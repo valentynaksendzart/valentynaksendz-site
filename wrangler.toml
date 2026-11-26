@@ -19,5 +19,5 @@ bucket_name = "valentyna-art-photos"
 # ACCESS_AUD: the Application Audience (AUD) tag of the Access app protecting /admin and /api/admin
 # ADMIN_EMAILS (comma-separated emails allowed in) is set as an encrypted secret in the
 # Cloudflare dashboard, not here, so the emails stay out of the public repo.
-ACCESS_TEAM_DOMAIN = ""
-ACCESS_AUD = ""
+ACCESS_TEAM_DOMAIN = "quiet-feather-61b5.cloudflareaccess.com"
+ACCESS_AUD = "469bff0ec0a30fe0959cd5dde65985d7bdeeaadb2763b06c515b40b0154d72c5"
