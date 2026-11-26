@@ -292,7 +292,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
       <a href="#gallery">Paintings</a><a href="#prints">Limited prints</a><a href="#shipping">Shipping &amp; returns</a><a href="#about">About the artist</a>
     </div>
     <div class="fcol">
-      <span>Instagram: <a href="https://www.instagram.com/" target="_blank" rel="noopener">@handle</a> <span class="guess">link TBC</span></span>
+      <span>Instagram: <a href="https://www.instagram.com/valentynaart_uk/" target="_blank" rel="noopener">@valentynaart_uk</a></span>
       <span>Email: hello@yourdomain <span class="guess">TBC</span></span>
     </div>
   </div>
@@ -310,25 +310,25 @@ const THEMES = {
 const WORKS = [
   {id:"poppies-field",theme:"wildflowers",title:"Poppies at the Edge of the Field",w:60,h:80,medium:"Oil",support:"Linen canvas",year:2025,price:950,seed:11,status:"available",
    story:"Painted after an evening walk in early July, when the poppies had taken over the edge of a wheat field and the light went orange for about ten minutes.",
-   reel:"https://www.instagram.com/",prints:{paper:{price:65,sold:3},canvas:{price:180,sold:1}}},
+   reel:"https://www.instagram.com/valentynaart_uk/",prints:{paper:{price:65,sold:3},canvas:{price:180,sold:1}}},
   {id:"cornflower-morning",theme:"wildflowers",title:"Cornflower Morning",w:40,h:50,medium:"Oil",support:"Linen canvas",year:2025,price:620,seed:23,status:"available",
    story:"A jar of cornflowers on the studio window, still wet with dew. I wanted the blue to feel cold, like the morning.",
    reel:null,prints:{paper:{price:55,sold:6},canvas:{price:150,sold:2}}},
   {id:"lily-pond",theme:"impressions",title:"Lily Pond in Late Light",w:70,h:90,medium:"Oil",support:"Linen canvas",year:2024,price:1250,seed:37,status:"available",
    story:"A small pond in a friend's garden. I painted it over three evenings and never let a single lily become sharp.",
-   reel:"https://www.instagram.com/",prints:{paper:{price:70,sold:8},canvas:{price:190,sold:4}}},
+   reel:"https://www.instagram.com/valentynaart_uk/",prints:{paper:{price:70,sold:8},canvas:{price:190,sold:4}}},
   {id:"river-fog",theme:"impressions",title:"Fog over the River",w:50,h:70,medium:"Oil",support:"Linen canvas",year:2024,price:780,seed:41,status:"sold",
    story:"The river at 6 a.m. in October. You can only guess where the far bank is.",
    reel:null,prints:{paper:{price:60,sold:10},canvas:{price:160,sold:5}}},
   {id:"rain-peonies",theme:"impasto",title:"Peonies, Heavy with Rain",w:50,h:60,medium:"Oil",support:"Linen canvas",year:2025,price:890,seed:53,status:"available",
    story:"Peonies always collapse after the first rain. I built them up with the knife so the petals stand off the canvas.",
-   reel:"https://www.instagram.com/",prints:{paper:{price:60,sold:2},canvas:{price:170,sold:0}}},
+   reel:"https://www.instagram.com/valentynaart_uk/",prints:{paper:{price:60,sold:2},canvas:{price:170,sold:0}}},
   {id:"sunflowers-storm",theme:"impasto",title:"Sunflowers After the Storm",w:80,h:100,medium:"Oil",support:"Linen canvas",year:2025,price:1650,seed:67,status:"available",
    story:"A whole field bent over by wind, then turning back to the sun the next morning. The paint is almost a centimetre thick in places.",
    reel:null,prints:{paper:{price:75,sold:5},canvas:{price:210,sold:3}}},
   {id:"meadow-thrown",theme:"splash",title:"Meadow, Thrown",w:60,h:60,medium:"Acrylic",support:"Linen canvas",year:2025,price:720,seed:79,status:"available",
    story:"No brush touched this one until the very end. Splashed with a stick, dabbed with a glove, and the meadow appeared by itself.",
-   reel:"https://www.instagram.com/",prints:{paper:{price:55,sold:4},canvas:{price:150,sold:1}}},
+   reel:"https://www.instagram.com/valentynaart_uk/",prints:{paper:{price:55,sold:4},canvas:{price:150,sold:1}}},
   {id:"lavender-rain",theme:"splash",title:"Lavender Rain",w:40,h:40,medium:"Acrylic",support:"Linen canvas",year:2025,price:480,seed:83,status:"available",
    story:"Poured violet and blue, then tilted the canvas until it started to look like lavender in a summer shower.",
    reel:null,prints:{paper:{price:45,sold:7},canvas:{price:130,sold:2}}}
@@ -538,7 +538,7 @@ function vPiece(w){
     <div><span class="label">The story</span></div>
     <div>
       <blockquote>“${esc(w.story)}”</blockquote>
-      ${w.reel?`<a class="reel" href="${w.reel}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>Watch this painting in motion on Instagram</a> <span class="guess">reel link TBC</span>`:""}
+      ${w.reel?`<a class="reel" href="${w.reel}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>Watch this painting in motion on Instagram</a> <span class="guess">exact reel link TBC</span>`:""}
     </div>
   </div>
   <section style="border-top:1px solid var(--rule)"><div class="sec-head"><h2>More ${t.name.toLowerCase()}</h2></div><div class="grid">${WORKS.filter(x=>x.id!==w.id).sort((a,b)=>(b.theme===w.theme)-(a.theme===w.theme)).slice(0,3).map(workCard).join("")}</div></section>`;
@@ -625,7 +625,7 @@ function vAbout(){
       <p>Valentyna will add: why she paints, when she started, her training, where her studio is, and where her work now hangs.</p>
       <h2>Collected in</h2>
       <p>Australia · Japan · USA · Canada · Europe</p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="https://www.instagram.com/" target="_blank" rel="noopener">Follow on Instagram</a></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="https://www.instagram.com/valentynaart_uk/" target="_blank" rel="noopener">Follow on Instagram</a></div>
     </div>
   </div>`;
 }
