@@ -225,6 +225,11 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 /* tilt cards */
 .tilt{transition:transform .25s ease;transform:perspective(900px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg))}
 
+/* ---------- currency picker ---------- */
+.cur select{font:500 1rem var(--font-body);color:var(--gold);background:var(--wall);border:1px solid var(--gold-deep);border-radius:3px;padding:6px 10px;cursor:pointer}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cur-note{font-size:.9rem;color:var(--muted);margin-top:6px}
+
 /* ---------- framing option ---------- */
 .frames{margin-top:22px;border:1px solid var(--rule);background:var(--paper);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
 .frames h3{font-family:var(--font-body);font-weight:700;color:var(--ink);font-size:1.05rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
@@ -290,6 +295,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
       <a href="#shipping" data-nav="shipping">Shipping &amp; returns</a>
       <a href="#about" data-nav="about">About</a>
     </nav>
+    <label class="cur"><span class="sr">Currency</span><select id="cur" aria-label="Currency"></select></label>
   </div>
 </header>
 
@@ -382,7 +388,23 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const inch = cm => (cm/2.54).toFixed(1).replace(/\.0$/,"");
 const sizeText = w => `${w.w} × ${w.h} cm (${inch(w.w)} × ${inch(w.h)} in)`;
-const money = n => "£" + n.toLocaleString("en-GB");
+// Prices are set in GBP. Other currencies use fixed approximate rates until the payment service is connected (rates TBC; the checkout will charge the exact amount).
+const CURRENCIES = {
+  GBP:{label:"GBP (£)",sym:"£",rate:1,locale:"en-GB"},
+  USD:{label:"USD (US$)",sym:"US$",rate:1.27,locale:"en-US"},
+  EUR:{label:"EUR (€)",sym:"€",rate:1.17,locale:"de-DE"},
+  CAD:{label:"CAD (CA$)",sym:"CA$",rate:1.76,locale:"en-CA"},
+  AUD:{label:"AUD (A$)",sym:"A$",rate:1.93,locale:"en-AU"},
+  JPY:{label:"JPY (¥)",sym:"¥",rate:190,locale:"ja-JP"}
+};
+let CUR = (()=>{try{const c=localStorage.getItem("cur");if(CURRENCIES[c])return c}catch(e){}
+  const l=(navigator.language||"").toLowerCase();
+  if(l.endsWith("-us"))return "USD"; if(l.endsWith("-ca"))return "CAD"; if(l.endsWith("-au")||l.endsWith("-nz"))return "AUD"; if(l.startsWith("ja"))return "JPY";
+  if(/^(de|fr|it|es|nl|pt|fi|el|sk|sl|et|lv|lt|ga|mt)/.test(l)||/-(ie|at|be)$/.test(l))return "EUR"; return "GBP"})();
+const money = n => {const c=CURRENCIES[CUR]; let v=n*c.rate;
+  const step = CUR==="JPY" ? (n>=300?1000:100) : (n>=300?10:1); v=Math.round(v/step)*step;
+  return c.sym + v.toLocaleString(c.locale==="de-DE"?"en-GB":c.locale)};
+const curNote = () => CUR==="GBP" ? "" : `<p class="cur-note">Shown in ${CUR} at an approximate rate. The exact amount is confirmed at checkout. <span class="guess">rates TBC</span></p>`;
 const rolledByDefault = w => Math.max(w.w,w.h) > ROLL_OVER_CM;
 const left = p => EDITION - p.sold;
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -522,7 +544,7 @@ function vPiece(w){
         <dt>Signed</dt><dd>Signed on the front, certificate of authenticity included <span class="guess">guess</span></dd>
       </dl></div>
 
-      <div class="price-row"><span class="price-big">${w.status==="sold"?"Sold":money(w.price)}</span><span class="label">Original · one of a kind</span></div>
+      <div class="price-row"><span class="price-big">${w.status==="sold"?"Sold":money(w.price)}</span><span class="label">Original · one of a kind</span></div>${w.status==="sold"?"":curNote()}
       ${w.status==="sold"
         ? `<p class="buy-note">This original has found its home. Limited prints are still available below.</p>`
         : `<button class="btn wide" type="button" id="buyOrig" style="margin-top:14px">Buy the original</button><p class="buy-note" id="buyNote"></p>
@@ -855,6 +877,8 @@ function route(){
   document.querySelectorAll("nav.main a").forEach(a=>{if(a.dataset.nav===nav)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   window.scrollTo(0,0);
 }
+(()=>{const sel=$("#cur");sel.innerHTML=Object.entries(CURRENCIES).map(([k,c])=>`<option value="${k}" ${k===CUR?"selected":""}>${c.label}</option>`).join("");
+  sel.addEventListener("change",()=>{CUR=sel.value;try{localStorage.setItem("cur",CUR)}catch(e){}const y=scrollY;route();scrollTo(0,y)})})();
 window.addEventListener("hashchange",route);
 route();
 </script>
