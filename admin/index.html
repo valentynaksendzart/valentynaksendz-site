@@ -179,7 +179,7 @@ async function edit(id) {
           <div class="photos" id="photos"></div>
           <input type="file" id="file" accept="image/*" multiple class="sr">
           <button class="drop" id="drop">Добавить фото</button>
-          <div class="hint">Можно загружать в полном качестве, прямо с телефона. Сайт сам сделает лёгкие копии. Первое фото будет главным.</div>
+          <div class="hint">Можно загружать в полном качестве, прямо с телефона. Сайт сам сделает лёгкие копии. Первое фото будет главным. Если сфотографируете картину сзади, нажмите на этом фото «Это оборот»: сайт покажет его, когда картину поворачивают.</div>
         </section>
         <section class="panel">
           <h3>2. О картине</h3>
@@ -189,6 +189,9 @@ async function edit(id) {
             <label>Ширина, см<input type="number" inputmode="decimal" min="1" data-k="width_cm" value="${cur.width_cm ?? ""}"></label>
             <label>Высота, см<input type="number" inputmode="decimal" min="1" data-k="height_cm" value="${cur.height_cm ?? ""}"></label>
           </div>
+          <label>Толщина подрамника, см
+            <input type="number" inputmode="decimal" min="0.5" max="15" step="0.1" data-k="depth_cm" value="${cur.depth_cm ?? ""}" placeholder="например, 1.8 или 3.5"></label>
+          <div class="hint" style="margin-top:-8px">Измерьте картину сбоку линейкой. По этой цифре сайт показывает толщину в 3D.</div>
           <div style="display:flex;flex-direction:column;gap:8px"><span>Тема</span>
             <div class="chips" role="group" aria-label="Тема" id="themes">
               ${THEMES.map(([k,t]) => `<button class="chip green" data-theme="${k}" aria-pressed="${cur.theme===k}">${t}</button>`).join("")}
@@ -350,14 +353,20 @@ function drawPhotos(pending = []) {
   box.innerHTML = cur.photos.map((p, i) => `
     <div class="ph">
       <img src="${img(p.thumb)}" alt="Фото ${i + 1}">
-      ${i === 0 ? `<span class="main">Главное</span>` : ""}
+      ${p.kind === "back" ? `<span class="main">Оборот</span>` : i === 0 ? `<span class="main">Главное</span>` : ""}
       <div class="acts">
-        ${i > 0 ? `<button data-main="${i}">Главным</button>` : ""}
+        ${i > 0 && p.kind !== "back" ? `<button data-main="${i}">Главным</button>` : ""}
+        ${i > 0 ? `<button data-back="${i}">${p.kind === "back" ? "Не оборот" : "Это оборот"}</button>` : ""}
         <button data-del="${i}">Убрать</button>
       </div>
     </div>`).join("") + pending.map(t => `<div class="ph busy">${esc(t)}</div>`).join("");
   box.querySelectorAll("[data-main]").forEach(b => b.onclick = () => {
     const i = Number(b.dataset.main); cur.photos.unshift(cur.photos.splice(i, 1)[0]); drawPhotos(); saveNow();
+  });
+  box.querySelectorAll("[data-back]").forEach(b => b.onclick = () => {
+    const p = cur.photos[Number(b.dataset.back)];
+    if (p.kind !== "back") cur.photos.forEach(x => { if (x.kind === "back") x.kind = "art"; });
+    p.kind = p.kind === "back" ? "art" : "back"; drawPhotos(); saveNow();
   });
   box.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
     if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Точно?"; return; }

@@ -372,13 +372,15 @@ async function loadWorks(){
     LIVE=true; const dp=document.getElementById("draftph"); if(dp) dp.remove();
     WORKS=data.paintings.map(p=>{
       // never hide a published painting: if the size is missing, draw it at the photo's proportions
-      const ph=(p.photos||[])[0], noSize=!(p.w>0&&p.h>0), ar=ph&&ph.w&&ph.h?ph.w/ph.h:.75;
+      // the photo of the back is used only for the back of the 3D view, never as the main picture
+      const all=(p.photos||[]).filter(x=>x.src), back=all.find(x=>x.kind==="back")||null, photos=all.filter(x=>x.kind!=="back").concat(back?[back]:[]);
+      const ph=photos[0], noSize=!(p.w>0&&p.h>0), ar=ph&&ph.w&&ph.h?ph.w/ph.h:.75;
       const w=noSize?Math.round(ar>=1?60:60*ar):p.w, h=noSize?Math.round(ar>=1?60/ar:60):p.h;
       return {
       id:"p-"+p.id, theme:THEMES[p.theme]?p.theme:Object.keys(THEMES)[0], title:p.title||"Untitled", w, h, noSize, medium:p.medium||"Oil", support:p.support||"Linen canvas",
       year:p.year||"", price:p.price||0, status:p.status, story:p.story||"", reel:p.reel||null, seed:hashSeed(p.id),
       prints:{paper:p.prints&&p.prints.paper, canvas:p.prints&&p.prints.canvas}, cards:(p.cards||[]).filter(c=>c.price>0), sku:p.sku||"",
-      photos:(p.photos||[]).filter(x=>x.src), depth:Math.max(w,h)>=70?3.8:1.8
+      photos, back, depth:p.depth>0?p.depth:(Math.max(w,h)>=70?3.8:1.8), depthGuess:!(p.depth>0)
     }});
     // small copies for cards and the hall; the big copy loads when a painting is opened
     await Promise.all(WORKS.map(async w=>{w.img=await loadImg(w.photos[0]&&w.photos[0].thumb)}));
@@ -583,7 +585,7 @@ function vPiece(w){
       <div class="card"><dl>
         <dt>Size</dt><dd>${sizeText(w)}</dd>
         <dt>Medium</dt><dd>${w.medium}</dd>
-        <dt>Support</dt><dd>${w.support}, ${w.depth} cm deep stretcher, painted edges <span class="guess">guess</span></dd>
+        <dt>Support</dt><dd>${w.support}, ${w.depth} cm deep stretcher${w.depthGuess===false?"":`, painted edges <span class="guess">guess</span>`}</dd>
         <dt>Style</dt><dd>${STYLE_NAMES[t.style]}</dd>
         <dt>Year</dt><dd>${w.year}</dd>
         <dt>Signed</dt><dd>Signed on the front, certificate of authenticity included <span class="guess">guess</span></dd>
@@ -836,7 +838,8 @@ function viewer3D(host,w){
   const sheen=document.createElement("i");sheen.className="sheen";fFront.appendChild(sheen);
   const back=mk("back",W,H,`rotateY(180deg) translateZ(${D/2}px)`,[0,0,-1]);
   const bar=Math.max(6,Math.round(4.5*s));
-  back.insertAdjacentHTML("afterbegin",`<div class="bars" style="box-shadow:inset 0 0 0 ${bar}px #c4a57a, inset 0 0 0 ${bar+1}px rgba(0,0,0,.15)"></div>${Math.max(w.w,w.h)>=60?`<div style="position:absolute;left:${bar}px;right:${bar}px;top:50%;height:${bar}px;margin-top:-${bar/2}px;background:#c4a57a;box-shadow:0 1px 0 rgba(0,0,0,.15)"></div>`:""}<div class="label-sticker">${esc(w.title)}<br>Valentyna Ksendz, ${w.year}<br>${w.noSize?"":w.w+" × "+w.h+" cm · "}${w.medium.toLowerCase()} on linen</div>`);
+  if(w.back&&w.back.src) back.insertAdjacentHTML("afterbegin",`<img class="back-photo" src="${esc(w.back.src)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`);
+  else back.insertAdjacentHTML("afterbegin",`<div class="bars" style="box-shadow:inset 0 0 0 ${bar}px #c4a57a, inset 0 0 0 ${bar+1}px rgba(0,0,0,.15)"></div>${Math.max(w.w,w.h)>=60?`<div style="position:absolute;left:${bar}px;right:${bar}px;top:50%;height:${bar}px;margin-top:-${bar/2}px;background:#c4a57a;box-shadow:0 1px 0 rgba(0,0,0,.15)"></div>`:""}<div class="label-sticker">${esc(w.title)}<br>Valentyna Ksendz, ${w.year}<br>${w.noSize?"":w.w+" × "+w.h+" cm · "}${esc(w.medium.toLowerCase())} on ${esc(w.support.toLowerCase())}</div>`);
   mk("side",D,H,`translateX(${(W-D)/2}px) rotateY(90deg) translateZ(${W/2}px)`,[1,0,0],slice(fw-k,0,k,fh,D,H));
   mk("side",D,H,`translateX(${(W-D)/2}px) rotateY(-90deg) translateZ(${W/2}px)`,[-1,0,0],slice(0,0,k,fh,D,H));
   mk("side",W,D,`translateY(${(H-D)/2}px) rotateX(90deg) translateZ(${H/2}px)`,[0,-1,0],slice(0,0,fw,k,W,D));
