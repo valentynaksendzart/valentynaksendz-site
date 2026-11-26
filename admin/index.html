@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Кабинет Валентины</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f3ec;--card:#fffdf9;--line:#e3dccf;--line2:#cfc6b6;--ink:#2b2622;--muted:#5e564d;--acc:#3f5a3a;--acc-ink:#2a3e27;--acc-soft:#e6efe2;--warn-soft:#fff3d6;--warn-ink:#6b4e0f;--bad:#9b2c2c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:19px/1.45 Inter,system-ui,sans-serif}
+h1,h2,.brand{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;margin:0}
+h1{font-size:clamp(32px,5vw,44px);line-height:1.1}
+h2{font-size:30px}
+a{color:var(--acc)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid #8aa07a;outline-offset:2px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(16px,4vw,48px);background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{font-size:28px}
+.top nav{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+main{max-width:1240px;margin:0 auto;padding:28px clamp(16px,4vw,48px) 80px;display:flex;flex-direction:column;gap:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:12px 22px;border-radius:12px;border:1px solid var(--line2);background:#fff;text-decoration:none;color:var(--ink);font-size:18px}
+.btn.big{min-height:64px;font-size:21px;font-weight:600;padding:16px 30px;border-radius:14px}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.soft{background:var(--acc-soft);border-color:var(--acc);color:var(--acc-ink)}
+.btn.danger{color:var(--bad);border-color:#d9b3b3}
+.btn:disabled{opacity:.55;cursor:default}
+.row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.stat .k{color:var(--muted);font-size:18px}
+.stat .v{font-size:46px;font-weight:600;line-height:1.15;margin-top:4px}
+.stat .s{color:var(--muted);font-size:16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:46px;padding:8px 18px;border-radius:999px;border:1px solid var(--line2);background:#fff;font-size:17px}
+.chip[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip.green[aria-pressed=true]{background:var(--acc);border-color:var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;text-align:left;padding:0}
+.card .pic{aspect-ratio:4/3;background:#e9e2d5 center/cover no-repeat;display:flex;align-items:flex-end;padding:10px}
+.card .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:2px}
+.card .t{font-size:20px;font-weight:600}
+.card .m{font-size:16px;color:var(--muted)}
+.badge{font-size:15px;font-weight:600;padding:4px 12px;border-radius:999px}
+.b-available{background:var(--acc-soft);color:var(--acc-ink)}
+.b-sold{background:var(--ink);color:#fff}
+.b-draft{background:var(--warn-soft);color:var(--warn-ink)}
+.empty{background:var(--card);border:1px dashed var(--line2);border-radius:16px;padding:32px;text-align:center;color:var(--muted)}
+.edit{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:900px){.edit{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:16px}
+.panel h3{margin:0;font-size:20px}
+label{display:flex;flex-direction:column;gap:6px}
+.hint{font-size:15px;color:var(--muted)}
+input[type=text],input[type=url],input[type=number],select,textarea{width:100%;min-height:54px;padding:12px 14px;border-radius:12px;border:1px solid var(--line2);background:#fff;font-size:19px}
+textarea{min-height:130px;resize:vertical}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.ph{position:relative;border-radius:12px;overflow:hidden;background:#e9e2d5;aspect-ratio:1;border:1px solid var(--line)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .main{position:absolute;left:8px;top:8px;background:var(--card);font-size:14px;font-weight:600;padding:2px 10px;border-radius:999px}
+.ph .acts{position:absolute;left:0;right:0;bottom:0;display:flex;gap:6px;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.ph .acts button{flex:1;min-height:40px;border-radius:8px;border:0;background:rgba(255,255,255,.92);font-size:14px}
+.ph.busy{display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--muted);padding:8px;text-align:center}
+.drop{border:2px dashed #8a9a7f;background:var(--card);color:var(--acc);font-weight:600;min-height:64px;border-radius:14px;width:100%}
+.drop.over{background:var(--acc-soft)}
+.counter{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.counter button{width:56px;height:56px;border-radius:12px;border:1px solid var(--line2);background:#fff;font-size:28px;line-height:1}
+.counter .n{text-align:center;font-size:17px;color:var(--muted)}
+.counter .n b{font-size:30px;color:var(--ink)}
+.save{font-size:16px;color:var(--muted);min-height:24px}
+.save.bad{color:var(--bad);font-weight:600}
+.statusline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.actions{display:flex;flex-direction:column;gap:10px}
+.msg{padding:14px 16px;border-radius:12px;background:var(--warn-soft);color:var(--warn-ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="#/" class="brand" style="text-decoration:none;color:inherit">Кабинет Валентины</a>
+  <nav>
+    <a class="btn" href="/" target="_blank" rel="noopener">Открыть сайт</a>
+    <a class="btn" href="/cdn-cgi/access/logout">Выйти</a>
+  </nav>
+</header>
+<main id="app" aria-live="polite"><p>Загружаю…</p></main>
+
+<script>
+"use strict";
+const THEMES = [["wildflowers","Полевые цветы"],["impressions","Импрессионизм"],["impasto","Импасто"],["splash","Всплеск и заливка"]];
+const MEDIUMS = [["Oil","Масло"],["Acrylic","Акрил"],["Mixed media","Смешанная техника"]];
+const SUPPORTS = [["Linen canvas","Льняной холст"],["Cotton canvas","Хлопковый холст"],["Canvas board","Холст на картоне"],["Paper","Бумага"]];
+const STATUS_RU = {available:"На сайте",sold:"Продано",draft:"Черновик"};
+const $app = document.getElementById("app");
+
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = n => "£" + Number(n || 0).toLocaleString("ru-RU");
+const img = k => k ? "/img/" + k : "";
+
+async function api(path, opts = {}) {
+  const res = await fetch("/api/admin/" + path, {credentials: "same-origin", ...opts,
+    headers: {"content-type": "application/json", ...(opts.headers || {})}});
+  if (res.status === 401) { location.reload(); throw new Error("Нужно войти"); }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || "Ошибка " + res.status);
+  return data;
+}
+
+/* ---------------- Home ---------------- */
+let filter = "all";
+async function home() {
+  document.title = "Кабинет Валентины";
+  const [stats, list] = await Promise.all([api("stats"), api("paintings")]);
+  const ps = list.paintings.filter(p => filter === "all" || p.status === filter);
+  const hour = new Date().getHours();
+  const hello = hour < 12 ? "Доброе утро" : hour < 18 ? "Добрый день" : "Добрый вечер";
+  $app.innerHTML = `
+    <div class="row">
+      <h1>${hello}, Валентина</h1>
+      <button class="btn big primary" id="add">${plusIcon()} Добавить картину</button>
+    </div>
+    <section class="stats" aria-label="Статистика">
+      <div class="stat"><div class="k">Картин на сайте</div><div class="v">${stats.onSite}</div><div class="s">${stats.drafts ? "и черновиков: " + stats.drafts : "черновиков нет"}</div></div>
+      <div class="stat"><div class="k">Продано в ${stats.year} году</div><div class="v">${stats.soldYear}</div><div class="s">на сумму ${money(stats.revenueYear)}</div></div>
+      <div class="stat"><div class="k">Отпечатков осталось</div><div class="v">${stats.printsLeft}</div><div class="s">из ${stats.printsTotal}</div></div>
+      <div class="stat"><div class="k">Продано отпечатков</div><div class="v">${stats.printsTotal - stats.printsLeft}</div><div class="s">на сумму ${money(stats.printsRevenue)}</div></div>
+    </section>
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <div class="row">
+        <h2>Мои картины</h2>
+        <div class="chips" role="group" aria-label="Показать">
+          ${[["all","Все"],["available","На сайте"],["sold","Продано"],["draft","Черновики"]].map(([k,t]) =>
+            `<button class="chip" data-f="${k}" aria-pressed="${filter===k}">${t}</button>`).join("")}
+        </div>
+      </div>
+      ${ps.length ? `<div class="grid">${ps.map(card).join("")}</div>`
+        : `<div class="empty">${list.paintings.length ? "Здесь пока пусто." : "Картин пока нет. Нажмите «Добавить картину»."}</div>`}
+    </section>`;
+  $app.querySelector("#add").onclick = async e => {
+    e.currentTarget.disabled = true;
+    const {painting} = await api("paintings", {method: "POST", body: "{}"});
+    location.hash = "#/p/" + painting.id;
+  };
+  $app.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { filter = b.dataset.f; home(); });
+}
+function card(p) {
+  const ph = p.photos[0];
+  const size = p.width_cm && p.height_cm ? `${p.width_cm} × ${p.height_cm} см` : "размер не указан";
+  return `<a class="card" href="#/p/${p.id}" style="text-decoration:none;color:inherit">
+    <div class="pic" style="${ph ? `background-image:url('${img(ph.thumb)}')` : ""}"><span class="badge b-${p.status}">${STATUS_RU[p.status]}</span></div>
+    <div class="body"><div class="t">${esc(p.title) || "Без названия"}</div>
+    <div class="m">${size}${p.price ? " · " + money(p.price) : ""}</div></div></a>`;
+}
+const plusIcon = () => `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>`;
+
+/* ---------------- Edit ---------------- */
+let cur = null, saveTimer = null, saving = Promise.resolve();
+
+async function edit(id) {
+  const {painting} = await api("paintings/" + id);
+  cur = painting;
+  document.title = (cur.title || "Новая картина") + " · Кабинет";
+  const opt = (list, v) => list.map(([k,t]) => `<option value="${k}" ${k===v?"selected":""}>${t}</option>`).join("");
+  $app.innerHTML = `
+    <div class="row">
+      <a class="btn" href="#/">← Все картины</a>
+      <div class="statusline"><span class="badge b-${cur.status}" id="st">${STATUS_RU[cur.status]}</span><span class="save" id="save"></span></div>
+    </div>
+    <h1 id="h">${esc(cur.title) || "Новая картина"}</h1>
+    <div class="edit">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <section class="panel">
+          <h3>1. Фотографии</h3>
+          <div class="photos" id="photos"></div>
+          <input type="file" id="file" accept="image/*" multiple class="sr">
+          <button class="drop" id="drop">Добавить фото</button>
+          <div class="hint">Можно загружать в полном качестве, прямо с телефона. Сайт сам сделает лёгкие копии. Первое фото будет главным.</div>
+        </section>
+        <section class="panel">
+          <h3>2. О картине</h3>
+          <label>Название на английском
+            <input type="text" data-k="title" value="${esc(cur.title)}" placeholder="Poppies at Dawn"></label>
+          <div class="two">
+            <label>Ширина, см<input type="number" inputmode="decimal" min="1" data-k="width_cm" value="${cur.width_cm ?? ""}"></label>
+            <label>Высота, см<input type="number" inputmode="decimal" min="1" data-k="height_cm" value="${cur.height_cm ?? ""}"></label>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px"><span>Тема</span>
+            <div class="chips" role="group" aria-label="Тема" id="themes">
+              ${THEMES.map(([k,t]) => `<button class="chip green" data-theme="${k}" aria-pressed="${cur.theme===k}">${t}</button>`).join("")}
+            </div></div>
+          <div class="two">
+            <label>Техника<select data-k="medium">${opt(MEDIUMS, cur.medium)}</select></label>
+            <label>Основа<select data-k="support">${opt(SUPPORTS, cur.support)}</select></label>
+          </div>
+          <div class="two">
+            <label>Цена, £<input type="number" inputmode="numeric" min="0" data-k="price" value="${cur.price ?? ""}"></label>
+            <label>Год<input type="number" inputmode="numeric" min="1950" max="2100" data-k="year" value="${cur.year ?? ""}"></label>
+          </div>
+        </section>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <section class="panel">
+          <h3>3. История картины</h3>
+          <label>По-русски, как удобно (на сайте не показывается)
+            <textarea data-k="story_ru">${esc(cur.story_ru)}</textarea></label>
+          <label>На английском, для покупателей
+            <textarea data-k="story">${esc(cur.story)}</textarea></label>
+          <label>Ссылка на Reels в Instagram (необязательно)
+            <input type="url" data-k="reel_url" value="${esc(cur.reel_url)}" placeholder="instagram.com/reel/…"></label>
+        </section>
+        <section class="panel">
+          <h3>Отпечатки (тираж ${cur.prints_edition})</h3>
+          ${printBlock("paper", "На бумаге")}
+          ${printBlock("canvas", "На холсте")}
+          <div class="hint">Оставьте цену пустой, если такого отпечатка нет.</div>
+        </section>
+        <section class="panel actions" id="actions"></section>
+      </div>
+    </div>`;
+
+  $app.querySelectorAll("[data-k]").forEach(el => el.addEventListener("input", () => {
+    cur[el.dataset.k] = el.value;
+    if (el.dataset.k === "title") $app.querySelector("#h").textContent = el.value || "Новая картина";
+    queueSave();
+  }));
+  $app.querySelectorAll("[data-theme]").forEach(b => b.onclick = () => {
+    cur.theme = b.dataset.theme;
+    $app.querySelectorAll("[data-theme]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    queueSave();
+  });
+  $app.querySelectorAll("[data-pk]").forEach(b => b.onclick = () => {
+    const k = `print_${b.dataset.pk}_sold`;
+    cur[k] = Math.max(0, Math.min(cur.prints_edition, Number(cur[k] || 0) + Number(b.dataset.d)));
+    drawPrints(); queueSave();
+  });
+  drawPrints(); drawPhotos(); drawActions();
+
+  const file = $app.querySelector("#file"), drop = $app.querySelector("#drop");
+  drop.onclick = () => file.click();
+  file.onchange = () => { addFiles([...file.files]); file.value = ""; };
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+  drop.ondragleave = () => drop.classList.remove("over");
+  drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); addFiles([...e.dataTransfer.files]); };
+}
+
+function printBlock(kind, label) {
+  return `<div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px">
+    <label>${label}: цена, £<input type="number" inputmode="numeric" min="0" data-k="print_${kind}_price" value="${cur[`print_${kind}_price`] ?? ""}"></label>
+    <div class="counter">
+      <button data-pk="${kind}" data-d="1" aria-label="${label}: продан ещё один">−</button>
+      <div class="n" id="pn-${kind}"></div>
+      <button data-pk="${kind}" data-d="-1" aria-label="${label}: вернуть один">+</button>
+    </div></div>`;
+}
+function drawPrints() {
+  for (const kind of ["paper", "canvas"]) {
+    const left = cur.prints_edition - Number(cur[`print_${kind}_sold`] || 0);
+    $app.querySelector("#pn-" + kind).innerHTML = `осталось <b>${left}</b> из ${cur.prints_edition}`;
+  }
+}
+
+function drawPhotos(pending = []) {
+  const box = $app.querySelector("#photos");
+  box.innerHTML = cur.photos.map((p, i) => `
+    <div class="ph">
+      <img src="${img(p.thumb)}" alt="Фото ${i + 1}">
+      ${i === 0 ? `<span class="main">Главное</span>` : ""}
+      <div class="acts">
+        ${i > 0 ? `<button data-main="${i}">Главным</button>` : ""}
+        <button data-del="${i}">Убрать</button>
+      </div>
+    </div>`).join("") + pending.map(t => `<div class="ph busy">${esc(t)}</div>`).join("");
+  box.querySelectorAll("[data-main]").forEach(b => b.onclick = () => {
+    const i = Number(b.dataset.main); cur.photos.unshift(cur.photos.splice(i, 1)[0]); drawPhotos(); saveNow();
+  });
+  box.querySelectorAll("[data-del]").forEach(b => b.onclick = () => {
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Точно?"; return; }
+    cur.photos.splice(Number(b.dataset.del), 1); drawPhotos(); saveNow();
+  });
+}
+
+function drawActions() {
+  const box = $app.querySelector("#actions");
+  const s = cur.status;
+  box.innerHTML = `
+    ${s !== "available" ? `<button class="btn big primary" data-s="available">${s === "sold" ? "Вернуть в продажу" : "Опубликовать на сайте"}</button>` : ""}
+    ${s !== "sold" ? `<button class="btn big dark" data-s="sold">Отметить как продано</button>` : ""}
+    ${s === "sold" ? `<label>Цена продажи, £ (для статистики)<input type="number" min="0" id="soldp" value="${cur.sold_price ?? cur.price ?? ""}"></label>` : ""}
+    ${s !== "draft" ? `<button class="btn" data-s="draft">Убрать с сайта в черновики</button>` : ""}
+    <div class="hint">Всё сохраняется само, кнопку «Сохранить» нажимать не нужно.</div>
+    <button class="btn danger" id="del">Удалить картину навсегда</button>`;
+  box.querySelectorAll("[data-s]").forEach(b => b.onclick = async () => {
+    if (b.dataset.s !== "draft" && !cur.photos.length) return note("Добавьте хотя бы одно фото, прежде чем публиковать.");
+    if (b.dataset.s !== "draft" && !String(cur.title).trim()) return note("Напишите название картины.");
+    cur.status = b.dataset.s;
+    if (cur.status === "sold" && cur.sold_price == null) cur.sold_price = cur.price;
+    await saveNow();
+    const st = $app.querySelector("#st"); st.className = "badge b-" + cur.status; st.textContent = STATUS_RU[cur.status];
+    drawActions();
+  });
+  const sp = box.querySelector("#soldp");
+  if (sp) sp.oninput = () => { cur.sold_price = sp.value; queueSave(); };
+  box.querySelector("#del").onclick = async e => {
+    const b = e.currentTarget;
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Нажмите ещё раз, чтобы удалить вместе с фото"; return; }
+    await api("paintings/" + cur.id, {method: "DELETE"});
+    location.hash = "#/";
+  };
+}
+
+function note(t) {
+  const s = $app.querySelector("#save"); s.textContent = t; s.className = "save bad";
+}
+function queueSave() {
+  clearTimeout(saveTimer);
+  $app.querySelector("#save").textContent = "…";
+  saveTimer = setTimeout(saveNow, 900);
+}
+function saveNow() {
+  clearTimeout(saveTimer); saveTimer = null;
+  const s = $app.querySelector("#save");
+  const body = {...cur}; delete body.id;
+  saving = saving.then(async () => {
+    s.className = "save"; s.textContent = "Сохраняю…";
+    try {
+      const {painting} = await api("paintings/" + cur.id, {method: "PUT", body: JSON.stringify(body)});
+      cur.slug = painting.slug; cur.sold_at = painting.sold_at;
+      s.textContent = "Сохранено ✓";
+    } catch (e) {
+      s.className = "save bad"; s.textContent = "Не сохранилось: " + e.message + ". Проверьте интернет.";
+    }
+  });
+  return saving;
+}
+
+/* ---------------- Photos: shrink in the browser, upload 3 versions ---------------- */
+async function decode(file) {
+  try { return await createImageBitmap(file, {imageOrientation: "from-image"}); }
+  catch {
+    const url = URL.createObjectURL(file);
+    try {
+      const im = new Image(); im.src = url; await im.decode(); return im;
+    } finally { URL.revokeObjectURL(url); }
+  }
+}
+async function variant(src, maxSide, q) {
+  const w0 = src.width, h0 = src.height, k = Math.min(1, maxSide / Math.max(w0, h0));
+  const c = document.createElement("canvas");
+  c.width = Math.round(w0 * k); c.height = Math.round(h0 * k);
+  const g = c.getContext("2d"); g.imageSmoothingQuality = "high"; g.drawImage(src, 0, 0, c.width, c.height);
+  let b = await new Promise(r => c.toBlob(r, "image/webp", q));
+  if (!b || b.type !== "image/webp") b = await new Promise(r => c.toBlob(r, "image/jpeg", q));
+  return {blob: b, w: c.width, h: c.height};
+}
+async function put(id, photo, v, blob, type) {
+  const res = await fetch(`/api/admin/upload?painting=${id}&photo=${photo}&variant=${v}`,
+    {method: "PUT", body: blob, headers: {"content-type": type}, credentials: "same-origin"});
+  const d = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(d.error || "Ошибка загрузки");
+  return d;
+}
+async function addFiles(files) {
+  files = files.filter(f => f.type.startsWith("image/") || /\.(heic|heif)$/i.test(f.name));
+  const pending = files.map(f => "Загружаю " + f.name + "…");
+  drawPhotos(pending);
+  const errors = [];
+  for (let i = 0; i < files.length; i++) {
+    const f = files[i];
+    try {
+      const src = await decode(f).catch(() => { throw new Error("этот формат не открылся, попробуйте JPG"); });
+      const large = await variant(src, 2400, 0.86), thumb = await variant(src, 800, 0.8);
+      const id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + i).replace(/[^\w-]/g, "");
+      const otype = f.type || "image/heic";
+      const o = await put(cur.id, id, "orig", f, otype);
+      const l = await put(cur.id, id, "large", large.blob, large.blob.type);
+      const t = await put(cur.id, id, "thumb", thumb.blob, thumb.blob.type);
+      cur.photos.push({id, orig: o.key, large: l.key, thumb: t.key, w: large.w, h: large.h, bytes: o.bytes + l.bytes + t.bytes, kind: "art"});
+      await saveNow();
+    } catch (e) { errors.push(f.name + ": " + e.message); }
+    pending.shift(); drawPhotos(pending);
+  }
+  if (errors.length) note("Не загрузилось: " + errors.join("; "));
+}
+
+/* ---------------- Router ---------------- */
+async function route() {
+  try {
+    const m = location.hash.match(/^#\/p\/(\d+)/);
+    if (m) await edit(m[1]); else await home();
+    window.scrollTo(0, 0);
+  } catch (e) {
+    $app.innerHTML = `<div class="msg">Не получилось загрузить: ${esc(e.message)}. Обновите страницу.</div>`;
+  }
+}
+window.addEventListener("hashchange", async () => { if (saveTimer) await saveNow(); route(); });
+window.addEventListener("beforeunload", e => { if (saveTimer) { saveNow(); e.preventDefault(); } });
+route();
+</script>
+</body>
+</html>

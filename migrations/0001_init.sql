@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS paintings (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  slug          TEXT UNIQUE,
+  title         TEXT NOT NULL DEFAULT '',
+  theme         TEXT NOT NULL DEFAULT 'wildflowers',
+  width_cm      REAL,
+  height_cm     REAL,
+  medium        TEXT NOT NULL DEFAULT 'Oil',
+  support       TEXT NOT NULL DEFAULT 'Linen canvas',
+  year          INTEGER,
+  price         INTEGER,
+  status        TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','available','sold')),
+  sold_at       TEXT,
+  sold_price    INTEGER,
+  story         TEXT NOT NULL DEFAULT '',
+  story_ru      TEXT NOT NULL DEFAULT '',
+  reel_url      TEXT,
+  prints_edition     INTEGER NOT NULL DEFAULT 10,
+  print_paper_price  INTEGER,
+  print_paper_sold   INTEGER NOT NULL DEFAULT 0,
+  print_canvas_price INTEGER,
+  print_canvas_sold  INTEGER NOT NULL DEFAULT 0,
+  photos        TEXT NOT NULL DEFAULT '[]',
+  sort          INTEGER NOT NULL DEFAULT 0,
+  created_at    TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at    TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS paintings_status ON paintings(status);
