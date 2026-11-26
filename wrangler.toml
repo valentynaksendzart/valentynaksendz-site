@@ -6,7 +6,7 @@ pages_build_output_dir = "."
 [[d1_databases]]
 binding = "DB"
 database_name = "valentyna-art"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "ff20937b-9230-488f-bc77-05dced4ba41b"
 migrations_dir = "migrations"
 
 [[r2_buckets]]

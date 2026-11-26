@@ -20,7 +20,7 @@ Draft status: paintings, prices, texts and photos are placeholders. Items marked
 Public endpoints: `GET /api/paintings` (everything except drafts, in the same shape as `WORKS` in `index.html`) and `GET /img/p/...` (web copies of photos). Originals are only downloadable from the admin API.
 
 Setup on Cloudflare (once):
-1. Create the D1 database `valentyna-art`, put its id in `wrangler.toml`, apply `migrations/0001_init.sql`.
+1. Create the D1 database `valentyna-art`, put its id in `wrangler.toml`. Tables are created automatically on first request (`lib/schema.js`).
 2. Create the R2 bucket `valentyna-art-photos`.
 3. Create a Pages project from this repo (build command empty, output directory `.`).
 4. Zero Trust: add the One-time PIN login method, then a self-hosted Access application for `<domain>/admin` and `<domain>/api/admin` allowing only the owner emails. Put the team domain and the application AUD tag in `wrangler.toml`, and the emails in the `ADMIN_EMAILS` secret of the Pages project.
