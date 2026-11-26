@@ -31,3 +31,11 @@ Local development:
 npx wrangler d1 migrations apply valentyna-art --local
 npx wrangler pages dev --binding DEV_NO_AUTH=1   # login is skipped only on localhost
 ```
+
+### Products and SKUs
+
+Greeting cards live in the `products` table (D1), one row per card, linked to a painting
+(`painting_id`). Prices are stored in pence (`price_p`); `stock` is how many were printed and
+`sold` how many are gone. SKUs: originals `VK-O-0001`, prints `VK-O-0001-PP` / `-PC`,
+cards `VK-C-0001` (number = database id). `GET /api/paintings` returns each painting's
+`sku` and its on-sale `cards`, so a checkout can be added later on top of these SKUs.

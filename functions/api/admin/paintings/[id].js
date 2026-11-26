@@ -46,6 +46,9 @@ export const onRequestDelete = async ({ env, params }) => {
   if (!old) return err(404, 'Картина не найдена');
   const keys = JSON.parse(old.photos || '[]').flatMap((p) => [p.orig, p.large, p.thumb]).filter(Boolean);
   if (keys.length) await env.PHOTOS.delete(keys);
-  await env.DB.prepare('DELETE FROM paintings WHERE id = ?').bind(params.id).run();
+  await env.DB.batch([
+    env.DB.prepare('DELETE FROM products WHERE painting_id = ?').bind(params.id),
+    env.DB.prepare('DELETE FROM paintings WHERE id = ?').bind(params.id),
+  ]);
   return json({ ok: true });
 };
