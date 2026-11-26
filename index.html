@@ -285,7 +285,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 <body>
 
 
-<div class="draftbar">DRAFT · paintings, prices, texts and photos are placeholders · items marked <span class="guess">guess</span> need Valentyna's confirmation</div>
+<div class="draftbar">DRAFT · <span id="draftph">paintings, prices, texts and photos are placeholders · </span>items marked <span class="guess">guess</span> need Valentyna's confirmation</div>
 
 <header class="site">
   <div class="wrap">
@@ -367,13 +367,17 @@ async function loadWorks(){
     const r=await fetch("/api/paintings",{signal:ctl.signal}); clearTimeout(t);
     if(!r.ok) return;
     const data=await r.json(); if(!data||!Array.isArray(data.paintings)) return;
-    LIVE=true;
-    WORKS=data.paintings.filter(p=>THEMES[p.theme]&&p.w&&p.h).map(p=>({
-      id:"p-"+p.id, theme:p.theme, title:p.title||"Untitled", w:p.w, h:p.h, medium:p.medium||"Oil", support:p.support||"Linen canvas",
+    LIVE=true; const dp=document.getElementById("draftph"); if(dp) dp.remove();
+    WORKS=data.paintings.map(p=>{
+      // never hide a published painting: if the size is missing, draw it at the photo's proportions
+      const ph=(p.photos||[])[0], noSize=!(p.w>0&&p.h>0), ar=ph&&ph.w&&ph.h?ph.w/ph.h:.75;
+      const w=noSize?Math.round(ar>=1?60:60*ar):p.w, h=noSize?Math.round(ar>=1?60/ar:60):p.h;
+      return {
+      id:"p-"+p.id, theme:THEMES[p.theme]?p.theme:Object.keys(THEMES)[0], title:p.title||"Untitled", w, h, noSize, medium:p.medium||"Oil", support:p.support||"Linen canvas",
       year:p.year||"", price:p.price||0, status:p.status, story:p.story||"", reel:p.reel||null, seed:hashSeed(p.id),
       prints:{paper:p.prints&&p.prints.paper, canvas:p.prints&&p.prints.canvas},
-      photos:(p.photos||[]).filter(x=>x.src), depth:Math.max(p.w,p.h)>=70?3.8:1.8
-    }));
+      photos:(p.photos||[]).filter(x=>x.src), depth:Math.max(w,h)>=70?3.8:1.8
+    }});
     // small copies for cards and the hall; the big copy loads when a painting is opened
     await Promise.all(WORKS.map(async w=>{w.img=await loadImg(w.photos[0]&&w.photos[0].thumb)}));
   }catch(e){ /* keep the samples */ }
@@ -413,7 +417,7 @@ const COUNTRIES = [
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const inch = cm => (cm/2.54).toFixed(1).replace(/\.0$/,"");
-const sizeText = w => `${w.w} × ${w.h} cm (${inch(w.w)} × ${inch(w.h)} in)`;
+const sizeText = w => w.noSize?"Size on request":`${w.w} × ${w.h} cm (${inch(w.w)} × ${inch(w.h)} in)`;
 // Prices are set in GBP. Other currencies use fixed approximate rates until the payment service is connected (rates TBC; the checkout will charge the exact amount).
 const CURRENCIES = {
   GBP:{label:"GBP (£)",sym:"£",rate:1,locale:"en-GB"},
@@ -427,7 +431,7 @@ let CUR = (()=>{try{const c=localStorage.getItem("cur");if(CURRENCIES[c])return 
   const l=(navigator.language||"").toLowerCase();
   if(l.endsWith("-us"))return "USD"; if(l.endsWith("-ca"))return "CAD"; if(l.endsWith("-au")||l.endsWith("-nz"))return "AUD"; if(l.startsWith("ja"))return "JPY";
   if(/^(de|fr|it|es|nl|pt|fi|el|sk|sl|et|lv|lt|ga|mt)/.test(l)||/-(ie|at|be)$/.test(l))return "EUR"; return "GBP"})();
-const money = n => {const c=CURRENCIES[CUR]; let v=n*c.rate;
+const money = n => { if(!(n>0)) return "Price on request";const c=CURRENCIES[CUR]; let v=n*c.rate;
   const step = CUR==="JPY" ? (n>=300?1000:100) : (n>=300?10:1); v=Math.round(v/step)*step;
   return c.sym + v.toLocaleString(c.locale==="de-DE"?"en-GB":c.locale)};
 const curNote = () => CUR==="GBP" ? "" : `<p class="cur-note">Shown in ${CUR} at an approximate rate. The exact amount is confirmed at checkout. <span class="guess">rates TBC</span></p>`;
@@ -505,17 +509,17 @@ const frame = (id,kind="front",tag="Photo placeholder") => {const w=WORKS.find(x
 function workCard(w){
   return `<a class="work" href="#${w.id}">${frame(w.id)}
     <div class="meta"><h3>${esc(w.title)}</h3><span class="price">${w.status==="sold"?'<span class="sold-dot"></span>Sold':money(w.price)}</span></div>
-    <span class="spec">${w.medium} on ${w.support.toLowerCase()} · ${w.w} × ${w.h} cm</span></a>`;
+    <span class="spec">${w.medium} on ${w.support.toLowerCase()} · ${w.noSize?"size on request":w.w+" × "+w.h+" cm"}</span></a>`;
 }
 function vHome(){
   const themeList = Object.entries(THEMES).filter(([k])=>!LIVE||WORKS.some(w=>w.theme===k));
-  return `<div class="ship-strip" style="padding-block:28px 0;margin-top:0"><span><b>Worldwide shipping</b> with insurance</span><span><b>Linen canvas</b> originals</span><span><b>Editions of ${EDITION}</b>, signed &amp; numbered</span><span><b>Turn every painting in 3D</b> and try it on your wall</span></div>
+  return `<div class="ship-strip" style="padding-block:28px 0;margin-top:0"><span><b>Worldwide shipping</b> with insurance</span><span><b>Stretched canvas</b> originals</span><span><b>Editions of ${EDITION}</b>, signed &amp; numbered</span><span><b>Turn every painting in 3D</b> and try it on your wall</span></div>
   ${themeList.length?`<section>
     <div class="sec-head"><h2>${themeList.length===4?"Four ways I paint":"The ways I paint"}</h2><a href="#gallery" class="label">All paintings →</a></div>
     <div class="themes">${themeList.map(([k,t])=>`<a class="theme-card" href="#${k}"><div class="frame tilt"><canvas data-theme-cover="${k}" role="img" aria-label="${t.name} placeholder"></canvas></div><h3>${t.name}</h3><p>${t.blurb}</p></a>`).join("")}</div>
   </section>`:""}
   <section>
-    <div class="sec-head"><h2>New on the easel</h2></div>
+    ${WORKS.length?`<div class="sec-head"><h2>New on the easel</h2></div>`:""}
     ${WORKS.length?`<div class="grid">${WORKS.filter(w=>w.status!=="sold").slice(0,4).map(workCard).join("")}</div>`:emptyHTML()}
   </section>`;
 }
@@ -812,7 +816,7 @@ function viewer3D(host,w){
   const sheen=document.createElement("i");sheen.className="sheen";fFront.appendChild(sheen);
   const back=mk("back",W,H,`rotateY(180deg) translateZ(${D/2}px)`,[0,0,-1]);
   const bar=Math.max(6,Math.round(4.5*s));
-  back.insertAdjacentHTML("afterbegin",`<div class="bars" style="box-shadow:inset 0 0 0 ${bar}px #c4a57a, inset 0 0 0 ${bar+1}px rgba(0,0,0,.15)"></div>${Math.max(w.w,w.h)>=60?`<div style="position:absolute;left:${bar}px;right:${bar}px;top:50%;height:${bar}px;margin-top:-${bar/2}px;background:#c4a57a;box-shadow:0 1px 0 rgba(0,0,0,.15)"></div>`:""}<div class="label-sticker">${esc(w.title)}<br>Valentyna Ksendz, ${w.year}<br>${w.w} × ${w.h} cm · ${w.medium.toLowerCase()} on linen</div>`);
+  back.insertAdjacentHTML("afterbegin",`<div class="bars" style="box-shadow:inset 0 0 0 ${bar}px #c4a57a, inset 0 0 0 ${bar+1}px rgba(0,0,0,.15)"></div>${Math.max(w.w,w.h)>=60?`<div style="position:absolute;left:${bar}px;right:${bar}px;top:50%;height:${bar}px;margin-top:-${bar/2}px;background:#c4a57a;box-shadow:0 1px 0 rgba(0,0,0,.15)"></div>`:""}<div class="label-sticker">${esc(w.title)}<br>Valentyna Ksendz, ${w.year}<br>${w.noSize?"":w.w+" × "+w.h+" cm · "}${w.medium.toLowerCase()} on linen</div>`);
   mk("side",D,H,`translateX(${(W-D)/2}px) rotateY(90deg) translateZ(${W/2}px)`,[1,0,0],slice(fw-k,0,k,fh,D,H));
   mk("side",D,H,`translateX(${(W-D)/2}px) rotateY(-90deg) translateZ(${W/2}px)`,[-1,0,0],slice(0,0,k,fh,D,H));
   mk("side",W,D,`translateY(${(H-D)/2}px) rotateX(90deg) translateZ(${H/2}px)`,[0,-1,0],slice(0,0,fw,k,W,D));
@@ -868,7 +872,7 @@ function roomView(host,w){
       <div class="furn" style="left:50%;width:${F.w*px}px">${F.svg}</div>
       <div class="hung" style="left:calc(50% - ${ow/2}px);top:${top}px;width:${ow}px;height:${oh}px"><div class="pic" style="${fr.bg?`background:${fr.bg};padding:${(fr.cm*px).toFixed(1)}px`:""}"><div class="inner" style="${fr.gap?`padding:${(fr.gap*px).toFixed(1)}px;background:#1d1d1b`:""};width:100%;height:100%;box-sizing:border-box"></div></div></div>
       <div class="light" style="--lx:50%;--ly:${((top+oh/2)/host.clientHeight*100).toFixed(1)}%"></div>
-      <span class="scale-note">True scale · ${F.label} · painting ${w.w} × ${w.h} cm${fr.bg?" · "+fr.name.toLowerCase():""}</span>`;
+      <span class="scale-note">True scale · ${F.label} · painting ${w.w} × ${w.h} cm${w.noSize?" (approximate)":""}${fr.bg?" · "+fr.name.toLowerCase():""}</span>`;
     host.classList.toggle("evening",st.evening);
     pic=host.querySelector(".pic"); furn=host.querySelector(".furn");
     host.querySelector(".inner").appendChild(paintedCanvas(w,pw,ph));

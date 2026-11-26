@@ -297,6 +297,7 @@ function drawActions() {
   box.querySelectorAll("[data-s]").forEach(b => b.onclick = async () => {
     if (b.dataset.s !== "draft" && !cur.photos.length) return note("Добавьте хотя бы одно фото, прежде чем публиковать.");
     if (b.dataset.s !== "draft" && !String(cur.title).trim()) return note("Напишите название картины.");
+    if (b.dataset.s === "available" && !(Number(cur.width_cm) > 0 && Number(cur.height_cm) > 0)) return note("Укажите ширину и высоту: по ним сайт показывает картину на стене в настоящем размере.");
     cur.status = b.dataset.s;
     if (cur.status === "sold" && cur.sold_price == null) cur.sold_price = cur.price;
     await saveNow();
