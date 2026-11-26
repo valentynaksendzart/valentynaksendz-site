@@ -1,0 +1,23 @@
+# Cloudflare Pages config: public site + admin panel ("Кабинет").
+name = "valentynaksendz-site"
+compatibility_date = "2026-11-01"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "valentyna-art"
+database_id = "ff20937b-9230-488f-bc77-05dced4ba41b"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "valentyna-art-photos"
+
+[vars]
+# Cloudflare Access (Zero Trust) settings for the admin login.
+# ACCESS_TEAM_DOMAIN: e.g. "valentyna.cloudflareaccess.com"
+# ACCESS_AUD: the Application Audience (AUD) tag of the Access app protecting /admin and /api/admin
+# ADMIN_EMAILS (comma-separated emails allowed in) is set as an encrypted secret in the
+# Cloudflare dashboard, not here, so the emails stay out of the public repo.
+ACCESS_TEAM_DOMAIN = "quiet-feather-61b5.cloudflareaccess.com"
+ACCESS_AUD = "469bff0ec0a30fe0959cd5dde65985d7bdeeaadb2763b06c515b40b0154d72c5"
