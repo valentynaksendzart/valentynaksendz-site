@@ -225,6 +225,25 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 /* tilt cards */
 .tilt{transition:transform .25s ease;transform:perspective(900px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg))}
 
+/* ---------- currency picker ---------- */
+.cur select{font:500 1rem var(--font-body);color:var(--gold);background:var(--wall);border:1px solid var(--gold-deep);border-radius:3px;padding:6px 10px;cursor:pointer}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cur-note{font-size:.9rem;color:var(--muted);margin-top:6px}
+
+/* ---------- framing option ---------- */
+.frames{margin-top:22px;border:1px solid var(--rule);background:var(--paper);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.frames h3{font-family:var(--font-body);font-weight:700;color:var(--ink);font-size:1.05rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.frame-opt{display:grid;grid-template-columns:auto 34px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--rule);border-radius:3px;cursor:pointer;background:var(--wall)}
+.frame-opt:has(input:checked){border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.frame-opt input{width:20px;height:20px;accent-color:var(--gold);margin:0}
+.frame-opt .sw{width:34px;height:34px;border-radius:2px;background:#4b6b5f}
+.frame-opt b{display:block;font-weight:700}
+.frame-opt small{display:block;color:var(--muted);font-size:.92rem;line-height:1.4}
+.frame-opt .fp{font-weight:700;color:var(--gold);white-space:nowrap;font-size:.95rem}
+.linkbtn{background:none;border:0;padding:0;font:500 1rem var(--font-body);color:var(--gold);text-decoration:underline;cursor:pointer;align-self:flex-start}
+.frame-note{font-size:.95rem;color:var(--muted)}
+@media (max-width:480px){.frame-opt{grid-template-columns:auto 28px 1fr}.frame-opt .fp{grid-column:3}}
+
 /* ---------- painting viewer: 3D / on a wall / photos ---------- */
 .modes{display:flex;gap:4px;margin-bottom:12px;border-bottom:1px solid var(--rule)}
 .modes button{font:500 1.02rem var(--font-body);background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px;color:var(--muted);cursor:pointer;margin-bottom:-1px}
@@ -276,6 +295,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
       <a href="#shipping" data-nav="shipping">Shipping &amp; returns</a>
       <a href="#about" data-nav="about">About</a>
     </nav>
+    <label class="cur"><span class="sr">Currency</span><select id="cur" aria-label="Currency"></select></label>
   </div>
 </header>
 
@@ -336,6 +356,15 @@ const WORKS = [
 // stretcher depth in cm (guess: deep 3.8 cm "gallery" edge on larger works, standard 1.8 cm otherwise)
 WORKS.forEach(w=>{w.depth = Math.max(w.w,w.h)>=70?3.8:1.8});
 const EDITION = 10;
+// framing options (Valentyna's request); prices and suppliers TBC. cm = moulding width, gap = float gap shown around the canvas
+const FRAMES = [
+  {id:"none",name:"No frame",desc:"Painted edges, ready to hang as it is",price:"Included",sw:"repeating-linear-gradient(45deg,#4b6b5f 0 4px,#3a5a4e 4px 8px)"},
+  {id:"oak",name:"Natural oak floating frame",desc:"Light wood with a small shadow gap around the canvas",price:"+ price TBC",cm:2.5,gap:.8,bg:"linear-gradient(135deg,#d7b68a,#b38d5f)",sw:"linear-gradient(135deg,#d7b68a,#b38d5f)"},
+  {id:"black",name:"Black floating frame",desc:"Slim and modern, makes bright colours glow",price:"+ price TBC",cm:2.5,gap:.8,bg:"linear-gradient(135deg,#3a3a3a,#141414)",sw:"linear-gradient(135deg,#3a3a3a,#141414)"},
+  {id:"gold",name:"Classic gold frame",desc:"Traditional moulding, beautiful with impressionist work",price:"+ price TBC",cm:6,gap:0,bg:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)",sw:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)"},
+  {id:"help",name:"Help me choose a frame",desc:"Valentyna suggests 2 or 3 frames for this painting and your room, with photos, before you decide",price:"Free advice",sw:"radial-gradient(circle,#d9bc6e 0 30%,#4b6b5f 31%)"}
+];
+let currentFrame = "none";
 const CAN3D = typeof CSS!=="undefined" && CSS.supports && CSS.supports("transform-style","preserve-3d");
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const FINE = matchMedia("(pointer: fine)").matches;
@@ -359,7 +388,23 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const inch = cm => (cm/2.54).toFixed(1).replace(/\.0$/,"");
 const sizeText = w => `${w.w} × ${w.h} cm (${inch(w.w)} × ${inch(w.h)} in)`;
-const money = n => "£" + n.toLocaleString("en-GB");
+// Prices are set in GBP. Other currencies use fixed approximate rates until the payment service is connected (rates TBC; the checkout will charge the exact amount).
+const CURRENCIES = {
+  GBP:{label:"GBP (£)",sym:"£",rate:1,locale:"en-GB"},
+  USD:{label:"USD (US$)",sym:"US$",rate:1.27,locale:"en-US"},
+  EUR:{label:"EUR (€)",sym:"€",rate:1.17,locale:"de-DE"},
+  CAD:{label:"CAD (CA$)",sym:"CA$",rate:1.76,locale:"en-CA"},
+  AUD:{label:"AUD (A$)",sym:"A$",rate:1.93,locale:"en-AU"},
+  JPY:{label:"JPY (¥)",sym:"¥",rate:190,locale:"ja-JP"}
+};
+let CUR = (()=>{try{const c=localStorage.getItem("cur");if(CURRENCIES[c])return c}catch(e){}
+  const l=(navigator.language||"").toLowerCase();
+  if(l.endsWith("-us"))return "USD"; if(l.endsWith("-ca"))return "CAD"; if(l.endsWith("-au")||l.endsWith("-nz"))return "AUD"; if(l.startsWith("ja"))return "JPY";
+  if(/^(de|fr|it|es|nl|pt|fi|el|sk|sl|et|lv|lt|ga|mt)/.test(l)||/-(ie|at|be)$/.test(l))return "EUR"; return "GBP"})();
+const money = n => {const c=CURRENCIES[CUR]; let v=n*c.rate;
+  const step = CUR==="JPY" ? (n>=300?1000:100) : (n>=300?10:1); v=Math.round(v/step)*step;
+  return c.sym + v.toLocaleString(c.locale==="de-DE"?"en-GB":c.locale)};
+const curNote = () => CUR==="GBP" ? "" : `<p class="cur-note">Shown in ${CUR} at an approximate rate. The exact amount is confirmed at checkout. <span class="guess">rates TBC</span></p>`;
 const rolledByDefault = w => Math.max(w.w,w.h) > ROLL_OVER_CM;
 const left = p => EDITION - p.sold;
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -499,10 +544,16 @@ function vPiece(w){
         <dt>Signed</dt><dd>Signed on the front, certificate of authenticity included <span class="guess">guess</span></dd>
       </dl></div>
 
-      <div class="price-row"><span class="price-big">${w.status==="sold"?"Sold":money(w.price)}</span><span class="label">Original · one of a kind</span></div>
+      <div class="price-row"><span class="price-big">${w.status==="sold"?"Sold":money(w.price)}</span><span class="label">Original · one of a kind</span></div>${w.status==="sold"?"":curNote()}
       ${w.status==="sold"
         ? `<p class="buy-note">This original has found its home. Limited prints are still available below.</p>`
-        : `<button class="btn wide" type="button" id="buyOrig" style="margin-top:14px">Buy the original</button><p class="buy-note" id="buyNote"></p>`}
+        : `<button class="btn wide" type="button" id="buyOrig" style="margin-top:14px">Buy the original</button><p class="buy-note" id="buyNote"></p>
+        <fieldset class="frames" style="margin-inline:0"><legend class="label" style="padding:0 6px">Framing</legend>
+          <h3>Would you like it framed? <span class="guess">prices &amp; frames TBC</span></h3>
+          ${FRAMES.map((f,i)=>`<label class="frame-opt"><input type="radio" name="frame" id="frame-${f.id}" value="${f.id}" ${i===0?"checked":""}><span class="sw" style="background:${f.sw}" aria-hidden="true"></span><span><b>${f.name}</b><small>${f.desc}</small></span><span class="fp">${f.price}</span></label>`).join("")}
+          <p class="frame-note" id="frameNote"></p>
+          ${CAN3D?`<button type="button" class="linkbtn" id="seeFrame">See it framed on a wall</button>`:""}
+        </fieldset>`}
 
       <div class="terms" aria-label="Delivery and returns">
         <h3>Delivery: worldwide, with insurance</h3>
@@ -572,6 +623,14 @@ function bindPiece(w){
   renderEd();
   const soon="Online checkout is coming soon. For now this button does nothing.";
   $("#buyOrig")&&$("#buyOrig").addEventListener("click",()=>{$("#buyNote").textContent=soon});
+  currentFrame="none"; roomRerender=null;
+  const frameNote=()=>{const n=$("#frameNote");if(!n)return;const f=FRAMES.find(x=>x.id===currentFrame);
+    n.textContent = currentFrame==="none" ? "The edges are painted, so the canvas looks finished without a frame."
+      : currentFrame==="help" ? "After you order, Valentyna will email you frame ideas with photos. You only pay for a frame if you choose one."
+      : `Framed paintings travel ready to hang, packed in a wooden crate, so they cannot be rolled. Delivery costs more, and framed works cannot be sent to Australia or New Zealand.`;};
+  document.querySelectorAll('input[name="frame"]').forEach(r=>r.addEventListener("change",()=>{currentFrame=r.value;frameNote();if(roomRerender)roomRerender()}));
+  frameNote();
+  $("#seeFrame")&&$("#seeFrame").addEventListener("click",()=>{show("wall");$("#pane-wall").scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"})});
   $("#buyPrint").addEventListener("click",()=>{$("#printNote").textContent=soon});
 }
 function vPrints(){
@@ -666,7 +725,7 @@ function buildHall(){
       <h1 style="margin-top:12px">Wildflower Artist</h1>
       <div class="tagline">Nature in every brushstroke</div>
       <div class="goldrule"></div>
-      <p>Original oil and acrylic paintings on linen canvas by Valentyna Ksendz. ${still?"":"Scroll down to walk through the gallery."}</p>
+      <p>Original oil and acrylic paintings on stretched canvas by Valentyna Ksendz. ${still?"":"Scroll down to walk through the gallery."}</p>
       <div class="ctas"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="#prints">Limited prints</a></div>
     </div></div>
     <div class="end-copy" id="endCopy"><div class="ctas"><a class="btn" href="#${feature.id}">Turn “${esc(feature.title)}” in 3D</a><a class="btn ghost" href="#gallery" style="background:rgba(15,42,34,.6)">All paintings</a></div></div>
@@ -754,25 +813,28 @@ const FURN = {
   console:{w:120,h:80,label:"console table 120 cm",svg:`<svg viewBox="0 0 120 80"><rect x="0" y="0" width="120" height="5" fill="#8a6b4e"/><rect x="4" y="5" width="112" height="12" fill="#7a5d43"/><rect x="6" y="17" width="4" height="63" fill="#7a5d43"/><rect x="110" y="17" width="4" height="63" fill="#7a5d43"/><rect x="10" y="62" width="100" height="3" fill="#7a5d43"/></svg>`}
 };
 const PLANT=`<svg viewBox="0 0 50 130"><path d="M25 70 C10 40 0 30 4 10 C14 26 22 40 25 70 Z" fill="#6f8a5a"/><path d="M25 70 C40 36 48 26 46 6 C34 24 28 42 25 70 Z" fill="#7d9a64"/><path d="M25 72 C18 50 20 30 25 18 C30 30 32 50 25 72 Z" fill="#5f7a4b"/><path d="M12 82 h26 l-4 48 h-18 z" fill="#c9b9a0"/></svg>`;
+let roomRerender = null;
 function roomView(host,w){
   const st={room:"sofa",wall:"#efebe3",evening:false};
   let px=0,pic=null,furn=null;
   const render=()=>{
     const Wd=host.clientWidth; px=Wd/360; const F=FURN[st.room]; const floorCm=240.3;
     let gap=22; if(F.h+gap+w.h>232) gap=Math.max(8,232-F.h-w.h);
-    const top=(floorCm-(F.h+gap+w.h))*px, pw=w.w*px, ph=w.h*px;
+    const fr=FRAMES.find(f=>f.id===currentFrame)||FRAMES[0], fw=((fr.cm||0)+(fr.gap||0));
+    const top=(floorCm-(F.h+gap+w.h+fw))*px, pw=w.w*px, ph=w.h*px, ow=pw+2*fw*px, oh=ph+2*fw*px;
     host.style.setProperty("--wallc",st.wall);
     host.innerHTML=`<div class="skirting"></div><div class="floor"></div>
       ${st.room==="sofa"?`<div class="plant" style="left:86%;width:${50*px}px">${PLANT}</div>`:""}
       <div class="furn" style="left:50%;width:${F.w*px}px">${F.svg}</div>
-      <div class="hung" style="left:calc(50% - ${pw/2}px);top:${top}px;width:${pw}px;height:${ph}px"><div class="pic"></div></div>
-      <div class="light" style="--lx:50%;--ly:${((top+ph/2)/host.clientHeight*100).toFixed(1)}%"></div>
-      <span class="scale-note">True scale · ${F.label} · painting ${w.w} × ${w.h} cm</span>`;
+      <div class="hung" style="left:calc(50% - ${ow/2}px);top:${top}px;width:${ow}px;height:${oh}px"><div class="pic" style="${fr.bg?`background:${fr.bg};padding:${(fr.cm*px).toFixed(1)}px`:""}"><div class="inner" style="${fr.gap?`padding:${(fr.gap*px).toFixed(1)}px;background:#1d1d1b`:""};width:100%;height:100%;box-sizing:border-box"></div></div></div>
+      <div class="light" style="--lx:50%;--ly:${((top+oh/2)/host.clientHeight*100).toFixed(1)}%"></div>
+      <span class="scale-note">True scale · ${F.label} · painting ${w.w} × ${w.h} cm${fr.bg?" · "+fr.name.toLowerCase():""}</span>`;
     host.classList.toggle("evening",st.evening);
     pic=host.querySelector(".pic"); furn=host.querySelector(".furn");
-    pic.appendChild(paintedCanvas(w,pw,ph));
+    host.querySelector(".inner").appendChild(paintedCanvas(w,pw,ph));
   };
   render();
+  roomRerender = render;
   if(FINE){
     const mv=e=>{const r=host.getBoundingClientRect();const dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;pic.style.transform=`perspective(900px) rotateY(${(dx*10).toFixed(2)}deg) rotateX(${(-dy*6).toFixed(2)}deg)`;furn.style.transform=`translateX(calc(-50% + ${(-dx*10).toFixed(1)}px))`};
     host.addEventListener("pointermove",mv,{passive:true});
@@ -815,6 +877,8 @@ function route(){
   document.querySelectorAll("nav.main a").forEach(a=>{if(a.dataset.nav===nav)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   window.scrollTo(0,0);
 }
+(()=>{const sel=$("#cur");sel.innerHTML=Object.entries(CURRENCIES).map(([k,c])=>`<option value="${k}" ${k===CUR?"selected":""}>${c.label}</option>`).join("");
+  sel.addEventListener("change",()=>{CUR=sel.value;try{localStorage.setItem("cur",CUR)}catch(e){}const y=scrollY;route();scrollTo(0,y)})})();
 window.addEventListener("hashchange",route);
 route();
 </script>
