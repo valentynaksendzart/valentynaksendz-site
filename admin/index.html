@@ -219,6 +219,7 @@ async function edit(id) {
           ${printBlock("canvas", "На холсте")}
           <div class="hint">Оставьте цену пустой, если такого отпечатка нет.</div>
         </section>
+        <section class="panel" id="cards"><h3>Открытка</h3><div class="hint">Загружаю…</div></section>
         <section class="panel actions" id="actions"></section>
       </div>
     </div>`;
@@ -239,6 +240,7 @@ async function edit(id) {
     drawPrints(); queueSave();
   });
   drawPrints(); drawPhotos(); drawActions();
+  loadCard();
 
   const file = $app.querySelector("#file"), drop = $app.querySelector("#drop");
   drop.onclick = () => file.click();
@@ -262,6 +264,85 @@ function drawPrints() {
     const left = cur.prints_edition - Number(cur[`print_${kind}_sold`] || 0);
     $app.querySelector("#pn-" + kind).innerHTML = `осталось <b>${left}</b> из ${cur.prints_edition}`;
   }
+}
+
+/* ---------- Greeting card (one per painting) ---------- */
+let pcard = null, cardTimer = null;
+async function loadCard() {
+  const id = cur.id;
+  try {
+    const {products} = await api("products?painting=" + id);
+    if (!cur || cur.id !== id) return;
+    pcard = products[0] || null; drawCard();
+  } catch (e) { const b = $app.querySelector("#cards"); if (b) b.innerHTML = `<h3>Открытка</h3><div class="save bad">Не загрузилось: ${esc(e.message)}</div>`; }
+}
+function drawCard() {
+  const box = $app.querySelector("#cards");
+  if (!box) return;
+  if (!pcard) {
+    box.innerHTML = `<h3>Открытка</h3>
+      <div class="hint">Можно продавать открытку с этой картиной. Это отдельный товар со своей ценой и остатком.</div>
+      <button class="btn soft" id="mkcard">Продавать открытку с этой картиной</button>`;
+    box.querySelector("#mkcard").onclick = async () => {
+      try { ({product: pcard} = await api("products", {method: "POST", body: JSON.stringify({painting_id: cur.id})})); drawCard(); }
+      catch (e) { note("Не получилось: " + e.message); }
+    };
+    return;
+  }
+  const left = Math.max(0, pcard.stock - pcard.sold);
+  box.innerHTML = `<h3>Открытка <span class="badge b-${pcard.status}">${pcard.status === "available" ? "На сайте" : "Не показывается"}</span></h3>
+    <div class="hint">Артикул ${esc(pcard.sku)}</div>
+    <label>Какая открытка (по-английски, для покупателей)
+      <input type="text" data-c="format" value="${esc(pcard.format)}" placeholder="A6 folded card, blank inside, with envelope"></label>
+    <div class="two">
+      <label>Цена, £<input type="text" inputmode="decimal" data-c="price" value="${pcard.price ?? ""}" placeholder="3.50"></label>
+      <label>Всего напечатано, шт<input type="number" inputmode="numeric" min="0" data-c="stock" value="${pcard.stock}"></label>
+    </div>
+    <div class="counter">
+      <button data-cs="1" aria-label="Открытка: продана ещё одна">−</button>
+      <div class="n">осталось <b>${left}</b> из ${pcard.stock}</div>
+      <button data-cs="-1" aria-label="Открытка: вернуть одну">+</button>
+    </div>
+    ${pcard.status === "available"
+      ? `<button class="btn" id="cardst" data-s="draft">Убрать открытку с сайта</button>`
+      : `<button class="btn primary" id="cardst" data-s="available">Показать открытку на сайте</button>`}
+    <button class="btn danger" id="carddel">Удалить открытку</button>`;
+  box.querySelectorAll("[data-c]").forEach(el => el.addEventListener("input", () => {
+    pcard[el.dataset.c] = el.value;
+    if (el.dataset.c === "stock") { pcard.stock = Math.max(0, Number(el.value) || 0); pcard.sold = Math.min(pcard.sold, pcard.stock); box.querySelector(".counter .n").innerHTML = `осталось <b>${Math.max(0, pcard.stock - pcard.sold)}</b> из ${pcard.stock}`; }
+    queueCardSave();
+  }));
+  box.querySelectorAll("[data-cs]").forEach(b => b.onclick = () => {
+    pcard.sold = Math.max(0, Math.min(pcard.stock, pcard.sold + Number(b.dataset.cs)));
+    drawCard(); queueCardSave();
+  });
+  box.querySelector("#cardst").onclick = async e => {
+    const s = e.currentTarget.dataset.s;
+    if (s === "available" && !(Number(String(pcard.price).replace(",", ".")) > 0)) return note("Укажите цену открытки.");
+    if (s === "available" && cur.status === "draft") return note("Сначала опубликуйте саму картину, потом открытку.");
+    pcard.status = s; await saveCard(); drawCard();
+  };
+  box.querySelector("#carddel").onclick = async e => {
+    const b = e.currentTarget;
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Нажмите ещё раз, чтобы удалить"; return; }
+    clearTimeout(cardTimer);
+    await api("products/" + pcard.id, {method: "DELETE"}); pcard = null; drawCard();
+  };
+}
+function queueCardSave() {
+  clearTimeout(cardTimer);
+  $app.querySelector("#save").textContent = "…";
+  cardTimer = setTimeout(saveCard, 900);
+}
+async function saveCard() {
+  clearTimeout(cardTimer); cardTimer = null;
+  if (!pcard) return;
+  const s = $app.querySelector("#save");
+  s.className = "save"; s.textContent = "Сохраняю…";
+  try {
+    const {product} = await api("products/" + pcard.id, {method: "PUT", body: JSON.stringify({format: pcard.format, price: pcard.price, stock: pcard.stock, sold: pcard.sold, status: pcard.status})});
+    pcard = {...product, price: pcard.price, format: pcard.format}; s.textContent = "Сохранено ✓";
+  } catch (e) { s.className = "save bad"; s.textContent = "Не сохранилось: " + e.message + ". Проверьте интернет."; }
 }
 
 function drawPhotos(pending = []) {
