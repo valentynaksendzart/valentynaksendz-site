@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Valentyna Ksendz Art</title>
+<meta name="description" content="Original oil and acrylic paintings by Valentyna Ksendz: wildflowers, impressionist landscapes, impasto and splash technique. Limited-edition prints. Worldwide shipping.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Karla:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a quiet white-wall gallery. Paintings carry the colour; type is a Bodoni label on the wall, specs read like a museum card. */
+:root{
+  --wall:#f7f7f3;        /* gallery wall, faint green bias */
+  --paper:#ffffff;
+  --ink:#1d2421;         /* deep green-black */
+  --muted:#5e6a64;
+  --rule:#dfe3dc;
+  --accent:#3f5bb0;      /* cornflower blue */
+  --accent-ink:#ffffff;
+  --flag:#b4462f;        /* draft / guess markers */
+  --flag-bg:#fbeee9;
+  --ok:#2f7a4f;
+  --font-display:"Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
+  --font-body:"Karla", "Helvetica Neue", Arial, sans-serif;
+  --font-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --maxw:1180px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --wall:#151917;--paper:#1c211f;--ink:#e9ece7;--muted:#a1aca6;--rule:#2d3430;
+  --accent:#8ea6ec;--accent-ink:#10162b;--flag:#f0997f;--flag-bg:#3a221c;--ok:#7cc79a;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --wall:#151917;--paper:#1c211f;--ink:#e9ece7;--muted:#a1aca6;--rule:#2d3430;
+  --accent:#8ea6ec;--accent-ink:#10162b;--flag:#f0997f;--flag-bg:#3a221c;--ok:#7cc79a;color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--wall);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6}
+a{color:inherit}
+h1,h2,h3{font-family:var(--font-display);font-weight:400;line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.label{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.guess{display:inline-block;font-family:var(--font-mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--flag);background:var(--flag-bg);border:1px dashed var(--flag);padding:1px 6px;border-radius:3px;vertical-align:middle;white-space:nowrap}
+.draftbar{background:var(--flag-bg);color:var(--flag);font-family:var(--font-mono);font-size:.75rem;text-align:center;padding-block:6px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--wall)}
+header.site{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:var(--wall);border-bottom:1px solid var(--rule)}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap}
+.brand{font-family:var(--font-display);font-size:1.45rem;text-decoration:none;letter-spacing:.01em}
+.brand small{display:block;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+nav.main{display:flex;gap:18px;flex-wrap:wrap}
+nav.main a{text-decoration:none;font-size:.95rem;color:var(--muted);padding-block:4px;border-bottom:1px solid transparent}
+nav.main a:hover,nav.main a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--ink)}
+
+main{padding-block:0 64px}
+section{padding-block:48px}
+
+/* home hero */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;padding-block:48px 24px}
+.hero h1{font-size:clamp(2.3rem,5vw,4rem)}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.hero p.lede{margin-top:18px;max-width:34em;color:var(--muted);font-size:1.08rem}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero .art{min-width:0}
+.ship-strip{display:flex;gap:28px;flex-wrap:wrap;margin-top:28px;font-size:.9rem;color:var(--muted)}
+.ship-strip b{color:var(--ink);font-weight:500}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:500 1rem var(--font-body);padding:12px 22px;border-radius:2px;border:1px solid var(--ink);background:var(--ink);color:var(--wall);text-decoration:none;cursor:pointer}
+.btn:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:transparent}
+.btn.wide{width:100%}
+
+/* framed canvas placeholder */
+.frame{position:relative;background:var(--paper);box-shadow:0 1px 2px rgba(0,0,0,.08),0 14px 30px -18px rgba(0,0,0,.35)}
+.frame canvas{display:block;width:100%;height:auto}
+.ph-tag{position:absolute;left:8px;bottom:8px;font-family:var(--font-mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;background:rgba(0,0,0,.55);color:#fff;padding:2px 6px;border-radius:2px}
+
+/* themes */
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.sec-head h2{font-size:clamp(1.7rem,3vw,2.4rem)}
+.themes{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.theme-card{text-decoration:none;display:flex;flex-direction:column;gap:12px}
+.theme-card h3{font-size:1.35rem}
+.theme-card p{color:var(--muted);font-size:.92rem}
+.theme-card:hover h3{color:var(--accent)}
+
+/* gallery grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:40px 28px}
+.work{text-decoration:none;display:flex;flex-direction:column;gap:10px}
+.work .meta{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.work h3{font-size:1.12rem}
+.work .spec{font-size:.85rem;color:var(--muted)}
+.work .price{font-family:var(--font-mono);font-size:.9rem;white-space:nowrap}
+.work:hover h3{color:var(--accent)}
+.sold-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--flag);margin-right:6px;vertical-align:middle}
+.filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
+.filter a{text-decoration:none;font-size:.9rem;padding:6px 14px;border:1px solid var(--rule);border-radius:99px;color:var(--muted)}
+.filter a[aria-current="page"]{border-color:var(--ink);color:var(--ink)}
+.theme-intro{max-width:40em;color:var(--muted);margin-top:10px}
+
+/* painting page */
+.crumbs{font-size:.85rem;color:var(--muted);padding-block:22px 6px}
+.crumbs a{text-decoration:none}.crumbs a:hover{color:var(--accent)}
+.piece{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:56px;align-items:start;padding-block:16px 40px}
+.viewer .main-shot{margin-bottom:14px}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.thumbs button{padding:0;border:2px solid transparent;background:none;cursor:pointer;display:flex;flex-direction:column;gap:4px;text-align:left;color:var(--muted);font:400 .72rem var(--font-body)}
+.thumbs button[aria-pressed="true"]{border-color:var(--ink)}
+.thumbs canvas{width:100%;height:auto;display:block}
+.info h1{font-size:clamp(1.9rem,3.4vw,2.7rem)}
+.info .theme-link{margin-bottom:10px;display:block}
+.card{margin-top:22px;border-top:1px solid var(--ink)}
+.card dl{display:grid;grid-template-columns:8.5em 1fr;margin:0}
+.card dt,.card dd{margin:0;padding:9px 0;border-bottom:1px solid var(--rule);font-size:.95rem}
+.card dt{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:12px}
+.price-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:26px;flex-wrap:wrap}
+.price-big{font-family:var(--font-display);font-size:2.1rem}
+.buy-note{margin-top:10px;font-size:.85rem;color:var(--muted);min-height:1.4em}
+
+.terms{margin-top:22px;background:var(--paper);border:1px solid var(--rule);padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.terms h3{font-family:var(--font-body);font-weight:700;font-size:.95rem;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.terms p,.terms li{font-size:.9rem;color:var(--muted)}
+.terms ul{margin:4px 0 0;padding-left:18px}
+.terms .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.terms select{font:inherit;font-size:.9rem;padding:6px 8px;border:1px solid var(--rule);background:var(--wall);color:var(--ink);border-radius:2px;max-width:100%}
+.pack{display:flex;gap:12px;align-items:flex-start;font-size:.9rem;padding:12px;border-radius:2px;background:var(--wall)}
+.pack svg{flex:none}
+.pack b{display:block;color:var(--ink)}
+.pack.no{color:var(--flag)}
+.terms a.more{font-size:.85rem;color:var(--accent)}
+
+.prints{margin-top:28px;border:1px solid var(--ink);padding:20px;display:flex;flex-direction:column;gap:14px}
+.prints h2{font-size:1.4rem}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{border:1px solid var(--rule);padding:12px;cursor:pointer;display:flex;flex-direction:column;gap:6px;background:var(--paper);text-align:left;font:inherit;color:inherit}
+.opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt b{font-weight:700}
+.opt .p{font-family:var(--font-mono);font-size:.9rem}
+.edition{display:flex;flex-direction:column;gap:6px}
+.edition .count{display:flex;justify-content:space-between;font-size:.88rem}
+.edition .count strong{font-family:var(--font-mono)}
+.bar{display:grid;grid-template-columns:repeat(10,1fr);gap:3px}
+.bar i{height:10px;background:var(--rule)}
+.bar i.sold{background:var(--ink)}
+.edition small{color:var(--muted);font-size:.82rem}
+
+.story{padding-block:40px;border-top:1px solid var(--rule);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:40px}
+.story blockquote{margin:0;font-family:var(--font-display);font-style:italic;font-size:1.35rem;line-height:1.5;max-width:34em}
+.reel{display:inline-flex;gap:10px;align-items:center;margin-top:20px;text-decoration:none;border-bottom:1px solid var(--accent);color:var(--accent);font-weight:500}
+
+/* prints page / generic pages */
+.page-head{padding-block:40px 8px}
+.page-head h1{font-size:clamp(2rem,4vw,3rem)}
+.page-head p{margin-top:12px;max-width:40em;color:var(--muted)}
+.mini-bar{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;margin-top:4px}
+.mini-bar i{height:5px;background:var(--rule)}.mini-bar i.sold{background:var(--ink)}
+.prose{max-width:44em;display:flex;flex-direction:column;gap:16px}
+.prose h2{font-size:1.6rem;margin-top:20px}
+.prose p,.prose li{color:var(--muted)}
+.prose ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.table-wrap{overflow-x:auto}
+table.zones{border-collapse:collapse;width:100%;font-size:.92rem;min-width:520px}
+table.zones th,table.zones td{border-bottom:1px solid var(--rule);text-align:left;padding:10px 12px 10px 0;vertical-align:top}
+table.zones th{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+
+.about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:56px;align-items:start;padding-block:40px}
+.portrait{aspect-ratio:4/5;max-width:100%;background:repeating-linear-gradient(135deg,var(--rule) 0 1px,transparent 1px 14px),var(--paper);border:1px dashed var(--muted);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--muted);text-align:center;padding:24px}
+
+footer.site{border-top:1px solid var(--rule);padding-block:32px;font-size:.88rem;color:var(--muted)}
+footer.site .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+footer.site a{text-decoration:none}footer.site a:hover{color:var(--accent)}
+.fcol{display:flex;flex-direction:column;gap:4px}
+
+@media (max-width:900px){
+  .hero,.piece,.about,.story{grid-template-columns:1fr;gap:28px}
+  .themes{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:480px){
+  .themes{grid-template-columns:1fr}
+  .opts{grid-template-columns:1fr}
+  .card dl{grid-template-columns:7em 1fr}
+  nav.main{gap:12px}
+}
+@media (prefers-reduced-motion:no-preference){
+  #view{animation:fade .35s ease}
+  @keyframes fade{from{opacity:.4}to{opacity:1}}
+}
+
+/* ---------- cinematic gallery hall (home) ---------- */
+:root{--hall-bg:#0e1110;--hall-ink:#f1ede4;--hall-muted:#a9b1ab;--hall-wall:#1b201e;--hall-floor:#2a211b;--spot:rgba(255,236,200,.16)}
+#cine{position:relative;height:300vh;background:var(--hall-bg);color:var(--hall-ink)}
+#cine[hidden]{display:none}
+#cine.static{height:auto}
+#cine .stage{position:sticky;top:calc(env(safe-area-inset-top, 0px) + var(--hdr,62px));height:calc(100vh - var(--hdr,62px));height:calc(100svh - var(--hdr,62px));min-height:460px;overflow:hidden;perspective:var(--persp,800px);perspective-origin:50% 42%;background:radial-gradient(ellipse at 50% 35%,#29302c 0%,var(--hall-bg) 70%)}
+#cine.static .stage{position:relative;height:620px}
+.world{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+.world > *{position:absolute;transform-style:preserve-3d;backface-visibility:hidden}
+.hall-floor{background:repeating-linear-gradient(90deg,#2d241d 0 58px,#251d17 58px 60px),var(--hall-floor);transform-origin:50% 0}
+.hall-floor::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(14,17,16,.9),rgba(14,17,16,0) 30%)}
+.hall-wall{background:linear-gradient(180deg,#232926,var(--hall-wall));transform-origin:0 50%}
+.hall-end{background:radial-gradient(ellipse at 50% 30%,#2c332f,var(--hall-wall) 70%)}
+.hall-art{display:block;box-shadow:0 0 0 6px #e9e4da,0 0 90px 30px var(--spot),0 20px 40px rgba(0,0,0,.6)}
+.hall-art canvas{display:block;width:100%;height:100%}
+.hall-art:focus-visible{outline:3px solid var(--accent)}
+.hall-plate{position:absolute;left:50%;top:calc(100% + 18px);transform:translateX(-50%);white-space:nowrap;font:500 11px/1.3 var(--font-mono);letter-spacing:.06em;color:var(--hall-muted);text-align:center}
+.cine-copy{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding-block:0 9vh;pointer-events:none}
+.cine-copy .wrap{width:100%}
+.cine-copy h1{font-size:clamp(2.2rem,6vw,4.6rem);max-width:12em;text-shadow:0 2px 30px rgba(0,0,0,.6)}
+.cine-copy h1 em{color:#c9d4ff}
+.cine-copy p{margin-top:14px;color:var(--hall-muted);max-width:32em}
+.cine-copy .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;pointer-events:auto}
+.cine-copy .btn{background:var(--hall-ink);color:var(--hall-bg);border-color:var(--hall-ink)}
+.cine-copy .btn.ghost{background:transparent;color:var(--hall-ink)}
+.scroll-cue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font:500 11px var(--font-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--hall-muted);display:flex;flex-direction:column;align-items:center;gap:6px}
+.scroll-cue i{width:1px;height:28px;background:linear-gradient(var(--hall-muted),transparent)}
+@media (prefers-reduced-motion:no-preference){.scroll-cue i{animation:cue 1.8s ease-in-out infinite}@keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}}
+.end-copy{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7vh;opacity:0;pointer-events:none;text-align:center}
+.end-copy.on{pointer-events:auto}
+.end-copy .ctas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+
+/* tilt cards */
+.tilt{transition:transform .25s ease;transform:perspective(900px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg))}
+
+/* ---------- painting viewer: 3D / on a wall / photos ---------- */
+.modes{display:flex;gap:4px;margin-bottom:12px;border-bottom:1px solid var(--rule)}
+.modes button{font:500 .9rem var(--font-body);background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px;color:var(--muted);cursor:pointer;margin-bottom:-1px}
+.modes button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.stage3d{position:relative;height:clamp(360px,56vw,560px);perspective:1400px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;background:radial-gradient(ellipse at 50% 40%,var(--paper),var(--wall) 75%);overflow:hidden}
+.stage3d:active{cursor:grabbing}
+.obj{position:relative;transform-style:preserve-3d;will-change:transform}
+.face{position:absolute;left:0;top:0;backface-visibility:hidden;overflow:hidden}
+.face canvas{display:block;width:100%;height:100%}
+.face .shade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.face .sheen{position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);background-size:300% 100%;mix-blend-mode:soft-light}
+.face.back{background:repeating-linear-gradient(0deg,rgba(0,0,0,.04) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 1px,transparent 1px 3px),#d9ceb6}
+.face.back .bars{position:absolute;inset:0}
+.face.back .label-sticker{position:absolute;right:12%;bottom:14%;background:#fbf8f1;color:#2a2622;font:italic 400 12px/1.35 var(--font-display);padding:8px 10px;box-shadow:0 1px 2px rgba(0,0,0,.2);transform:rotate(-2deg);max-width:60%}
+.floor-shadow{position:absolute;left:50%;bottom:8%;width:60%;height:26px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(0,0,0,.28),transparent 70%);pointer-events:none}
+.v-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:10px}
+.v-controls .seg{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:500 .82rem var(--font-body);padding:6px 12px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:99px;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--wall)}
+.hint{font-size:.82rem;color:var(--muted)}
+.swatch{width:26px;height:26px;border-radius:50%;border:1px solid var(--rule);cursor:pointer;padding:0}
+.swatch[aria-pressed="true"]{box-shadow:0 0 0 2px var(--wall),0 0 0 4px var(--ink)}
+
+.room{position:relative;width:100%;aspect-ratio:360/270;max-width:100%;overflow:hidden;background:var(--wallc,#efebe3);transition:background-color .4s}
+.room .floor{position:absolute;left:0;right:0;bottom:0;height:11%;background:linear-gradient(#b08d68,#8e6e4f)}
+.room .skirting{position:absolute;left:0;right:0;bottom:11%;height:1.4%;background:rgba(255,255,255,.55);box-shadow:0 1px 0 rgba(0,0,0,.08)}
+.room .furn{position:absolute;bottom:11%;transform:translateX(-50%);transition:transform .2s ease-out}
+.room .furn svg{display:block;width:100%;height:auto}
+.room .hung{position:absolute;transform-style:preserve-3d;perspective:1200px}
+.room .hung .pic{width:100%;height:100%;box-shadow:6px 10px 18px rgba(0,0,0,.28),1px 1px 0 rgba(0,0,0,.2);transition:transform .2s ease-out}
+.room .hung canvas{display:block;width:100%;height:100%}
+.room .light{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s;background:radial-gradient(ellipse 38% 46% at var(--lx,50%) var(--ly,35%),rgba(255,214,150,.18),rgba(20,14,8,.62) 70%)}
+.room.evening .light{opacity:1}
+.room .scale-note{position:absolute;left:10px;top:10px;font:500 11px var(--font-mono);color:rgba(0,0,0,.55);background:rgba(255,255,255,.6);padding:3px 7px;border-radius:2px}
+.room .plant{position:absolute;bottom:11%;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+
+
+<div class="draftbar">DRAFT · paintings, prices, texts and photos are placeholders · items marked <span class="guess">guess</span> need Valentyna's confirmation</div>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="#home">Valentyna Ksendz<small>Original paintings &amp; limited prints</small></a>
+    <nav class="main" aria-label="Main">
+      <a href="#gallery" data-nav="gallery">Paintings</a>
+      <a href="#prints" data-nav="prints">Prints</a>
+      <a href="#shipping" data-nav="shipping">Shipping &amp; returns</a>
+      <a href="#about" data-nav="about">About</a>
+    </nav>
+  </div>
+</header>
+
+<div id="cine" hidden></div>
+<main id="view" class="wrap" aria-live="polite"></main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="fcol">
+      <span class="brand" style="font-size:1.1rem">Valentyna Ksendz</span>
+      <span>Oil &amp; acrylic on linen canvas · Ships worldwide</span>
+    </div>
+    <div class="fcol">
+      <a href="#gallery">Paintings</a><a href="#prints">Limited prints</a><a href="#shipping">Shipping &amp; returns</a><a href="#about">About the artist</a>
+    </div>
+    <div class="fcol">
+      <span>Instagram: <a href="https://www.instagram.com/" target="_blank" rel="noopener">@handle</a> <span class="guess">link TBC</span></span>
+      <span>Email: hello@yourdomain <span class="guess">TBC</span></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- DATA (all placeholder content; replace with Valentyna's real works) ---------- */
+const THEMES = {
+  wildflowers:{name:"Wildflowers",blurb:"Poppies, cornflowers, chamomile and meadow grasses, painted the way a field feels in June.",pal:["#5f7d3a","#8aa35a","#c8d49a","#d23b2a","#3f5bb0","#f4f1e6","#e9b93c"],style:"meadow"},
+  impressions:{name:"Impressions",blurb:"Soft, Monet-inspired light: ponds, river mist and gardens seen through half-closed eyes.",pal:["#8fa8c8","#b9c7dd","#c7b8d8","#a8c4a0","#e8d9b5","#6f88a8","#f1e8d8"],style:"monet"},
+  impasto:{name:"Impasto",blurb:"Thick, sculpted paint laid on with knife and brush. Up close it is pure texture; step back and the flowers appear.",pal:["#e7c33a","#d9822b","#b23a3a","#f3eee0","#5a7a3a","#2f3a5a","#e9a3b0"],style:"impasto"},
+  splash:{name:"Splash & Pour",blurb:"Acrylic thrown, poured and dabbed with gloves, sticks, knives and sponges, then gently guided into an image.",pal:["#1f2a44","#3a6fb0","#e05a7a","#f2c14e","#7fc8a9","#f6f4ee","#a26bd1"],style:"splash"}
+};
+// sizes in cm (w × h)
+const WORKS = [
+  {id:"poppies-field",theme:"wildflowers",title:"Poppies at the Edge of the Field",w:60,h:80,medium:"Oil",support:"Linen canvas",year:2025,price:950,seed:11,status:"available",
+   story:"Painted after an evening walk in early July, when the poppies had taken over the edge of a wheat field and the light went orange for about ten minutes.",
+   reel:"https://www.instagram.com/",prints:{paper:{price:65,sold:3},canvas:{price:180,sold:1}}},
+  {id:"cornflower-morning",theme:"wildflowers",title:"Cornflower Morning",w:40,h:50,medium:"Oil",support:"Linen canvas",year:2025,price:620,seed:23,status:"available",
+   story:"A jar of cornflowers on the studio window, still wet with dew. I wanted the blue to feel cold, like the morning.",
+   reel:null,prints:{paper:{price:55,sold:6},canvas:{price:150,sold:2}}},
+  {id:"lily-pond",theme:"impressions",title:"Lily Pond in Late Light",w:70,h:90,medium:"Oil",support:"Linen canvas",year:2024,price:1250,seed:37,status:"available",
+   story:"A small pond in a friend's garden. I painted it over three evenings and never let a single lily become sharp.",
+   reel:"https://www.instagram.com/",prints:{paper:{price:70,sold:8},canvas:{price:190,sold:4}}},
+  {id:"river-fog",theme:"impressions",title:"Fog over the River",w:50,h:70,medium:"Oil",support:"Linen canvas",year:2024,price:780,seed:41,status:"sold",
+   story:"The river at 6 a.m. in October. You can only guess where the far bank is.",
+   reel:null,prints:{paper:{price:60,sold:10},canvas:{price:160,sold:5}}},
+  {id:"rain-peonies",theme:"impasto",title:"Peonies, Heavy with Rain",w:50,h:60,medium:"Oil",support:"Linen canvas",year:2025,price:890,seed:53,status:"available",
+   story:"Peonies always collapse after the first rain. I built them up with the knife so the petals stand off the canvas.",
+   reel:"https://www.instagram.com/",prints:{paper:{price:60,sold:2},canvas:{price:170,sold:0}}},
+  {id:"sunflowers-storm",theme:"impasto",title:"Sunflowers After the Storm",w:80,h:100,medium:"Oil",support:"Linen canvas",year:2025,price:1650,seed:67,status:"available",
+   story:"A whole field bent over by wind, then turning back to the sun the next morning. The paint is almost a centimetre thick in places.",
+   reel:null,prints:{paper:{price:75,sold:5},canvas:{price:210,sold:3}}},
+  {id:"meadow-thrown",theme:"splash",title:"Meadow, Thrown",w:60,h:60,medium:"Acrylic",support:"Linen canvas",year:2025,price:720,seed:79,status:"available",
+   story:"No brush touched this one until the very end. Splashed with a stick, dabbed with a glove, and the meadow appeared by itself.",
+   reel:"https://www.instagram.com/",prints:{paper:{price:55,sold:4},canvas:{price:150,sold:1}}},
+  {id:"lavender-rain",theme:"splash",title:"Lavender Rain",w:40,h:40,medium:"Acrylic",support:"Linen canvas",year:2025,price:480,seed:83,status:"available",
+   story:"Poured violet and blue, then tilted the canvas until it started to look like lavender in a summer shower.",
+   reel:null,prints:{paper:{price:45,sold:7},canvas:{price:130,sold:2}}}
+];
+// stretcher depth in cm (guess: deep 3.8 cm "gallery" edge on larger works, standard 1.8 cm otherwise)
+WORKS.forEach(w=>{w.depth = Math.max(w.w,w.h)>=70?3.8:1.8});
+const EDITION = 10;
+const CAN3D = typeof CSS!=="undefined" && CSS.supports && CSS.supports("transform-style","preserve-3d");
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const FINE = matchMedia("(pointer: fine)").matches;
+const ROLL_OVER_CM = 70; // guess: longest side above this ships rolled
+const STYLE_NAMES = {meadow:"Contemporary impressionism",monet:"Impressionism, Monet-inspired",impasto:"Impasto, palette knife",splash:"Acrylic splash & pour"};
+
+const COUNTRIES = [
+  {v:"uk",n:"United Kingdom",zone:"Domestic",ok:true,wood:true},
+  {v:"eu",n:"Europe (EU)",zone:"Europe",ok:true,wood:true},
+  {v:"us",n:"United States",zone:"North America",ok:true,wood:true},
+  {v:"ca",n:"Canada",zone:"North America",ok:true,wood:true},
+  {v:"jp",n:"Japan",zone:"Asia",ok:true,wood:true},
+  {v:"asia",n:"Other Asia",zone:"Asia",ok:true,wood:true},
+  {v:"au",n:"Australia",zone:"Oceania",ok:true,wood:false},
+  {v:"nz",n:"New Zealand",zone:"Oceania",ok:true,wood:false},
+  {v:"za",n:"South Africa",zone:"Not available",ok:false,wood:true}
+];
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const inch = cm => (cm/2.54).toFixed(1).replace(/\.0$/,"");
+const sizeText = w => `${w.w} × ${w.h} cm (${inch(w.w)} × ${inch(w.h)} in)`;
+const money = n => "£" + n.toLocaleString("en-GB");
+const rolledByDefault = w => Math.max(w.w,w.h) > ROLL_OVER_CM;
+const left = p => EDITION - p.sold;
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+/* ---------- painterly placeholders (canvas) ---------- */
+function paintArt(ctx,W,H,theme,seed){
+  const r = mulberry(seed), P = THEMES[theme].pal, pick=()=>P[Math.floor(r()*P.length)];
+  const st = THEMES[theme].style;
+  ctx.save();
+  if(st==="meadow"){
+    const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#dfe6d0");g.addColorStop(.45,"#c8d49a");g.addColorStop(1,"#5f7d3a");
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    for(let i=0;i<260;i++){ctx.strokeStyle=["#5f7d3a","#8aa35a","#4c6630"][i%3];ctx.globalAlpha=.6;ctx.lineWidth=1+r()*2;const x=r()*W,y=H*.4+r()*H*.6;ctx.beginPath();ctx.moveTo(x,H);ctx.quadraticCurveTo(x+(r()-.5)*30,y+20,x+(r()-.5)*20,y);ctx.stroke()}
+    for(let i=0;i<90;i++){const x=r()*W,y=H*.35+r()*H*.65,s=3+r()*9*(y/H);ctx.globalAlpha=.9;ctx.fillStyle=[ "#d23b2a","#d23b2a","#3f5bb0","#f4f1e6","#e9b93c"][Math.floor(r()*5)];ctx.beginPath();ctx.ellipse(x,y,s,s*.8,r()*3,0,7);ctx.fill()}
+  } else if(st==="monet"){
+    const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#e8d9b5");g.addColorStop(.5,"#b9c7dd");g.addColorStop(1,"#6f88a8");
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    for(let i=0;i<900;i++){ctx.globalAlpha=.35;ctx.fillStyle=pick();const x=r()*W,y=r()*H;ctx.fillRect(x,y,6+r()*16,2+r()*4)}
+    for(let i=0;i<14;i++){ctx.globalAlpha=.8;ctx.fillStyle=r()>.5?"#e9b7c9":"#f1e8d8";const x=r()*W,y=H*.55+r()*H*.4;ctx.beginPath();ctx.ellipse(x,y,8+r()*10,4+r()*4,0,0,7);ctx.fill();ctx.fillStyle="#a8c4a0";ctx.beginPath();ctx.ellipse(x+12,y+6,16,6,0,0,7);ctx.fill()}
+  } else if(st==="impasto"){
+    ctx.fillStyle="#2f3a5a";ctx.fillRect(0,0,W,H);
+    for(let i=0;i<420;i++){const x=r()*W,y=r()*H,len=10+r()*30,a=r()*Math.PI;ctx.lineCap="round";ctx.lineWidth=5+r()*9;ctx.globalAlpha=1;
+      ctx.strokeStyle="rgba(0,0,0,.35)";ctx.beginPath();ctx.moveTo(x+2,y+2);ctx.lineTo(x+2+Math.cos(a)*len,y+2+Math.sin(a)*len);ctx.stroke();
+      const c=(Math.hypot(x-W*.5,y-H*.42)<Math.min(W,H)*.3)?["#e7c33a","#d9822b","#e7c33a","#b23a3a"][Math.floor(r()*4)]:pick();
+      ctx.strokeStyle=c;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*len,y+Math.sin(a)*len);ctx.stroke();
+      ctx.strokeStyle="rgba(255,255,255,.35)";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x-1,y-2);ctx.lineTo(x-1+Math.cos(a)*len*.7,y-2+Math.sin(a)*len*.7);ctx.stroke()}
+  } else {
+    ctx.fillStyle="#f6f4ee";ctx.fillRect(0,0,W,H);
+    for(let k=0;k<5;k++){ctx.globalAlpha=.85;ctx.fillStyle=pick();ctx.beginPath();const cx=r()*W,cy=r()*H;for(let a=0;a<7;a+=.4){const rr=(40+r()*80)*(W/400);ctx.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr*.8)}ctx.fill()}
+    for(let i=0;i<500;i++){ctx.globalAlpha=.9;ctx.fillStyle=pick();ctx.beginPath();ctx.arc(r()*W,r()*H,r()<.9?1+r()*3:5+r()*8,0,7);ctx.fill()}
+    for(let i=0;i<10;i++){ctx.globalAlpha=.7;ctx.strokeStyle=pick();ctx.lineWidth=2+r()*3;const x=r()*W;ctx.beginPath();ctx.moveTo(x,r()*H*.3);ctx.lineTo(x+(r()-.5)*6,H*.4+r()*H*.6);ctx.stroke()}
+  }
+  ctx.restore();
+}
+function drawShot(cv,work,kind){
+  const ratio = work.h/work.w;
+  let W,H;
+  if(kind==="interior"){W=900;H=680}else if(kind==="detail"){W=900;H=900}else if(kind==="angle"){W=900;H=Math.round(900*ratio)}else{W=900;H=Math.round(900*ratio)}
+  cv.width=W;cv.height=H;const ctx=cv.getContext("2d");
+  if(kind==="front"){paintArt(ctx,W,H,work.theme,work.seed)}
+  else if(kind==="detail"){ctx.save();ctx.scale(3,3);ctx.translate(-W*.33,-H*.3);paintArt(ctx,W,H*ratio,work.theme,work.seed);ctx.restore()}
+  else if(kind==="angle"){
+    ctx.fillStyle="#d9d6cf";ctx.fillRect(0,0,W,H);
+    const off=document.createElement("canvas");off.width=600;off.height=Math.round(600*ratio);paintArt(off.getContext("2d"),off.width,off.height,work.theme,work.seed);
+    ctx.save();ctx.setTransform(.8,.12,0,1,W*.12,H*.04);ctx.fillStyle="rgba(0,0,0,.25)";ctx.fillRect(14,14,off.width,off.height*.85);ctx.drawImage(off,0,0,off.width,off.height*.85);
+    ctx.fillStyle="#efe9dc";ctx.setTransform(.12,-.05,0,1,W*.12+off.width*.8,H*.04+off.width*.12);ctx.fillRect(0,0,30,off.height*.85);ctx.restore();
+  } else {
+    // interior: wall, floor, sofa, painting
+    ctx.fillStyle="#e6e1d6";ctx.fillRect(0,0,W,H);ctx.fillStyle="#b89f80";ctx.fillRect(0,H*.78,W,H*.22);
+    const scale = 2.6; // px per cm, rough
+    const pw=Math.min(work.w*scale,W*.6), ph=pw*ratio>H*.5?H*.5:pw*ratio, pw2=ph/ratio;
+    const off=document.createElement("canvas");off.width=Math.round(pw2);off.height=Math.round(ph);paintArt(off.getContext("2d"),off.width,off.height,work.theme,work.seed);
+    const px=(W-pw2)/2,py=H*.1;ctx.fillStyle="rgba(0,0,0,.18)";ctx.fillRect(px+8,py+10,pw2,ph);ctx.drawImage(off,px,py);
+    ctx.fillStyle="#6d7a73";const sy=H*.62;ctx.beginPath();ctx.roundRect?ctx.roundRect(W*.18,sy,W*.64,H*.18,14):ctx.rect(W*.18,sy,W*.64,H*.18);ctx.fill();
+    ctx.fillStyle="#5c6862";ctx.fillRect(W*.16,sy+H*.05,W*.68,H*.12);ctx.fillStyle="#3b3430";ctx.fillRect(W*.2,H*.78,10,16);ctx.fillRect(W*.8-10,H*.78,10,16);
+    ctx.fillStyle="#7a8b5a";ctx.beginPath();ctx.ellipse(W*.9,H*.5,26,90,0,0,7);ctx.fill();ctx.fillStyle="#c9b9a0";ctx.fillRect(W*.87,H*.66,52,H*.12);
+  }
+}
+function hydrate(root){
+  root.querySelectorAll("canvas[data-work]").forEach(cv=>{const w=WORKS.find(x=>x.id===cv.dataset.work);drawShot(cv,w,cv.dataset.kind||"front")});
+  root.querySelectorAll("canvas[data-theme-cover]").forEach(cv=>{cv.width=600;cv.height=750;paintArt(cv.getContext("2d"),600,750,cv.dataset.themeCover,7)});
+}
+const frame = (id,kind="front",tag="Photo placeholder") => `<div class="frame tilt"><canvas data-work="${id}" data-kind="${kind}" role="img" aria-label="Placeholder image"></canvas><span class="ph-tag">${tag}</span></div>`;
+
+/* ---------- views ---------- */
+function workCard(w){
+  return `<a class="work" href="#${w.id}">${frame(w.id)}
+    <div class="meta"><h3>${esc(w.title)}</h3><span class="price">${w.status==="sold"?'<span class="sold-dot"></span>Sold':money(w.price)}</span></div>
+    <span class="spec">${w.medium} on ${w.support.toLowerCase()} · ${w.w} × ${w.h} cm</span></a>`;
+}
+function vHome(){
+  return `<div class="ship-strip" style="padding-block:28px 0;margin-top:0"><span><b>Worldwide shipping</b> with insurance</span><span><b>Linen canvas</b> originals</span><span><b>Editions of ${EDITION}</b>, signed &amp; numbered</span><span><b>Turn every painting in 3D</b> and try it on your wall</span></div>
+  <section>
+    <div class="sec-head"><h2>Four ways I paint</h2><a href="#gallery" class="label">All paintings →</a></div>
+    <div class="themes">${Object.entries(THEMES).map(([k,t])=>`<a class="theme-card" href="#${k}"><div class="frame tilt"><canvas data-theme-cover="${k}" role="img" aria-label="${t.name} placeholder"></canvas></div><h3>${t.name}</h3><p>${t.blurb}</p></a>`).join("")}</div>
+  </section>
+  <section>
+    <div class="sec-head"><h2>New on the easel</h2></div>
+    <div class="grid">${WORKS.filter(w=>w.status!=="sold").slice(0,4).map(workCard).join("")}</div>
+  </section>`;
+}
+function vGallery(theme){
+  const list = theme?WORKS.filter(w=>w.theme===theme):WORKS;
+  const t = theme&&THEMES[theme];
+  return `<div class="page-head"><span class="label">${t?"Theme":"Paintings"}</span><h1 style="margin-top:8px">${t?t.name:"All paintings"}</h1>${t?`<p class="theme-intro">${t.blurb}</p>`:`<p>Original works, grouped by the way they are painted.</p>`}</div>
+  <div class="filter" style="margin-top:24px"><a href="#gallery" ${!theme?'aria-current="page"':""}>All</a>${Object.entries(THEMES).map(([k,x])=>`<a href="#${k}" ${theme===k?'aria-current="page"':""}>${x.name}</a>`).join("")}</div>
+  <div class="grid">${list.map(workCard).join("")}</div>`;
+}
+function packHTML(w,c){
+  const C = COUNTRIES.find(x=>x.v===c);
+  const box = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="7" width="20" height="16" fill="none"/><path d="M4 7l4-4h12l4 4" fill="none"/></svg>`;
+  const tube = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="6" cy="14" rx="3" ry="6" fill="none"/><path d="M6 8h17M6 20h17" fill="none"/><ellipse cx="23" cy="14" rx="3" ry="6" fill="none"/></svg>`;
+  if(!C.ok) return `<div class="pack no"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="14" cy="14" r="10" fill="none"/><path d="M7 21L21 7" fill="none"/></svg><div><b>Sorry, I don't ship to ${C.n} at the moment.</b>Delivery there is very expensive and unreliable. Please write to me if you'd like to discuss it.</div></div>`;
+  if(!C.wood) return `<div class="pack">${tube}<div><b>Ships rolled in a tube, without the wooden stretcher</b>${C.n} does not accept untreated wood in parcels. The canvas arrives rolled and needs re-stretching locally (any framer can do this). <span class="guess">wording TBC</span></div></div>`;
+  if(rolledByDefault(w)) return `<div class="pack">${tube}<div><b>Ships rolled in a tube (recommended for this size)</b>At ${w.w} × ${w.h} cm a box is not safe enough in transit, so I take the canvas off the stretcher and roll it. Shipping stretched in a box is possible on request, at a higher cost. <span class="guess">size limit ${ROLL_OVER_CM} cm is a guess</span></div></div>`;
+  return `<div class="pack">${box}<div><b>Ships stretched, ready to hang</b>Wrapped, corner-protected and packed in a rigid box.</div></div>`;
+}
+function vPiece(w){
+  const t = THEMES[w.theme];
+  const shots=[["front","Front"],["angle","Side view"],["detail","Detail"],["interior","In an interior"]];
+  const prints=w.prints;
+  return `<div class="crumbs"><a href="#gallery">Paintings</a> / <a href="#${w.theme}">${t.name}</a> / ${esc(w.title)}</div>
+  <div class="piece">
+    <div class="viewer">
+      <div class="modes" role="tablist" aria-label="How to view">
+        ${CAN3D?`<button type="button" role="tab" data-mode="turn" aria-selected="true">Turn in 3D</button><button type="button" role="tab" data-mode="wall" aria-selected="false">On a wall</button>`:""}
+        <button type="button" role="tab" data-mode="photos" aria-selected="${!CAN3D}">Photos</button>
+      </div>
+      <div id="pane-turn" ${CAN3D?"":"hidden"}>
+        <div class="stage3d" id="stage3d" aria-label="3D view of the painting. Drag to turn it."></div>
+        <div class="v-controls">
+          <div class="seg"><button class="chip" type="button" data-ang="0" aria-pressed="true">Front</button><button class="chip" type="button" data-ang="62">Edge</button><button class="chip" type="button" data-ang="180">Back</button></div>
+          <span class="hint">Drag to turn · the edge shows the ${w.depth} cm stretcher depth</span>
+        </div>
+      </div>
+      <div id="pane-wall" hidden>
+        <div class="room" id="room"></div>
+        <div class="v-controls">
+          <div class="seg" id="roomSeg"><button class="chip" type="button" data-room="sofa" aria-pressed="true">Living room</button><button class="chip" type="button" data-room="bed">Bedroom</button><button class="chip" type="button" data-room="console">Hallway</button></div>
+          <div class="seg" id="wallSeg">${[["#efebe3","Warm white"],["#b9c2ad","Sage"],["#c9b3a6","Clay"],["#3d4143","Charcoal"]].map(([c,n],i)=>`<button class="swatch" type="button" style="background:${c}" data-wall="${c}" aria-label="${n} wall" title="${n}" aria-pressed="${i===0}"></button>`).join("")}<button class="chip" type="button" id="evening" aria-pressed="false">Evening light</button></div>
+        </div>
+      </div>
+      <div id="pane-photos" ${CAN3D?"hidden":""}>
+        <div class="main-shot" id="mainShot">${frame(w.id,"front","Front · placeholder")}</div>
+        <div class="thumbs" role="group" aria-label="Photos">${shots.map(([k,l],i)=>`<button type="button" data-shot="${k}" data-label="${l}" aria-pressed="${i===0}"><canvas data-work="${w.id}" data-kind="${k}"></canvas>${l}</button>`).join("")}</div>
+      </div>
+    </div>
+    <div class="info">
+      <a class="label theme-link" href="#${w.theme}">${t.name}</a>
+      <h1>${esc(w.title)}</h1>
+      <div class="card"><dl>
+        <dt>Size</dt><dd>${sizeText(w)}</dd>
+        <dt>Medium</dt><dd>${w.medium}</dd>
+        <dt>Support</dt><dd>${w.support}, ${w.depth} cm deep stretcher, painted edges <span class="guess">guess</span></dd>
+        <dt>Style</dt><dd>${STYLE_NAMES[t.style]}</dd>
+        <dt>Year</dt><dd>${w.year}</dd>
+        <dt>Signed</dt><dd>Signed on the front, certificate of authenticity included <span class="guess">guess</span></dd>
+      </dl></div>
+
+      <div class="price-row"><span class="price-big">${w.status==="sold"?"Sold":money(w.price)}</span><span class="label">Original · one of a kind</span></div>
+      ${w.status==="sold"
+        ? `<p class="buy-note">This original has found its home. Limited prints are still available below.</p>`
+        : `<button class="btn wide" type="button" id="buyOrig" style="margin-top:14px">Buy the original</button><p class="buy-note" id="buyNote"></p>`}
+
+      <div class="terms" aria-label="Delivery and returns">
+        <h3>Delivery: worldwide, with insurance</h3>
+        <div class="row"><label for="ctry" class="label">Shipping to</label>
+          <select id="ctry">${COUNTRIES.map(c=>`<option value="${c.v}">${c.n}</option>`).join("")}</select></div>
+        <div id="packOut">${packHTML(w,"uk")}</div>
+        <ul>
+          <li>Shipping and insurance are paid by the buyer and quoted for your country before payment. <span class="guess">guess</span></li>
+          <li>Every original is sent fully insured for its value, with tracking, by a courier such as FedEx or DHL. <span class="guess">courier TBC</span></li>
+          <li>Dispatched within 5 working days; delivery usually takes 3–10 working days. <span class="guess">guess</span></li>
+          <li>Import duties and taxes in your country are paid by you on arrival.</li>
+        </ul>
+        <h3>Returns</h3>
+        <p>You can return an original within 14 days of delivery if it isn't right for you. It must come back in its original condition and packaging, fully insured; return shipping is paid by you. Refund within 5 days of the painting arriving back. Prints are final sale unless damaged. <span class="guess">all terms TBC</span></p>
+        <a class="more" href="#shipping">Full shipping &amp; returns details →</a>
+      </div>
+
+      <div class="prints" id="printBox">
+        <span class="label">Limited edition prints</span>
+        <h2>Own a numbered print of this painting</h2>
+        <div class="opts" role="group" aria-label="Print type">
+          <button type="button" class="opt" data-pt="paper" aria-pressed="true"><b>Fine-art paper</b><span class="p">${money(prints.paper.price)}</span><span class="label">${left(prints.paper)} of ${EDITION} left</span></button>
+          <button type="button" class="opt" data-pt="canvas" aria-pressed="false"><b>Stretched canvas</b><span class="p">${money(prints.canvas.price)}</span><span class="label">${left(prints.canvas)} of ${EDITION} left</span></button>
+        </div>
+        <div class="edition" id="edition"></div>
+        <button class="btn wide ghost" type="button" id="buyPrint">Buy print</button>
+        <p class="buy-note" id="printNote"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="story">
+    <div><span class="label">The story</span></div>
+    <div>
+      <blockquote>“${esc(w.story)}”</blockquote>
+      ${w.reel?`<a class="reel" href="${w.reel}" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>Watch this painting in motion on Instagram</a> <span class="guess">reel link TBC</span>`:""}
+    </div>
+  </div>
+  <section style="border-top:1px solid var(--rule)"><div class="sec-head"><h2>More ${t.name.toLowerCase()}</h2></div><div class="grid">${WORKS.filter(x=>x.id!==w.id).sort((a,b)=>(b.theme===w.theme)-(a.theme===w.theme)).slice(0,3).map(workCard).join("")}</div></section>`;
+}
+function editionHTML(p,type){
+  const l=left(p);
+  return `<div class="count"><span>${type==="paper"?"Giclée on fine-art paper":"Giclée on canvas, stretched"}</span><strong>${l} of ${EDITION} left</strong></div>
+  <div class="bar" aria-hidden="true">${Array.from({length:EDITION},(_,i)=>`<i class="${i<p.sold?"sold":""}"></i>`).join("")}</div>
+  <small>Each print is signed and numbered (for example 4/${EDITION}). When all ${EDITION} are gone, this print will never be made again.</small>`;
+}
+function bindPiece(w){
+  const inited={};
+  const show=m=>{
+    document.querySelectorAll(".modes [data-mode]").forEach(b=>b.setAttribute("aria-selected",b.dataset.mode===m));
+    ["turn","wall","photos"].forEach(k=>{const p=$("#pane-"+k);if(p)p.hidden=k!==m});
+    if(inited[m])return; inited[m]=true;
+    if(m==="turn") viewer3D($("#stage3d"),w);
+    if(m==="wall") roomView($("#room"),w);
+  };
+  document.querySelectorAll(".modes [data-mode]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.mode)));
+  show(CAN3D?"turn":"photos");
+  const main=$("#mainShot");
+  document.querySelectorAll(".thumbs button").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll(".thumbs button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    main.innerHTML=frame(w.id,b.dataset.shot,b.dataset.label+" · placeholder");hydrate(main);
+  }));
+  $("#ctry").addEventListener("change",e=>{$("#packOut").innerHTML=packHTML(w,e.target.value)});
+  let pt="paper";
+  const renderEd=()=>{const p=w.prints[pt];$("#edition").innerHTML=editionHTML(p,pt);const b=$("#buyPrint");b.disabled=left(p)===0;b.textContent=left(p)===0?"Edition sold out":`Buy ${pt==="paper"?"paper":"canvas"} print · ${money(p.price)}`};
+  document.querySelectorAll(".opt").forEach(o=>o.addEventListener("click",()=>{pt=o.dataset.pt;document.querySelectorAll(".opt").forEach(x=>x.setAttribute("aria-pressed",x===o));renderEd()}));
+  renderEd();
+  const soon="Online checkout is coming soon. For now this button does nothing.";
+  $("#buyOrig")&&$("#buyOrig").addEventListener("click",()=>{$("#buyNote").textContent=soon});
+  $("#buyPrint").addEventListener("click",()=>{$("#printNote").textContent=soon});
+}
+function vPrints(){
+  return `<div class="page-head"><span class="label">Limited editions</span><h1 style="margin-top:8px">Prints, only ${EDITION} of each</h1>
+    <p>High-quality giclée prints on fine-art paper or stretched canvas, made from my originals. Every edition is limited to ${EDITION} copies worldwide, each signed and numbered by hand. <span class="guess">print process TBC</span></p></div>
+  <div class="grid" style="margin-top:32px">${WORKS.map(w=>{const p=w.prints.paper,c=w.prints.canvas;return `<a class="work" href="#${w.id}">${frame(w.id)}
+    <div class="meta"><h3>${esc(w.title)}</h3><span class="price">from ${money(p.price)}</span></div>
+    <span class="spec">Paper: ${left(p)} of ${EDITION} left</span><div class="mini-bar">${Array.from({length:EDITION},(_,i)=>`<i class="${i<p.sold?"sold":""}"></i>`).join("")}</div>
+    <span class="spec">Canvas: ${left(c)} of ${EDITION} left</span><div class="mini-bar">${Array.from({length:EDITION},(_,i)=>`<i class="${i<c.sold?"sold":""}"></i>`).join("")}</div></a>`}).join("")}</div>`;
+}
+function vShipping(){
+  return `<div class="page-head"><span class="label">Before you buy</span><h1 style="margin-top:8px">Shipping &amp; returns</h1>
+    <p>I ship paintings all over the world and have sent them to Australia, Japan, the USA, Canada and across Europe. Here is exactly how it works, so there are no surprises.</p></div>
+  <div class="prose" style="margin-top:24px">
+    <h2>Delivery plus insurance</h2>
+    <p>Every original travels fully insured for its value, with tracking from my studio to your door. Shipping and insurance are paid by the buyer. I quote the exact cost for your country before you pay. <span class="guess">guess</span></p>
+    <h2>Stretched in a box, or rolled in a tube</h2>
+    <p>Paintings up to ${ROLL_OVER_CM} cm on the longest side ship stretched on their wooden frame, ready to hang. Larger paintings are safer rolled: I take the canvas off the stretcher, roll it paint-side out with protective paper, and send it in a strong tube. <span class="guess">size limit TBC</span></p>
+    <p>A rolled canvas needs to be re-stretched when it arrives. Any local framer can do this. If you would rather receive it stretched, tell me before you order and I'll quote for a crate.</p>
+    <h2>Countries that don't accept wood</h2>
+    <p>Some countries, including Australia and New Zealand, have strict rules on wood in parcels. Paintings to these countries always ship rolled, without the wooden stretcher bars.</p>
+    <div class="table-wrap"><table class="zones">
+      <thead><tr><th>Destination</th><th>Ships</th><th>Packing</th></tr></thead>
+      <tbody>
+        <tr><td>United Kingdom</td><td>Yes</td><td>Stretched or rolled, by size</td></tr>
+        <tr><td>Europe</td><td>Yes</td><td>Stretched or rolled, by size</td></tr>
+        <tr><td>USA &amp; Canada</td><td>Yes</td><td>Stretched or rolled, by size</td></tr>
+        <tr><td>Japan &amp; Asia</td><td>Yes</td><td>Stretched or rolled, by size</td></tr>
+        <tr><td>Australia &amp; New Zealand</td><td>Yes</td><td>Rolled only, no wood</td></tr>
+        <tr><td>South Africa</td><td>Not at the moment</td><td>Write to me to discuss</td></tr>
+      </tbody></table></div>
+    <h2>Customs and taxes</h2>
+    <p>Import duties and local taxes are set by your country and paid by you when the parcel arrives.</p>
+    <h2>Returns</h2>
+    <ul>
+      <li>Originals can be returned within 14 days of delivery. <span class="guess">guess</span></li>
+      <li>The painting must come back in its original condition and packaging, fully insured.</li>
+      <li>Return shipping is paid by the buyer. I refund the painting's price once it arrives back safely.</li>
+      <li>Limited prints are final sale, unless they arrive damaged. <span class="guess">guess</span></li>
+      <li>If anything arrives damaged, photograph the parcel and the work and write to me within 48 hours.</li>
+    </ul>
+  </div>`;
+}
+function vAbout(){
+  return `<div class="about">
+    <div class="portrait"><span class="label">Artist photo</span><span>Placeholder: Valentyna at the easel</span></div>
+    <div class="prose">
+      <span class="label">About the artist</span>
+      <h1 style="font-size:clamp(2rem,4vw,3rem)">Valentyna Ksendz</h1>
+      <p><span class="guess">placeholder text</span> I paint wildflowers, gardens and water, the things that stop me on a walk. For years I worked only in oil, building thick, sculpted impasto with a palette knife. Recently I started throwing and pouring acrylic with gloves, sticks and sponges, and letting the paint find the image before I guide it.</p>
+      <p>Valentyna will add: why she paints, when she started, her training, where her studio is, and where her work now hangs.</p>
+      <h2>Collected in</h2>
+      <p>Australia · Japan · USA · Canada · Europe</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="https://www.instagram.com/" target="_blank" rel="noopener">Follow on Instagram</a></div>
+    </div>
+  </div>`;
+}
+
+/* ---------- shared animation helpers ---------- */
+let cleanups = [];
+const onCleanup = f => cleanups.push(f);
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+const DPR = () => Math.min(window.devicePixelRatio||1, 1.5); // cap pixel density: keeps old phones fast
+function paintedCanvas(w,W,H){const c=document.createElement("canvas");c.width=Math.max(2,Math.round(W*DPR()));c.height=Math.max(2,Math.round(H*DPR()));paintArt(c.getContext("2d"),c.width,c.height,w.theme,w.seed);return c}
+// run a rAF loop only while `step` returns true; returns a kick() to restart it
+function loop(step){let id=0,alive=true;const tick=t=>{id=0;if(alive&&step(t))id=requestAnimationFrame(tick)};const kick=()=>{if(alive&&!id)id=requestAnimationFrame(tick)};onCleanup(()=>{alive=false;cancelAnimationFrame(id)});return kick}
+
+/* ---------- 1. cinematic walk-through hall (home) ---------- */
+function buildHall(){
+  const el=$("#cine"); el.hidden=false; el.className="";
+  el.style.setProperty("--hdr",document.querySelector("header.site").offsetHeight+"px");
+  const mobile=innerWidth<700;
+  const HW=mobile?520:1100, HH=mobile?600:640, L=mobile?2500:3000, PX=mobile?2.4:2.9, STEP=mobile?300:340;
+  const still = REDUCED || !CAN3D;
+  if(still) el.classList.add("static");
+  const feature = WORKS.find(w=>w.id==="sunflowers-storm");
+  const side = WORKS.filter(w=>w!==feature);
+  const art = (w,x,y,z,ry,k=1)=>{const W=w.w*PX*k,H=w.h*PX*k;
+    return `<a class="hall-art" href="#${w.id}" data-z="${z}" aria-label="${esc(w.title)}" style="width:${W}px;height:${H}px;transform:translate3d(${x-W/2}px,${y-H/2}px,${z}px) rotateY(${ry}deg)"><canvas data-hall="${w.id}" width="${Math.round(W)}" height="${Math.round(H)}"></canvas><span class="hall-plate">${esc(w.title)}<br>${w.status==="sold"?"Sold":money(w.price)}</span></a>`};
+  const FRONT=700, LEN=L+FRONT;
+  const items = side.map((w,i)=>{const left=i%2===0, z=-380-i*STEP;
+    return art(w,left?-HW/2+4:HW/2-4,-30,z,left?90:-90)}).join("");
+  el.innerHTML=`<div class="stage" style="--persp:${mobile?640:800}px"><div class="world" id="world">
+      <div class="hall-floor" style="width:${HW}px;height:${LEN}px;transform:translate3d(${-HW/2}px,${HH/2}px,${FRONT}px) rotateX(-90deg)"></div>
+      <div class="hall-wall" style="width:${LEN}px;height:${HH}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${FRONT}px) rotateY(90deg)"></div>
+      <div class="hall-wall" style="width:${LEN}px;height:${HH}px;transform:translate3d(${HW/2}px,${-HH/2}px,${FRONT}px) rotateY(90deg)"></div>
+      <div class="hall-end" style="width:${HW}px;height:${HH}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${-L}px)"></div>
+      ${items}${art(feature,0,-40,-L+3,0,1.5)}
+    </div>
+    <div class="cine-copy" id="cineCopy"><div class="wrap">
+      <span class="label" style="color:var(--hall-muted)">Original paintings · Limited prints</span>
+      <h1 style="margin-top:12px">Wildflowers, light and <em>thick, living paint</em></h1>
+      <p>Oil and acrylic on linen canvas by Valentyna Ksendz. ${still?"":"Scroll to walk through the gallery."}</p>
+      <div class="ctas"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="#prints">Limited prints</a></div>
+    </div></div>
+    <div class="end-copy" id="endCopy"><div class="ctas"><a class="btn" href="#${feature.id}" style="background:var(--hall-ink);color:var(--hall-bg)">Turn “${esc(feature.title)}” in 3D</a><a class="btn ghost" href="#gallery" style="color:var(--hall-ink);border-color:var(--hall-ink)">All paintings</a></div></div>
+    ${still?"":`<div class="scroll-cue" id="cue">Scroll<i></i></div>`}
+  </div>`;
+  el.querySelectorAll("canvas[data-hall]").forEach(c=>{const w=WORKS.find(x=>x.id===c.dataset.hall);paintArt(c.getContext("2d"),c.width,c.height,w.theme,w.seed)});
+  const world=$("#world"), copy=$("#cineCopy"), end=$("#endCopy"), cue=$("#cue"), arts=[...el.querySelectorAll(".hall-art")];
+  const MAXZ=L-640;
+  if(still){world.style.transform=`translateZ(${MAXZ*.18}px)`;return}
+  let cam=0,target=0,ox=50,oxT=50;
+  const stage=el.querySelector(".stage");
+  const read=()=>{const r=el.getBoundingClientRect();const p=clamp(-r.top/Math.max(1,r.height-stage.offsetHeight),0,1);target=p*MAXZ};
+  const kick=loop(()=>{
+    cam+= (target-cam)*0.09; ox+=(oxT-ox)*0.08;
+    world.style.transform=`translateZ(${cam.toFixed(1)}px)`;
+    stage.style.perspectiveOrigin=`${ox.toFixed(2)}% 42%`;
+    const p=cam/MAXZ;
+    copy.style.opacity=clamp(1-p*4,0,1); copy.style.visibility=p>.3?"hidden":"visible";
+    const e=clamp((p-.82)*6,0,1); end.style.opacity=e; end.classList.toggle("on",e>.5);
+    if(cue) cue.style.opacity=clamp(1-p*8,0,1);
+    for(const a of arts){const z=+a.dataset.z+cam; a.style.visibility=z>220?"hidden":"visible"}
+    return Math.abs(target-cam)>.3||Math.abs(oxT-ox)>.05;
+  });
+  const onScroll=()=>{read();kick()};
+  const onMove=e=>{oxT=50+(e.clientX/innerWidth-.5)*8;kick()};
+  addEventListener("scroll",onScroll,{passive:true}); addEventListener("resize",onScroll);
+  if(FINE) addEventListener("pointermove",onMove,{passive:true});
+  onCleanup(()=>{removeEventListener("scroll",onScroll);removeEventListener("resize",onScroll);removeEventListener("pointermove",onMove)});
+  read(); cam=target; kick();
+}
+
+/* ---------- 2. turn the painting in 3D ---------- */
+function viewer3D(host,w){
+  const hw=host.clientWidth, hh=host.clientHeight;
+  const s=Math.min(hw*.62/w.w, hh*.74/w.h);
+  const W=Math.round(w.w*s), H=Math.round(w.h*s), D=Math.max(5,Math.round(w.depth*s));
+  const front=paintedCanvas(w,W,H), fw=front.width, fh=front.height, k=Math.max(2,Math.round(5*DPR()));
+  const slice=(sx,sy,sw,sh,cw,ch)=>{const c=document.createElement("canvas");c.width=Math.max(2,Math.round(cw*DPR()));c.height=Math.max(2,Math.round(ch*DPR()));c.getContext("2d").drawImage(front,sx,sy,sw,sh,0,0,c.width,c.height);return c};
+  host.innerHTML=`<div class="obj" style="width:${W}px;height:${H}px"></div><div class="floor-shadow"></div>`;
+  const obj=host.querySelector(".obj"), shadow=host.querySelector(".floor-shadow");
+  const faces=[];
+  const mk=(cls,wd,ht,tf,n,child)=>{const f=document.createElement("div");f.className="face "+cls;f.style.cssText=`width:${wd}px;height:${ht}px;transform:${tf}`;if(child)f.appendChild(child);const sh=document.createElement("i");sh.className="shade";f.appendChild(sh);obj.appendChild(f);faces.push({sh,n});return f};
+  const fFront=mk("front",W,H,`translateZ(${D/2}px)`,[0,0,1],front);
+  const sheen=document.createElement("i");sheen.className="sheen";fFront.appendChild(sheen);
+  const back=mk("back",W,H,`rotateY(180deg) translateZ(${D/2}px)`,[0,0,-1]);
+  const bar=Math.max(6,Math.round(4.5*s));
+  back.insertAdjacentHTML("afterbegin",`<div class="bars" style="box-shadow:inset 0 0 0 ${bar}px #c4a57a, inset 0 0 0 ${bar+1}px rgba(0,0,0,.15)"></div>${Math.max(w.w,w.h)>=60?`<div style="position:absolute;left:${bar}px;right:${bar}px;top:50%;height:${bar}px;margin-top:-${bar/2}px;background:#c4a57a;box-shadow:0 1px 0 rgba(0,0,0,.15)"></div>`:""}<div class="label-sticker">${esc(w.title)}<br>Valentyna Ksendz, ${w.year}<br>${w.w} × ${w.h} cm · ${w.medium.toLowerCase()} on linen</div>`);
+  mk("side",D,H,`translateX(${(W-D)/2}px) rotateY(90deg) translateZ(${W/2}px)`,[1,0,0],slice(fw-k,0,k,fh,D,H));
+  mk("side",D,H,`translateX(${(W-D)/2}px) rotateY(-90deg) translateZ(${W/2}px)`,[-1,0,0],slice(0,0,k,fh,D,H));
+  mk("side",W,D,`translateY(${(H-D)/2}px) rotateX(90deg) translateZ(${H/2}px)`,[0,-1,0],slice(0,0,fw,k,W,D));
+  mk("side",W,D,`translateY(${(H-D)/2}px) rotateX(-90deg) translateZ(${H/2}px)`,[0,1,0],slice(0,fh-k,fw,k,W,D));
+  const Lt=(()=>{const v=[-.45,-.55,1],m=Math.hypot(...v);return v.map(x=>x/m)})();
+  let ry=0,rx=-4,vy=0,target=null,drag=null,touched=false,visible=true,t0=performance.now();
+  const chips=[...document.querySelectorAll("[data-ang]")];
+  const apply=()=>{
+    obj.style.transform=`rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+    const a=ry*Math.PI/180,b=rx*Math.PI/180,ca=Math.cos(a),sa=Math.sin(a),cb=Math.cos(b),sb=Math.sin(b);
+    for(const f of faces){const [x,y,z]=f.n;const x1=x*ca+z*sa,z1=-x*sa+z*ca;const y2=y*cb-z1*sb,z2=y*sb+z1*cb;const d=x1*Lt[0]+y2*Lt[1]+z2*Lt[2];f.sh.style.opacity=((1-clamp(d,0,1))*.55).toFixed(3)}
+    sheen.style.backgroundPosition=`${clamp(50+ry*1.6,0,100)}% 0`;
+    const vis=Math.abs(ca)*W+Math.abs(sa)*D; shadow.style.width=`${vis*1.1}px`;
+    const n=((ry%360)+360)%360; chips.forEach(c=>{const g=+c.dataset.ang;c.setAttribute("aria-pressed",Math.min(Math.abs(n-g),360-Math.abs(n-g))<20)});
+  };
+  const kick=loop(t=>{
+    if(!visible) return false;
+    if(drag){}
+    else if(target!==null){ry+=(target-ry)*.12;rx+=(-4-rx)*.12;if(Math.abs(target-ry)<.2){ry=target;target=null}}
+    else if(Math.abs(vy)>.02){ry+=vy;vy*=.93;rx+=(-4-rx)*.08}
+    else if(!touched&&!REDUCED){ry=Math.sin((t-t0)/1500)*24}
+    else {rx+=(-4-rx)*.1; apply(); return Math.abs(rx+4)>.05}
+    apply(); return true;
+  });
+  host.addEventListener("pointerdown",e=>{touched=true;target=null;vy=0;drag={x:e.clientX,y:e.clientY};host.setPointerCapture(e.pointerId);kick()});
+  host.addEventListener("pointermove",e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag={x:e.clientX,y:e.clientY};vy=dx*.5;ry+=vy;rx=clamp(rx-dy*.3,-28,28);apply()});
+  const up=()=>{drag=null;kick()};host.addEventListener("pointerup",up);host.addEventListener("pointercancel",up);
+  chips.forEach(c=>c.addEventListener("click",()=>{touched=true;vy=0;const g=+c.dataset.ang;const base=Math.round((ry-g)/360)*360;target=g+base;kick()}));
+  const io=new IntersectionObserver(([en])=>{visible=en.isIntersecting;if(visible)kick()});io.observe(host);onCleanup(()=>io.disconnect());
+  const onVis=()=>{visible=!document.hidden;if(visible)kick()};document.addEventListener("visibilitychange",onVis);onCleanup(()=>document.removeEventListener("visibilitychange",onVis));
+  apply(); kick();
+}
+
+/* ---------- 3. see it on a wall, at true scale ---------- */
+const FURN = {
+  sofa:{w:210,h:86,label:"sofa 210 cm wide",svg:`<svg viewBox="0 0 210 86"><rect x="0" y="12" width="210" height="44" rx="8" fill="#6d7a73"/><rect x="22" y="44" width="166" height="26" rx="4" fill="#5c6862"/><line x1="77" y1="46" x2="77" y2="70" stroke="#4f5a55"/><line x1="133" y1="46" x2="133" y2="70" stroke="#4f5a55"/><rect x="0" y="30" width="24" height="44" rx="6" fill="#66736c"/><rect x="186" y="30" width="24" height="44" rx="6" fill="#66736c"/><rect x="12" y="74" width="5" height="12" fill="#3b3430"/><rect x="193" y="74" width="5" height="12" fill="#3b3430"/></svg>`},
+  bed:{w:170,h:112,label:"double bed 160 cm",svg:`<svg viewBox="0 0 170 112"><rect x="0" y="0" width="170" height="80" rx="6" fill="#cdbfae"/><rect x="0" y="56" width="170" height="46" rx="4" fill="#f4f0e8"/><ellipse cx="48" cy="56" rx="32" ry="10" fill="#e9e3d8"/><ellipse cx="122" cy="56" rx="32" ry="10" fill="#e9e3d8"/><rect x="0" y="78" width="170" height="24" fill="#a9b6c4"/><rect x="6" y="102" width="5" height="10" fill="#5a4a3c"/><rect x="159" y="102" width="5" height="10" fill="#5a4a3c"/></svg>`},
+  console:{w:120,h:80,label:"console table 120 cm",svg:`<svg viewBox="0 0 120 80"><rect x="0" y="0" width="120" height="5" fill="#8a6b4e"/><rect x="4" y="5" width="112" height="12" fill="#7a5d43"/><rect x="6" y="17" width="4" height="63" fill="#7a5d43"/><rect x="110" y="17" width="4" height="63" fill="#7a5d43"/><rect x="10" y="62" width="100" height="3" fill="#7a5d43"/></svg>`}
+};
+const PLANT=`<svg viewBox="0 0 50 130"><path d="M25 70 C10 40 0 30 4 10 C14 26 22 40 25 70 Z" fill="#6f8a5a"/><path d="M25 70 C40 36 48 26 46 6 C34 24 28 42 25 70 Z" fill="#7d9a64"/><path d="M25 72 C18 50 20 30 25 18 C30 30 32 50 25 72 Z" fill="#5f7a4b"/><path d="M12 82 h26 l-4 48 h-18 z" fill="#c9b9a0"/></svg>`;
+function roomView(host,w){
+  const st={room:"sofa",wall:"#efebe3",evening:false};
+  let px=0,pic=null,furn=null;
+  const render=()=>{
+    const Wd=host.clientWidth; px=Wd/360; const F=FURN[st.room]; const floorCm=240.3;
+    let gap=22; if(F.h+gap+w.h>232) gap=Math.max(8,232-F.h-w.h);
+    const top=(floorCm-(F.h+gap+w.h))*px, pw=w.w*px, ph=w.h*px;
+    host.style.setProperty("--wallc",st.wall);
+    host.innerHTML=`<div class="skirting"></div><div class="floor"></div>
+      ${st.room==="sofa"?`<div class="plant" style="left:86%;width:${50*px}px">${PLANT}</div>`:""}
+      <div class="furn" style="left:50%;width:${F.w*px}px">${F.svg}</div>
+      <div class="hung" style="left:calc(50% - ${pw/2}px);top:${top}px;width:${pw}px;height:${ph}px"><div class="pic"></div></div>
+      <div class="light" style="--lx:50%;--ly:${((top+ph/2)/host.clientHeight*100).toFixed(1)}%"></div>
+      <span class="scale-note">True scale · ${F.label} · painting ${w.w} × ${w.h} cm</span>`;
+    host.classList.toggle("evening",st.evening);
+    pic=host.querySelector(".pic"); furn=host.querySelector(".furn");
+    pic.appendChild(paintedCanvas(w,pw,ph));
+  };
+  render();
+  if(FINE){
+    const mv=e=>{const r=host.getBoundingClientRect();const dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;pic.style.transform=`perspective(900px) rotateY(${(dx*10).toFixed(2)}deg) rotateX(${(-dy*6).toFixed(2)}deg)`;furn.style.transform=`translateX(calc(-50% + ${(-dx*10).toFixed(1)}px))`};
+    host.addEventListener("pointermove",mv,{passive:true});
+    host.addEventListener("pointerleave",()=>{pic.style.transform="";furn.style.transform=""});
+  }
+  document.querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>{st.room=b.dataset.room;document.querySelectorAll("[data-room]").forEach(x=>x.setAttribute("aria-pressed",x===b));render()}));
+  document.querySelectorAll("[data-wall]").forEach(b=>b.addEventListener("click",()=>{st.wall=b.dataset.wall;document.querySelectorAll("[data-wall]").forEach(x=>x.setAttribute("aria-pressed",x===b));host.style.setProperty("--wallc",st.wall)}));
+  const ev=$("#evening");ev.addEventListener("click",()=>{st.evening=!st.evening;ev.setAttribute("aria-pressed",st.evening);host.classList.toggle("evening",st.evening)});
+  const ro=new ResizeObserver(()=>{if(Math.abs(host.clientWidth/360-px)>.05)render()});ro.observe(host);onCleanup(()=>ro.disconnect());
+}
+
+/* ---------- 4. gentle tilt on gallery cards (mouse only) ---------- */
+if(FINE && !REDUCED){
+  let cur=null;
+  document.addEventListener("pointermove",e=>{
+    const a=e.target.closest&&e.target.closest("a.work, a.theme-card"); const t=a&&a.querySelector(".tilt");
+    if(cur&&cur!==t){cur.style.removeProperty("--tx");cur.style.removeProperty("--ty");cur=null}
+    if(!t)return; cur=t; const r=t.getBoundingClientRect();
+    t.style.setProperty("--ty",((e.clientX-r.left)/r.width-.5)*8+"deg"); t.style.setProperty("--tx",-((e.clientY-r.top)/r.height-.5)*6+"deg");
+  },{passive:true});
+}
+
+/* ---------- router (plain #name hashes) ---------- */
+function route(){
+  const h = (location.hash||"#home").slice(1);
+  cleanups.forEach(f=>{try{f()}catch(e){}}); cleanups=[];
+  const cine=$("#cine"); cine.hidden=true; cine.innerHTML="";
+  const v = $("#view"); let html, nav="";
+  const w = WORKS.find(x=>x.id===h);
+  if(w){html=vPiece(w);nav="gallery"}
+  else if(THEMES[h]){html=vGallery(h);nav="gallery"}
+  else if(h==="gallery"){html=vGallery(null);nav="gallery"}
+  else if(h==="prints"){html=vPrints();nav="prints"}
+  else if(h==="shipping"){html=vShipping();nav="shipping"}
+  else if(h==="about"){html=vAbout();nav="about"}
+  else html=vHome();
+  window.scrollTo(0,0);
+  v.innerHTML=html; hydrate(v); if(w) bindPiece(w);
+  if(!w && !THEMES[h] && !["gallery","prints","shipping","about"].includes(h)) buildHall();
+  document.querySelectorAll("nav.main a").forEach(a=>{if(a.dataset.nav===nav)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",route);
+route();
+</script>
+
+</body>
+</html>
