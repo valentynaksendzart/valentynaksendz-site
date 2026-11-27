@@ -53,9 +53,9 @@ nav.main a{text-decoration:none;font-size:1.05rem;color:var(--muted);padding-blo
 nav.main a:hover,nav.main a[aria-current="page"]{color:var(--gold);border-bottom-color:var(--gold)}
 .menu-btn{display:none;font:500 1rem var(--font-body);color:var(--gold);background:none;border:1px solid var(--gold-deep);border-radius:3px;padding:6px 12px;cursor:pointer}
 @media (max-width:760px){
-  header.site .wrap{flex-wrap:nowrap;gap:10px;padding-block:8px}
-  .brand{font-size:1.25rem;margin-right:auto;white-space:nowrap}
-  .menu-btn{padding:4px 10px;font-size:.95rem}
+  header.site .wrap{flex-wrap:nowrap;gap:10px;padding-block:6px}
+  .brand{font-size:1.15rem;margin-right:auto;white-space:nowrap}
+  .menu-btn{padding:3px 10px;font-size:.9rem}
   .brand small{display:none}
   .menu-btn{display:block}
   nav.main .cur{padding:12px 0 4px}
@@ -226,7 +226,8 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 #cine .zoomer{position:absolute;inset:0;perspective:var(--persp,800px);perspective-origin:50% 42%;transform:scale(var(--zoom,1));transform-origin:50% 42%}
 .world{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;will-change:transform}
 .world > *{position:absolute;transform-style:preserve-3d;backface-visibility:hidden}
-.hall-floor{background:repeating-linear-gradient(90deg,#2d241d 0 58px,#251d17 58px 60px),var(--hall-floor);transform-origin:50% 0}
+.hall-floor{background:repeating-linear-gradient(90deg,rgba(0,0,0,.35) 0 2px,transparent 2px 55px),linear-gradient(90deg,#4a3a2c,#5c4834 50%,#4a3a2c),var(--hall-floor);transform-origin:50% 0}
+.hall-ceil{transform-origin:50% 0;background:radial-gradient(circle at 50% 50%,rgba(255,236,190,.9) 0 7px,rgba(255,220,150,.25) 9px,transparent 30px) 0 0/100% 260px,linear-gradient(90deg,#14352b,#1b4236 50%,#14352b)}
 .hall-floor::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(15,42,34,.9),rgba(15,42,34,0) 30%)}
 .hall-wall{background:linear-gradient(180deg,#1f4a3d,var(--hall-wall));transform-origin:0 50%}
 .hall-end{background:linear-gradient(180deg,#1f4a3d,var(--hall-wall))}
@@ -239,9 +240,9 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .cine-intro{padding-block:28px 22px;text-align:center}
 @media (max-width:760px){
   .draftbar{display:none}
-  .cine-intro{padding-block:10px 8px}
-  .cine-intro h1{font-size:1.6rem}
-  .cine-intro .tagline{font-size:1.05rem;margin-top:0}
+  .cine-intro{padding-block:8px 6px}
+  .cine-intro h1{font-size:1.45rem}
+  .cine-intro .tagline{font-size:.98rem;margin-top:0}
   .cine-intro .ctas{margin-top:8px;gap:8px}
   .cine-intro .btn{padding:7px 14px;font-size:.95rem}
   #cine .stage{min-height:360px}
@@ -824,20 +825,21 @@ function buildHall(){
   const el=$("#cine"); el.hidden=false; el.className="";
   el.style.setProperty("--hdr",document.querySelector("header.site").offsetHeight+"px");
   const mobile=innerWidth<700;
-  const HW=mobile?440:1100, HH=mobile?560:640, PX=mobile?2.4:2.9, STEP=mobile?300:340;
-  const L=Math.max(mobile?2500:3000, 380+Math.max(0,WORKS.length-2)*STEP+700); // last side painting stays well before the end wall
+  // phones: tall walls with paintings hung in two rows (salon hang), so the screen is filled top to bottom
+  const HW=mobile?440:1100, HH=mobile?900:640, PX=mobile?2.4:2.9, STEP=mobile?300:340, ZSTEP=mobile?190:STEP;
+  const L=Math.max(mobile?2500:3000, 380+Math.max(0,WORKS.length-2)*ZSTEP+700); // last side painting stays well before the end wall
   const still = REDUCED || !CAN3D;
   if(still) el.classList.add("static");
   if(!WORKS.length){el.hidden=true;return}
   const feature = WORKS.find(w=>w.id==="sunflowers-storm") || [...WORKS].filter(w=>w.status!=="sold").sort((a,b)=>b.w*b.h-a.w*a.h)[0] || WORKS[0];
   const side = WORKS.filter(w=>w!==feature);
   // keep every painting inside its wall: side walls hold up to ~half the hall height, the end wall up to 80 % of its width
-  const art = (w,x,y,z,ry,k=1)=>{const end=ry===0, maxW=end?HW*.8:STEP*1.6, maxH=HH*(end?.6:.5);
+  const art = (w,x,y,z,ry,k=1)=>{const end=ry===0, maxW=end?HW*.8:STEP*1.6, maxH=HH*(end?(mobile?.42:.6):(mobile?.36:.5));
     const f=Math.min(k, maxW/(w.w*PX), maxH/(w.h*PX)), W=w.w*PX*f, H=w.h*PX*f;
     return `<a class="hall-art" href="#${w.id}" data-z="${z}" aria-label="${esc(w.title)}" style="width:${W}px;height:${H}px;transform:translate3d(${x-W/2}px,${y-H/2}px,${z}px) rotateY(${ry}deg)"><canvas data-hall="${w.id}" width="${Math.round(W)}" height="${Math.round(H)}"></canvas><span class="hall-plate">${esc(w.title)}<br>${w.status==="sold"?"Sold":money(w.price)}</span></a>`};
   const FRONT=700, LEN=L+FRONT;
-  const items = side.map((w,i)=>{const left=i%2===0, z=-380-i*STEP;
-    return art(w,left?-HW/2+4:HW/2-4,-30,z,left?90:-90)}).join("");
+  const items = side.map((w,i)=>{const left=i%2===0, z=-380-i*ZSTEP, y=mobile?(Math.floor(i/2)%2?HH*.2:-HH*.2):-30;
+    return art(w,left?-HW/2+4:HW/2-4,y,z,left?90:-90)}).join("");
   el.innerHTML=`<div class="cine-intro wrap">
       <h1>Wildflower Artist</h1>
       <div class="tagline">Nature in every brushstroke</div>
@@ -847,6 +849,7 @@ function buildHall(){
       <div class="hall-floor" style="width:${HW}px;height:${LEN}px;transform:translate3d(${-HW/2}px,${HH/2}px,${FRONT}px) rotateX(-90deg)"></div>
       <div class="hall-wall" style="width:${LEN}px;height:${HH}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${FRONT}px) rotateY(90deg)"></div>
       <div class="hall-wall" style="width:${LEN}px;height:${HH}px;transform:translate3d(${HW/2}px,${-HH/2}px,${FRONT}px) rotateY(90deg)"></div>
+      <div class="hall-ceil" style="width:${HW}px;height:${LEN}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${-L}px) rotateX(90deg)"></div>
       <div class="hall-end" style="width:${HW}px;height:${HH}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${-L}px)"></div>
       ${items}${art(feature,0,-40,-L+3,0,1.5)}
     </div></div>
@@ -860,7 +863,7 @@ function buildHall(){
   let cam=0,target=0,ox=50,oxT=50;
   const stage=el.querySelector(".stage"), zoomer=el.querySelector(".zoomer");
   // on tall phones the hall would sit small in the middle: enlarge it to fill the screen
-  const fit=()=>{zoomer.style.setProperty("--zoom",mobile?clamp(stage.clientHeight/stage.clientWidth*.95,1.15,2).toFixed(2):1)};
+  const fit=()=>{zoomer.style.setProperty("--zoom",mobile?clamp(stage.clientHeight/stage.clientWidth*.8,1.05,1.8).toFixed(2):1)};
   fit();
   const track=el.querySelector(".track");
   const read=()=>{const r=track.getBoundingClientRect();const p=clamp(-r.top/Math.max(1,r.height-stage.offsetHeight),0,1);target=p*MAXZ};
