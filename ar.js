@@ -89,7 +89,9 @@ export function buildGLB(spec, jpeg) {
 /* ---------- USDZ (iPhone / iPad Quick Look) ---------- */
 function usdMesh(name, m, withUV, mat) {
   const q = m.p.length / 12, pts = [], nor = [], st = [];
-  for (let i = 0; i < m.p.length; i += 3) { pts.push(`(${f6(m.p[i])}, ${f6(m.p[i + 1])}, ${f6(m.p[i + 2])})`); nor.push(`(${m.n[i]}, ${m.n[i + 1]}, ${m.n[i + 2]})`); }
+  // Quick Look's wall anchor uses the model's +Y as "out of the wall" and -Z as "up", so lay the painting
+  // on its back for USD: (x, y, z) -> (x, z, -y). Without this it hangs face down (seen on a real iPhone).
+  for (let i = 0; i < m.p.length; i += 3) { pts.push(`(${f6(m.p[i])}, ${f6(m.p[i + 2])}, ${f6(-m.p[i + 1])})`); nor.push(`(${m.n[i]}, ${m.n[i + 2]}, ${-m.n[i + 1] || 0})`); }
   if (withUV) for (let i = 0; i < m.uv.length; i += 2) st.push(`(${f6(m.uv[i])}, ${f6(1 - m.uv[i + 1])})`); // USD textures start at the bottom
   return `
     def Mesh "${name}" (
