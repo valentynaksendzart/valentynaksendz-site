@@ -148,6 +148,7 @@ async function home() {
       ${ps.length ? `<div class="grid">${ps.map(card).join("")}</div>`
         : `<div class="empty">${list.paintings.length ? "Здесь пока пусто." : "Картин пока нет. Нажмите «Добавить картину»."}</div>`}
     </section>`;
+  backfillAr(list.paintings);
   $app.querySelector("#add").onclick = async e => {
     e.currentTarget.disabled = true;
     const {painting} = await api("paintings", {method: "POST", body: "{}"});
@@ -542,16 +543,30 @@ async function addFiles(files) {
 }
 
 // Paintings uploaded before the AR feature: make the JPEG copy of the main photo once, quietly, from its web copy.
+async function arCopyFor(p, paintingId) {
+  const r = await fetch(img(p.large), {credentials: "same-origin"}); if (!r.ok) throw new Error("photo");
+  const src = await createImageBitmap(await r.blob());
+  const ar = await variant(src, 2048, 0.85, true), a = await put(paintingId, p.id, "ar", ar.blob, "image/jpeg");
+  p.ar = a.key; p.aw = ar.w; p.ah = ar.h; p.bytes = (p.bytes || 0) + a.bytes;
+}
 async function ensureAr() {
   const p = cur && cur.photos.find(x => x.kind !== "back");
   if (!p || p.ar || !p.large) return;
-  try {
-    const r = await fetch(img(p.large), {credentials: "same-origin"}); if (!r.ok) return;
-    const src = await createImageBitmap(await r.blob());
-    const ar = await variant(src, 2048, 0.85, true), a = await put(cur.id, p.id, "ar", ar.blob, "image/jpeg");
-    p.ar = a.key; p.aw = ar.w; p.ah = ar.h; p.bytes = (p.bytes || 0) + a.bytes;
-    await saveNow();
-  } catch (e) { /* try again next time the painting is opened */ }
+  try { await arCopyFor(p, cur.id); await saveNow(); } catch (e) { /* try again next time the painting is opened */ }
+}
+// Paintings uploaded before the AR feature: make the JPEG copy for every one of them, quietly, when the admin home opens.
+async function backfillAr(paintings) {
+  for (const pt of paintings) {
+    const main = (pt.photos || []).find(x => x.kind !== "back");
+    if (!main || main.ar || !main.large) continue;
+    try {
+      const {painting} = await api("paintings/" + pt.id);   // fresh copy, so nothing newer is overwritten
+      const m = painting.photos.find(x => x.kind !== "back");
+      if (!m || m.ar) continue;
+      await arCopyFor(m, painting.id);
+      await api("paintings/" + pt.id, {method: "PUT", body: JSON.stringify({photos: painting.photos})});
+    } catch (e) { /* next visit */ }
+  }
 }
 
 /* ---------------- Router ---------------- */
