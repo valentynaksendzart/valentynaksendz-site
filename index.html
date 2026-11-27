@@ -7,7 +7,16 @@
 <style>[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Valentyna Ksendz Art</title>
 <meta name="description" content="Original oil and acrylic paintings by Valentyna Ksendz: wildflowers, impressionist landscapes, impasto and splash technique. Limited-edition prints. Worldwide shipping.">
+<link rel="canonical" href="https://valentynaksendz-site.pages.dev/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Valentyna Ksendz Art">
+<meta property="og:title" content="Valentyna Ksendz Art">
+<meta property="og:description" content="Original botanical paintings and wildflower art by Valentyna Ksendz. Limited-edition prints. Worldwide shipping from the UK.">
+<meta property="og:url" content="https://valentynaksendz-site.pages.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Valentyna Ksendz","jobTitle":"Artist","description":"Wildflower artist: original botanical paintings and limited-edition prints.","url":"https://valentynaksendz-site.pages.dev/","sameAs":["https://www.instagram.com/valentynaart_uk/"],"knowsAbout":["Botanical art","Wildflower painting","Impasto"]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Karla:wght@400;500;700&display=swap">
 <style>
 /* Layout: a calm forest-green gallery (Valentyna's Deep Forest Green #183D32) with gold headings; large, high-contrast text for older buyers. Single deliberate dark look. */
@@ -573,8 +582,8 @@ function vPiece(w){
         </div>
       </div>
       <div id="pane-photos" ${CAN3D?"hidden":""}>
-        ${w.photos&&w.photos.length?`<div class="main-shot" id="mainShot"><div class="frame"><img src="${w.photos[0].src}" alt="${esc(w.title)}" style="display:block;width:100%;height:auto"></div></div>
-        ${w.photos.length>1?`<div class="thumbs" role="group" aria-label="Photos">${w.photos.map((ph,i)=>`<button type="button" data-src="${ph.src}" aria-pressed="${i===0}" aria-label="Photo ${i+1}"><img src="${ph.thumb}" alt="" loading="lazy" style="display:block;width:100%;aspect-ratio:1;object-fit:cover"></button>`).join("")}</div>`:""}`
+        ${w.photos&&w.photos.length?`<div class="main-shot" id="mainShot"><div class="frame"><img src="${w.photos[0].src}" alt="${esc(w.title)}, painting by Valentyna Ksendz" fetchpriority="high" decoding="async"${w.photos[0].w?` width="${w.photos[0].w}" height="${w.photos[0].h}"`:""} style="display:block;width:100%;height:auto"></div></div>
+        ${w.photos.length>1?`<div class="thumbs" role="group" aria-label="Photos">${w.photos.map((ph,i)=>`<button type="button" data-src="${ph.src}" aria-pressed="${i===0}" aria-label="${esc(w.title)}, photo ${i+1}"><img src="${ph.thumb}" alt="" decoding="async" loading="lazy" style="display:block;width:100%;aspect-ratio:1;object-fit:cover"></button>`).join("")}</div>`:""}`
         :`<div class="main-shot" id="mainShot">${frame(w.id,"front","Front · placeholder")}</div>
         <div class="thumbs" role="group" aria-label="Photos">${shots.map(([k,l],i)=>`<button type="button" data-shot="${k}" data-label="${l}" aria-pressed="${i===0}"><canvas data-work="${w.id}" data-kind="${k}"></canvas>${l}</button>`).join("")}</div>`}
       </div>
@@ -926,7 +935,8 @@ if(FINE && !REDUCED){
 
 /* ---------- router (plain #name hashes) ---------- */
 function route(){
-  const h = (location.hash||"#home").slice(1);
+  const pm = location.pathname.match(/^\/art\/([\w-]+)\/?$/);
+  const h = (location.hash||(pm?"#"+pm[1]:"#home")).slice(1);
   cleanups.forEach(f=>{try{f()}catch(e){}}); cleanups=[];
   const cine=$("#cine"); cine.hidden=true; cine.innerHTML="";
   const v = $("#view"); let html, nav="";
@@ -943,7 +953,18 @@ function route(){
   v.innerHTML=html; hydrate(v); if(w) bindPiece(w); if(h==="cards") bindCardBuy(v);
   if(!w && !THEMES[h] && !["gallery","prints","cards","shipping","about"].includes(h)) buildHall();
   document.querySelectorAll("nav.main a").forEach(a=>{if(a.dataset.nav===nav)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  setMeta(w,h);
   window.scrollTo(0,0);
+}
+/* Page title + description per view (search engines and browser tabs). */
+const META_DESC = document.querySelector('meta[name="description"]').content;
+function setMeta(w,h){
+  const names={gallery:"Gallery",prints:"Prints",cards:"Cards",shipping:"Shipping & returns",about:"About the artist"};
+  let t="Valentyna Ksendz Art", d=META_DESC;
+  if(w){t=w.title+" by Valentyna Ksendz";d=(w.story||(w.title+", original painting by Valentyna Ksendz.")).replace(/\s+/g," ").slice(0,155)}
+  else if(THEMES[h]){t=(THEMES[h].name||h)+" | Valentyna Ksendz Art"}
+  else if(names[h]){t=names[h]+" | Valentyna Ksendz Art"}
+  document.title=t; document.querySelector('meta[name="description"]').content=d;
 }
 (()=>{const sel=$("#cur");sel.innerHTML=Object.entries(CURRENCIES).map(([k,c])=>`<option value="${k}" ${k===CUR?"selected":""}>${c.label}</option>`).join("");
   sel.addEventListener("change",()=>{CUR=sel.value;try{localStorage.setItem("cur",CUR)}catch(e){}const y=scrollY;route();scrollTo(0,y)})})();
