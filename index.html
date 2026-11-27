@@ -215,6 +215,23 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
   @keyframes fade{from{opacity:.4}to{opacity:1}}
 }
 
+
+/* ---------- phone home: wall carousel (one painting per screen, parallax wall) ---------- */
+.cw{background:#12302a;color:var(--hall-ink)}
+.cw-slide{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;perspective:900px}
+.cw-wall{position:absolute;left:0;right:0;top:-25%;bottom:-25%;background:linear-gradient(180deg,#1f4a3d,#183D32);will-change:transform}
+.cw-wall::before{content:"";position:absolute;left:0;right:0;top:21.3%;height:0;border-top:2px solid rgba(217,188,110,.3);box-shadow:0 7px 12px rgba(0,0,0,.22)}
+.cw-wall::after{content:"";position:absolute;left:0;right:0;top:71.3%;bottom:0;background:rgba(0,0,0,.2);border-top:2px solid rgba(217,188,110,.22);box-shadow:inset 0 10px 14px rgba(0,0,0,.18)}
+.cw-glow{position:absolute;left:50%;top:-12%;width:150%;height:75%;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 0,rgba(255,226,170,.26),transparent 68%);pointer-events:none}
+.cw-slide > .cine-intro,.cw-art,.cw-plate{position:relative;z-index:1}
+.cw-art{display:block;box-shadow:0 0 0 4px #c9a95a,0 18px 36px rgba(0,0,0,.55);will-change:transform}
+.cw-art canvas{display:block;width:100%;height:100%}
+.cw-plate{display:block;text-align:center;text-decoration:none;max-width:88%}
+.cw-plate b{display:block;font:600 1.45rem/1.2 var(--font-display);color:var(--gold)}
+.cw-plate span{display:block;margin-top:2px;font:500 1.05rem var(--font-body);color:var(--hall-ink)}
+.cw .scroll-cue{z-index:1}
+.cw-end{padding:30px 16px 40px;display:flex;justify-content:center;background:#12302a}
+
 /* ---------- cinematic gallery hall (home) ---------- */
 :root{--hall-bg:#0f2a22;--hall-ink:#f4eedd;--hall-muted:#cfd6c9;--hall-wall:#183D32;--hall-floor:#2a211b;--spot:rgba(255,226,170,.16)}
 #cine{position:relative;background:var(--hall-bg);color:var(--hall-ink)}
@@ -821,7 +838,58 @@ function paintedCanvas(w,W,H){const c=document.createElement("canvas");c.width=M
 function loop(step){let id=0,alive=true;const tick=t=>{id=0;if(alive&&step(t))id=requestAnimationFrame(tick)};const kick=()=>{if(alive&&!id)id=requestAnimationFrame(tick)};onCleanup(()=>{alive=false;cancelAnimationFrame(id)});return kick}
 
 /* ---------- 1. cinematic walk-through hall (home) ---------- */
+function buildCarousel(){
+  const el=$("#cine"); el.hidden=false; el.className="cw";
+  const hdr=document.querySelector("header.site").offsetHeight;
+  el.style.setProperty("--hdr",hdr+"px");
+  const vw=innerWidth, H=Math.max(480,innerHeight-hdr), INTRO=112, still=REDUCED;
+  const slide=(w,i)=>{
+    const availW=Math.min(vw*.76,420), availH=H-(i===0?INTRO:0)-150;
+    const fac=clamp(.6+.4*Math.sqrt(w.w*w.h/8000),.65,1);
+    const sc=Math.min(availW/w.w,availH/w.h)*fac, W=Math.round(w.w*sc), Hh=Math.round(w.h*sc);
+    return `<section class="cw-slide" style="height:${H}px"><div class="cw-wall"></div><i class="cw-glow"></i>
+      ${i===0?`<div class="cine-intro wrap"><h1>Wildflower Artist</h1><div class="tagline">Nature in every brushstroke</div><div class="ctas"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="#prints">Prints</a></div></div>`:""}
+      <a class="cw-art" href="#${w.id}" style="width:${W}px;height:${Hh}px" aria-label="${esc(w.title)}"><canvas data-cw="${w.id}"></canvas></a>
+      <a class="cw-plate" href="#${w.id}"><b>${esc(w.title)}</b><span>${w.status==="sold"?"Sold":money(w.price)}</span></a>
+      ${i===0&&!still&&H>=760?`<div class="scroll-cue" id="cue">Scroll<i></i></div>`:""}</section>`};
+  el.innerHTML=WORKS.map(slide).join("")+`<div class="cw-end"><a class="btn" href="#gallery">All paintings</a></div>`;
+  const slides=[...el.querySelectorAll(".cw-slide")], cue=$("#cue");
+  const parts=slides.map(sl=>({sl,wall:sl.querySelector(".cw-wall"),glow:sl.querySelector(".cw-glow"),art:sl.querySelector(".cw-art")}));
+  // paint a slide when it is near the screen, and tint its wall with the painting's average colour
+  const draw=sl=>{
+    if(sl.dataset.d) return; sl.dataset.d=1;
+    const cv=sl.querySelector("canvas"), w=WORKS.find(x=>x.id===cv.dataset.cw), k=DPR();
+    cv.width=Math.round(cv.parentNode.clientWidth*k); cv.height=Math.round(cv.parentNode.clientHeight*k);
+    paintWork(cv.getContext("2d"),cv.width,cv.height,w);
+    try{
+      const a=document.createElement("canvas"); a.width=a.height=8; a.getContext("2d").drawImage(cv,0,0,8,8);
+      const b=document.createElement("canvas"); b.width=b.height=1; const bx=b.getContext("2d"); bx.drawImage(a,0,0,1,1);
+      const d=bx.getImageData(0,0,1,1).data, mx=(c,base,p)=>Math.round(base+(c-base)*p);
+      sl.querySelector(".cw-wall").style.background=`linear-gradient(180deg,rgb(${mx(d[0],31,.22)},${mx(d[1],74,.22)},${mx(d[2],61,.22)}),rgb(${mx(d[0],24,.14)},${mx(d[1],61,.14)},${mx(d[2],50,.14)}))`;
+    }catch(e){}
+  };
+  const io="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)draw(e.target)}),{rootMargin:"120% 0px"}):null;
+  slides.forEach(sl=>io?io.observe(sl):draw(sl));
+  if(still) return onCleanup(()=>io&&io.disconnect());
+  // parallax: the wall moves slower than the page, the painting leans and grows as it comes to the middle of the screen
+  let raf=0;
+  const upd=()=>{
+    raf=0; const vh=innerHeight, mid=(hdr+vh)/2, rs=parts.map(p=>p.sl.getBoundingClientRect());
+    parts.forEach((p,i)=>{const r=rs[i]; if(r.bottom<-80||r.top>vh+80) return;
+      const rel=clamp((r.top+r.height/2-mid)/r.height,-1,1), a=Math.abs(rel);
+      p.wall.style.transform=`translate3d(0,${(-rel*.2*r.height).toFixed(1)}px,0)`;
+      p.art.style.transform=`rotateX(${(rel*6).toFixed(2)}deg) scale(${(1-a*.07).toFixed(3)})`;
+      p.glow.style.opacity=(1-a*.8).toFixed(2);});
+    if(cue) cue.style.opacity=clamp(1-scrollY/120,0,1);
+  };
+  const on=()=>{if(!raf)raf=requestAnimationFrame(upd)};
+  addEventListener("scroll",on,{passive:true}); addEventListener("resize",on);
+  onCleanup(()=>{removeEventListener("scroll",on);removeEventListener("resize",on);cancelAnimationFrame(raf);io&&io.disconnect()});
+  on();
+}
+
 function buildHall(){
+  if(innerWidth<700 && WORKS.length) return buildCarousel(); // phones: one painting per screen
   const el=$("#cine"); el.hidden=false; el.className="";
   el.style.setProperty("--hdr",document.querySelector("header.site").offsetHeight+"px");
   const mobile=innerWidth<700;
