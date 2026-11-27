@@ -936,7 +936,7 @@ if(FINE && !REDUCED){
 /* ---------- router (plain #name hashes) ---------- */
 function route(){
   const pm = location.pathname.match(/^\/art\/([\w-]+)\/?$/);
-  const h = (location.hash||(pm?"#"+pm[1]:"#home")).slice(1);
+  const h = (location.hash||(pm?"#p-"+pm[1]:"#home")).slice(1);
   cleanups.forEach(f=>{try{f()}catch(e){}}); cleanups=[];
   const cine=$("#cine"); cine.hidden=true; cine.innerHTML="";
   const v = $("#view"); let html, nav="";
