@@ -240,7 +240,13 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .cw-slide + .cw-slide::before{content:"";position:absolute;left:50%;top:0;width:64px;height:1px;margin-left:-32px;background:rgba(217,188,110,.45);z-index:1}
 .cw-glow{position:absolute;left:50%;top:6%;width:140%;height:72%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,226,170,.12),rgba(255,226,170,0));pointer-events:none}
 .cw-slide > .cine-intro,.cw-art,.cw-plate{position:relative;z-index:1}
-.cw-art{display:block;box-shadow:0 0 0 4px #c9a95a,0 18px 36px rgba(0,0,0,.55);will-change:transform}
+.cw-art{display:block;box-shadow:0 0 0 4px #c9a95a,0 18px 36px rgba(0,0,0,.55);transform:scale(.94);transition:transform .7s cubic-bezier(.2,.7,.2,1),box-shadow .7s ease}
+.cw-slide.on .cw-art{transform:scale(1.04);box-shadow:0 0 0 4px #d9bc6e,0 26px 50px rgba(0,0,0,.6)}
+.cw-glow{opacity:.35;transition:opacity .9s ease}
+.cw-slide.on .cw-glow{opacity:1}
+html.cw-snap{scroll-snap-type:y proximity;scroll-padding-top:var(--hdr,62px)}
+.cw-slide{scroll-snap-align:center}
+@media (prefers-reduced-motion:reduce){.cw-art{transform:none;transition:none}}
 .cw-art canvas{display:block;width:100%;height:100%}
 .cw-plate{display:block;text-align:center;text-decoration:none;max-width:88%}
 .cw-plate b{display:block;font:600 1.45rem/1.2 var(--font-display);color:var(--gold)}
@@ -978,19 +984,21 @@ function buildCarousel(){
   const io="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)draw(e.target)}),{rootMargin:"120% 0px"}):null;
   slides.forEach(sl=>io?io.observe(sl):draw(sl));
   if(still) return onCleanup(()=>io&&io.disconnect());
-  // the painting leans and grows as it comes to the middle of the screen
-  let raf=0;
-  const upd=()=>{
-    raf=0; const vh=innerHeight, mid=(hdr+vh)/2, rs=parts.map(p=>p.sl.getBoundingClientRect());
-    parts.forEach((p,i)=>{const r=rs[i]; if(r.bottom<-80||r.top>vh+80) return;
-      const rel=clamp((r.top+r.height/2-mid)/(vh*.6),-1,1), a=Math.abs(rel);
-      p.art.style.transform=`rotateX(${(rel*6).toFixed(2)}deg) scale(${(1.04-a*.16).toFixed(3)})`;
-      p.glow.style.opacity=(1-a*.8).toFixed(2);});
+  // focus: while the page moves every painting stays still and the same size; once scrolling stops,
+  // the painting nearest the middle of the screen gently grows and its light comes on (CSS transition)
+  const root=document.documentElement; root.classList.add("cw-snap"); root.style.setProperty("--hdr",hdr+"px");
+  let raf=0, idle=0, cur=null;
+  const near=()=>{const vh=innerHeight, mid=(hdr+vh)/2; let best=null, bd=1e9;
+    parts.forEach(p=>{const r=p.sl.getBoundingClientRect(), d=Math.abs(r.top+r.height/2-mid); if(d<bd){bd=d;best=p}});
+    return bd<vh*.3?best:null};
+  const setFocus=p=>{if(p===cur)return; if(cur)cur.sl.classList.remove("on"); cur=p; if(p)p.sl.classList.add("on")};
+  const upd=()=>{raf=0;
+    if(cur){const r=cur.sl.getBoundingClientRect(), mid=(hdr+innerHeight)/2; if(Math.abs(r.top+r.height/2-mid)>innerHeight*.22) setFocus(null);}
     if(cue) cue.style.opacity=clamp(1-scrollY/120,0,1);
   };
-  const on=()=>{if(!raf)raf=requestAnimationFrame(upd)};
+  const on=()=>{if(!raf)raf=requestAnimationFrame(upd); clearTimeout(idle); idle=setTimeout(()=>setFocus(near()),140)};
   addEventListener("scroll",on,{passive:true}); addEventListener("resize",on);
-  onCleanup(()=>{removeEventListener("scroll",on);removeEventListener("resize",on);cancelAnimationFrame(raf);io&&io.disconnect()});
+  onCleanup(()=>{removeEventListener("scroll",on);removeEventListener("resize",on);cancelAnimationFrame(raf);clearTimeout(idle);root.classList.remove("cw-snap");io&&io.disconnect()});
   on();
 }
 
