@@ -18,7 +18,8 @@ export const onRequestGet = async ({ env, params, request }) => {
   const w = toPublic(row);
   const pageUrl = `${url.origin}/art/${encodeURIComponent(w.id)}`;
   const title = `${w.title} by Valentyna Ksendz`;
-  const size = w.w && w.h ? ` ${w.w} × ${w.h} cm.` : '';
+  const multi = w.panels > 1, names = { 2: 'Diptych', 3: 'Triptych', 4: 'Polyptych' };
+  const size = w.w && w.h ? (multi ? ` ${names[w.panels] || 'Polyptych'}, ${w.panels} canvases of ${w.w} × ${w.h} cm.` : ` ${w.w} × ${w.h} cm.`) : '';
   const desc = ((w.story || `${w.title}, original ${String(w.medium || 'oil').toLowerCase()} painting by Valentyna Ksendz.`).replace(/\s+/g, ' ').slice(0, 140) + size).trim();
   const img = w.photos[0] ? url.origin + w.photos[0].src : null;
 
@@ -36,7 +37,7 @@ export const onRequestGet = async ({ env, params, request }) => {
     brand: { '@type': 'Brand', name: 'Valentyna Ksendz Art' },
   };
   if (img) ld.image = img;
-  if (w.w) ld.width = { '@type': 'QuantitativeValue', value: w.w, unitCode: 'CMT' };
+  if (w.w) ld.width = { '@type': 'QuantitativeValue', value: multi ? Math.round((w.panels * w.w + (w.panels - 1) * (w.gap ?? 5)) * 10) / 10 : w.w, unitCode: 'CMT' };
   if (w.h) ld.height = { '@type': 'QuantitativeValue', value: w.h, unitCode: 'CMT' };
   if (w.year) ld.dateCreated = String(w.year);
   if (w.price) ld.offers = {

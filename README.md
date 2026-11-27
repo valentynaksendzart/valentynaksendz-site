@@ -39,3 +39,12 @@ Greeting cards live in the `products` table (D1), one row per card, linked to a 
 `sold` how many are gone. SKUs: originals `VK-O-0001`, prints `VK-O-0001-PP` / `-PC`,
 cards `VK-C-0001` (number = database id). `GET /api/paintings` returns each painting's
 `sku` and its on-sale `cards`, so a checkout can be added later on top of these SKUs.
+
+### Diptychs and triptychs
+
+One artwork painted across 2-4 separate canvases is one painting row with `panels` > 1.
+`width_cm` / `height_cm` are the size of ONE canvas and `gap_cm` is the recommended space between
+canvases on the wall (5 cm if empty). The first photo is the whole picture with the canvases butted
+together; the site cuts it into panels itself (Photos tab, 3D, On a wall, gallery). It is sold and
+shipped as one set with one price and one SKU. Add `?demo=diptych` to any page address to see a
+placeholder diptych.
