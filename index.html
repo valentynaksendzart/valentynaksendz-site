@@ -221,8 +221,9 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 #cine .track{position:relative;height:300vh}
 #cine.static .track{height:auto}
 #cine[hidden]{display:none}
-#cine .stage{position:sticky;top:calc(env(safe-area-inset-top, 0px) + var(--hdr,62px));height:calc(100vh - var(--hdr,62px));height:calc(100svh - var(--hdr,62px));min-height:460px;overflow:hidden;perspective:var(--persp,800px);perspective-origin:50% 42%;background:radial-gradient(ellipse at 50% 35%,#24564a 0%,var(--hall-bg) 72%)}
+#cine .stage{position:sticky;top:calc(env(safe-area-inset-top, 0px) + var(--hdr,62px));height:calc(100vh - var(--hdr,62px));height:calc(100svh - var(--hdr,62px));min-height:460px;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#24564a 0%,var(--hall-bg) 72%)}
 #cine.static .stage{position:relative;height:620px}
+#cine .zoomer{position:absolute;inset:0;perspective:var(--persp,800px);perspective-origin:50% 42%;transform:scale(var(--zoom,1));transform-origin:50% 42%}
 .world{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;will-change:transform}
 .world > *{position:absolute;transform-style:preserve-3d;backface-visibility:hidden}
 .hall-floor{background:repeating-linear-gradient(90deg,#2d241d 0 58px,#251d17 58px 60px),var(--hall-floor);transform-origin:50% 0}
@@ -237,14 +238,16 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .cine-copy .wrap{width:100%}
 .cine-intro{padding-block:28px 22px;text-align:center}
 @media (max-width:760px){
-  .cine-intro{padding-block:14px 10px}
-  .cine-intro h1{font-size:1.9rem}
-  .cine-intro .tagline{font-size:1.15rem;margin-top:0}
-  .cine-intro .ctas{margin-top:12px;gap:10px}
-  .cine-intro .btn{padding:10px 18px;font-size:1rem}
-  #cine .stage{min-height:380px;perspective-origin:50% 36%}
-  .world{top:36%}
-  .hall-plate{font-size:26px}
+  .draftbar{display:none}
+  .cine-intro{padding-block:10px 8px}
+  .cine-intro h1{font-size:1.6rem}
+  .cine-intro .tagline{font-size:1.05rem;margin-top:0}
+  .cine-intro .ctas{margin-top:8px;gap:8px}
+  .cine-intro .btn{padding:7px 14px;font-size:.95rem}
+  #cine .stage{min-height:360px}
+  #cine .zoomer{transform-origin:50% 38%}
+  .world{top:38%}
+  .hall-plate{font-size:24px}
 }
 .cine-intro h1{font-size:clamp(2rem,6vw,3.4rem);color:var(--gold)}
 .cine-intro .tagline{font-family:var(--font-display);font-style:italic;font-size:clamp(1.25rem,3vw,1.7rem);color:var(--gold);margin-top:4px}
@@ -840,35 +843,38 @@ function buildHall(){
       <div class="tagline">Nature in every brushstroke</div>
       <div class="ctas"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="#prints">Prints</a></div>
     </div>
-    <div class="track" style="${still?"":`height:${Math.round(Math.max(300,L/10))}vh`}"><div class="stage" style="--persp:${mobile?640:800}px"><div class="world" id="world">
+    <div class="track" style="${still?"":`height:${Math.round(Math.max(300,L/10))}vh`}"><div class="stage"><div class="zoomer" style="--persp:${mobile?640:800}px"><div class="world" id="world">
       <div class="hall-floor" style="width:${HW}px;height:${LEN}px;transform:translate3d(${-HW/2}px,${HH/2}px,${FRONT}px) rotateX(-90deg)"></div>
       <div class="hall-wall" style="width:${LEN}px;height:${HH}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${FRONT}px) rotateY(90deg)"></div>
       <div class="hall-wall" style="width:${LEN}px;height:${HH}px;transform:translate3d(${HW/2}px,${-HH/2}px,${FRONT}px) rotateY(90deg)"></div>
       <div class="hall-end" style="width:${HW}px;height:${HH}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${-L}px)"></div>
       ${items}${art(feature,0,-40,-L+3,0,1.5)}
-    </div>
+    </div></div>
     <div class="end-copy" id="endCopy"><div class="ctas"><a class="btn" href="#${feature.id}">Turn “${esc(feature.title)}” in 3D</a><a class="btn ghost" href="#gallery" style="background:rgba(15,42,34,.6)">All paintings</a></div></div>
     ${still?"":`<div class="scroll-cue" id="cue">Scroll to walk through<i></i></div>`}
   </div></div>`;
   el.querySelectorAll("canvas[data-hall]").forEach(c=>{const w=WORKS.find(x=>x.id===c.dataset.hall);paintWork(c.getContext("2d"),c.width,c.height,w)});
   const world=$("#world"), end=$("#endCopy"), cue=$("#cue"), arts=[...el.querySelectorAll(".hall-art")];
-  const MAXZ=L-640;
+  const START=mobile?320:0, MAXZ=L-640-START; // phones start a few steps into the hall, so the first paintings are big
   if(still){world.style.transform=`translateZ(${MAXZ*.18}px)`;return}
   let cam=0,target=0,ox=50,oxT=50;
-  const stage=el.querySelector(".stage");
+  const stage=el.querySelector(".stage"), zoomer=el.querySelector(".zoomer");
+  // on tall phones the hall would sit small in the middle: enlarge it to fill the screen
+  const fit=()=>{zoomer.style.setProperty("--zoom",mobile?clamp(stage.clientHeight/stage.clientWidth*.95,1.15,2).toFixed(2):1)};
+  fit();
   const track=el.querySelector(".track");
   const read=()=>{const r=track.getBoundingClientRect();const p=clamp(-r.top/Math.max(1,r.height-stage.offsetHeight),0,1);target=p*MAXZ};
   const kick=loop(()=>{
     cam+= (target-cam)*0.09; ox+=(oxT-ox)*0.08;
-    world.style.transform=`translateZ(${cam.toFixed(1)}px)`;
-    stage.style.perspectiveOrigin=`${ox.toFixed(2)}% 42%`;
+    world.style.transform=`translateZ(${(cam+START).toFixed(1)}px)`;
+    zoomer.style.perspectiveOrigin=`${ox.toFixed(2)}% ${mobile?38:42}%`;
     const p=cam/MAXZ;
     const e=clamp((p-.82)*6,0,1); end.style.opacity=e; end.classList.toggle("on",e>.5);
     if(cue) cue.style.opacity=clamp(1-p*8,0,1);
-    for(const a of arts){const z=+a.dataset.z+cam; a.style.visibility=z>220?"hidden":"visible"}
+    for(const a of arts){const z=+a.dataset.z+cam+START; a.style.visibility=z>220?"hidden":"visible"}
     return Math.abs(target-cam)>.3||Math.abs(oxT-ox)>.05;
   });
-  const onScroll=()=>{read();kick()};
+  const onScroll=e=>{if(e&&e.type==="resize")fit();read();kick()};
   const onMove=e=>{oxT=50+(e.clientX/innerWidth-.5)*8;kick()};
   addEventListener("scroll",onScroll,{passive:true}); addEventListener("resize",onScroll);
   if(FINE) addEventListener("pointermove",onMove,{passive:true});
