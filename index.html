@@ -678,7 +678,7 @@ function packHTML(w,c){
   const box = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="7" width="20" height="16" fill="none"/><path d="M4 7l4-4h12l4 4" fill="none"/></svg>`;
   const tube = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="6" cy="14" rx="3" ry="6" fill="none"/><path d="M6 8h17M6 20h17" fill="none"/><ellipse cx="23" cy="14" rx="3" ry="6" fill="none"/></svg>`;
   if(!C.ok) return `<div class="pack no"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="14" cy="14" r="10" fill="none"/><path d="M7 21L21 7" fill="none"/></svg><div><b>Sorry, I don't ship to ${C.n} at the moment.</b>Delivery there is very expensive and unreliable. Please write to me if you'd like to discuss it.</div></div>`;
-  if(!C.wood) return `<div class="pack">${tube}<div><b>Ships rolled in a tube, without the wooden stretcher</b>${C.n} does not accept untreated wood in parcels. The canvas arrives rolled and needs re-stretching locally (any framer can do this). <span class="guess">wording TBC</span></div></div>`;
+  if(!C.wood) return `<div class="pack">${tube}<div><b>Ships rolled in a tube, without the wooden stretcher</b>${C.n} does not accept untreated wood in parcels. The canvas arrives rolled and needs re-stretching locally (any framer can do this). <span class="guess">Valentyna to confirm</span></div></div>`;
   return `<div class="pack">${box}<div><b>Ships on its stretcher, ready to hang</b>Wrapped, corner-protected and packed in a rigid box, large paintings too.</div></div>`;
 }
 const seenTip=()=>{try{return localStorage.getItem("tip1")==="1"}catch(e){return false}};
@@ -859,7 +859,7 @@ function vShipping(){
     <p>Paintings travel on their wooden stretcher, ready to hang the day they arrive, including large paintings over a metre wide. Each one is wrapped, corner-protected and packed in a rigid box.</p>
     <p>Every canvas is built on its own wooden stretcher, so the back can look a little different from painting to painting: larger canvases have extra cross bars to keep them flat and strong.</p>
     <h2>Countries that don't accept wood</h2>
-    <p>Some countries, including Australia and New Zealand, have strict rules on wood in parcels. Paintings to these countries always ship rolled, without the wooden stretcher bars.</p>
+    <p>Some countries, including Australia and New Zealand, have strict rules on wood in parcels. How paintings are sent there is agreed with the artist before you pay. <span class="guess">Valentyna to confirm</span></p>
     <div class="table-wrap"><table class="zones">
       <thead><tr><th>Destination</th><th>Ships</th><th>Packing</th></tr></thead>
       <tbody>
@@ -867,7 +867,7 @@ function vShipping(){
         <tr><td>Europe</td><td>Yes</td><td>On the stretcher, ready to hang</td></tr>
         <tr><td>USA &amp; Canada</td><td>Yes</td><td>On the stretcher, ready to hang</td></tr>
         <tr><td>Japan &amp; Asia</td><td>Yes</td><td>On the stretcher, ready to hang</td></tr>
-        <tr><td>Australia &amp; New Zealand</td><td>Yes</td><td>Rolled only, no wood</td></tr>
+        <tr><td>Australia &amp; New Zealand</td><td>Yes</td><td>Agreed with the artist <span class="guess">TBC</span></td></tr>
         <tr><td>South Africa</td><td>Not at the moment</td><td>Write to me to discuss</td></tr>
       </tbody></table></div>
     <h2>Customs and taxes</h2>
