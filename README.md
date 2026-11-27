@@ -48,3 +48,14 @@ canvases on the wall (5 cm if empty). The first photo is the whole picture with 
 together; the site cuts it into panels itself (Photos tab, 3D, On a wall, gallery). It is sold and
 shipped as one set with one price and one SKU. Add `?demo=diptych` to any page address to see a
 placeholder diptych.
+
+### "See it on your own wall" (AR on phones)
+
+On a painting page, phones get a big **See it on your own wall** button (with three short steps before the camera opens).
+The model is a true-size box per canvas (size, stretcher depth, diptych gap from the admin panel), the photo on the front,
+painted edges and a plain linen back, hung flat on a wall. Code: `ar.js` (no libraries).
+
+- iPhone / iPad: the browser builds a USDZ when the button is tapped and opens Apple Quick Look (fixed real size).
+- Android: Scene Viewer opens `GET /ar/<painting>.glb`, made on the fly by `functions/ar/[file].js` from a JPEG copy of the
+  main photo (`ar` copy). The admin panel makes that copy on upload, and once for older paintings when they are opened in the admin.
+- Add `?ar=ios` or `?ar=android` to the address to see the button on a computer.

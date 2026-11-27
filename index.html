@@ -317,6 +317,15 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .back.bottom{margin:28px 0 0}
 .tip{display:flex;align-items:center;gap:12px;justify-content:space-between;background:var(--paper);border:1px solid var(--gold-deep);border-radius:6px;padding:12px 14px;margin-bottom:12px;font-size:1.02rem}
 .tip button{font:700 1rem var(--font-body);min-height:44px;padding:0 16px;border-radius:4px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;flex:none}
+/* ---------- AR: see it on your own wall (phones only) ---------- */
+.ar-box{margin-top:14px;padding:14px 16px;border:1px solid var(--gold-deep);border-radius:6px;background:var(--paper)}
+.ar-box .btn{min-height:56px;font-size:1.1rem}
+.ar-box p{font-size:1rem;color:var(--muted);margin-top:8px;line-height:1.45}
+.ar-steps{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:ar}
+.ar-steps li{display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:start;font-size:1.05rem;line-height:1.45;counter-increment:ar}
+.ar-steps li::before{content:counter(ar);display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--gold);color:var(--accent-ink);font-weight:700}
+.ar-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.ar-row .btn{flex:1 1 160px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .cur-note{font-size:.9rem;color:var(--muted);margin-top:6px}
 
@@ -477,7 +486,7 @@ async function loadWorks(){
       year:p.year||"", price:p.price||0, status:p.status, story:p.story||"", reel:p.reel||null, seed:hashSeed(p.id),
       prints:{paper:p.prints&&p.prints.paper, canvas:p.prints&&p.prints.canvas}, cards:(p.cards||[]).filter(c=>c.price>0), sku:p.sku||"",
       panels:n, pw, gap,
-      photos, back, depth:p.depth>0?p.depth:(Math.max(pw,h)>=70?3.8:1.8), depthGuess:!(p.depth>0)
+      photos, back, ar:!!p.ar, depth:p.depth>0?p.depth:(Math.max(pw,h)>=70?3.8:1.8), depthGuess:!(p.depth>0)
     }});
     // small copies for cards and the hall; the big copy loads when a painting is opened
     await Promise.all(WORKS.map(async w=>{w.img=await loadImg(w.photos[0]&&w.photos[0].thumb)}));
@@ -650,6 +659,58 @@ function packHTML(w,c){
   if(!C.wood) return `<div class="pack">${tube}<div><b>Ships rolled in a tube, without the wooden stretcher</b>${C.n} does not accept untreated wood in parcels. The canvas arrives rolled and needs re-stretching locally (any framer can do this). <span class="guess">Valentyna to confirm</span></div></div>`;
   return `<div class="pack">${box}<div><b>Ships on its stretcher, ready to hang</b>Wrapped, corner-protected and packed in a rigid box, large paintings too.</div></div>`;
 }
+/* ---------- AR: "See it on your own wall" ----------
+   iPhone/iPad: the model (USDZ) is made right here in the browser when the button is tapped (ar.js), then Quick Look opens it.
+   Android: Scene Viewer downloads /ar/<painting>.glb, made by the server from the admin sizes and a JPEG copy of the photo.
+   Nothing is loaded until the button is tapped. Add ?ar=ios or ?ar=android to the address to see the button on a computer. */
+const AR_FORCE=(location.search.match(/[?&]ar=(ios|android)/)||[])[1];
+const AR_IOS=AR_FORCE==="ios"||(()=>{try{return document.createElement("a").relList.supports("ar")}catch(e){return false}})();
+const AR_ANDROID=AR_FORCE==="android"||(!AR_IOS&&/Android/i.test(navigator.userAgent));
+const arWay=w=>!w||w.noSize||!(w.w>0&&w.h>0)?null:AR_IOS?"ios":AR_ANDROID&&w.ar?"android":null;
+const arSpec=(w,tw,th)=>({pw:isMulti(w)?w.pw:w.w,h:w.h,panels:w.panels||1,gap:w.gap||0,depth:w.depth,tw,th});
+const arCache={};
+async function arUsdzUrl(w){
+  const key=w.id+"|"+w.w+"|"+w.h+"|"+w.depth; if(arCache[key]) return arCache[key];
+  const [AR]=await Promise.all([import("/ar.js"),loadLarge(w)]);
+  // texture = the whole picture (canvases butted together), at most 2048 px on the long side
+  const S=(isMulti(w)?w.panels*w.pw:w.w)/w.h, tw=S>=1?2048:Math.round(2048*S), th=S>=1?Math.round(2048/S):2048;
+  const cv=document.createElement("canvas");cv.width=tw;cv.height=th;paintStrip(cv.getContext("2d"),tw,th,w);
+  const jpg=await new Promise((res,rej)=>cv.toBlob(b=>b?res(b):rej(new Error("no jpeg")),"image/jpeg",.85));
+  const usdz=AR.buildUSDZ(arSpec(w,tw,th),new Uint8Array(await jpg.arrayBuffer()));
+  return arCache[key]=URL.createObjectURL(usdz);
+}
+function arAndroidUrl(w){
+  const file=location.origin+"/ar/"+encodeURIComponent(w.id.replace(/^p-/,""))+".glb?v="+hashSeed([w.w,w.h,w.depth,w.gap,w.photos&&w.photos[0]&&w.photos[0].src].join("|"));
+  return "intent://arvr.google.com/scene-viewer/1.0?file="+encodeURIComponent(file)+"&mode=ar_only&enable_vertical_placement=true&resizable=false&title="+encodeURIComponent(w.title)
+    +"#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url="+encodeURIComponent(location.href)+";end;";
+}
+function bindAR(w){
+  const box=$("#arBox"); if(!box) return;
+  const way=arWay(w);
+  const intro=()=>{box.innerHTML=`<h3 style="font-family:var(--font-body);font-weight:700;font-size:1.1rem">See ${esc(w.title)} on your wall</h3>
+    <ol class="ar-steps">
+      <li>Stand one or two steps back from the wall where you'd like it.</li>
+      <li>Point your phone at the wall and move it slowly from side to side until the painting appears.</li>
+      <li>Walk closer or further to see its real size. ${way==="ios"?"Tap the cross in the top corner":"Tap the back arrow"} to come back here.</li>
+    </ol>
+    <div class="ar-row"><button class="btn" type="button" id="arStart">Open the camera</button><button class="btn ghost" type="button" id="arNo">Not now</button></div>
+    <p id="arMsg" role="status"></p>`;
+    $("#arNo").addEventListener("click",reset);$("#arStart").addEventListener("click",start);};
+  const fail=()=>{box.innerHTML=`<p style="color:var(--ink)">Sorry, this phone can't show the painting on your wall. The <b>On a wall</b> tab above shows it in a room at its real size.</p><div class="ar-row"><button class="btn ghost" type="button" id="arNo">OK</button></div>`;$("#arNo").addEventListener("click",reset)};
+  async function start(){
+    const b=$("#arStart"),msg=$("#arMsg");
+    if(way==="android"){location.href=arAndroidUrl(w);return}
+    b.disabled=true;b.textContent="Getting it ready…";
+    try{
+      const url=await arUsdzUrl(w);
+      const a=document.createElement("a");a.rel="ar";a.href=url+"#allowsContentScaling=0";a.appendChild(document.createElement("img"));
+      document.body.appendChild(a);a.click();a.remove();
+      b.disabled=false;b.textContent="Open the camera again";msg.textContent="";
+    }catch(e){fail()}
+  }
+  function reset(){box.innerHTML=`<button class="btn wide" type="button" id="arGo">See it on your own wall</button><p>Uses your phone's camera. The painting appears on your wall at its real size, ${sizeShort(w)}.</p>`;$("#arGo").addEventListener("click",intro)}
+  $("#arGo").addEventListener("click",intro);
+}
 const seenTip=()=>{try{return localStorage.getItem("tip1")==="1"}catch(e){return false}};
 function vPiece(w){
   const t = THEMES[w.theme];
@@ -684,6 +745,10 @@ function vPiece(w){
         :`<div class="main-shot" id="mainShot">${frame(w.id,"front","Front · placeholder")}</div>
         <div class="thumbs" role="group" aria-label="Photos">${shots.map(([k,l],i)=>`<button type="button" data-shot="${k}" data-label="${l}" aria-pressed="${i===0}"><canvas data-work="${w.id}" data-kind="${k}"></canvas>${l}</button>`).join("")}</div>`}
       </div>
+      ${arWay(w)?`<div class="ar-box" id="arBox">
+        <button class="btn wide" type="button" id="arGo">See it on your own wall</button>
+        <p>Uses your phone's camera. The painting appears on your wall at its real size, ${sizeShort(w)}.</p>
+      </div>`:""}
     </div>
     <div class="info">
       <a class="label theme-link" href="#${w.theme}">${t.name}</a>
@@ -797,6 +862,7 @@ function bindPiece(w){
   $("#seeFrame")&&$("#seeFrame").addEventListener("click",()=>{show("wall");$("#pane-wall").scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"})});
   $("#buyPrint")&&$("#buyPrint").addEventListener("click",()=>{$("#printNote").textContent=soon});
   bindCardBuy(document);
+  bindAR(w);
 }
 function bindCardBuy(root){
   root.querySelectorAll("[data-buycard]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();const n=b.parentElement.querySelector("[data-cardnote]");if(n)n.textContent="Online checkout is coming soon. For now this button does nothing."}));

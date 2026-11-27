@@ -34,8 +34,8 @@ export const onRequestPut = async ({ env, params, request }) => {
 
   // Remove files of photos that were taken off the painting.
   if ('photos' in f) {
-    const keep = new Set(JSON.parse(f.photos).flatMap((p) => [p.orig, p.large, p.thumb]));
-    const gone = JSON.parse(old.photos || '[]').flatMap((p) => [p.orig, p.large, p.thumb]).filter((k) => k && !keep.has(k));
+    const keep = new Set(JSON.parse(f.photos).flatMap((p) => [p.orig, p.large, p.thumb, p.ar]));
+    const gone = JSON.parse(old.photos || '[]').flatMap((p) => [p.orig, p.large, p.thumb, p.ar]).filter((k) => k && !keep.has(k));
     if (gone.length) await env.PHOTOS.delete(gone);
   }
   return json({ painting: rowToPainting(await load(env, params.id)) });
@@ -44,7 +44,7 @@ export const onRequestPut = async ({ env, params, request }) => {
 export const onRequestDelete = async ({ env, params }) => {
   const old = await load(env, params.id);
   if (!old) return err(404, 'Картина не найдена');
-  const keys = JSON.parse(old.photos || '[]').flatMap((p) => [p.orig, p.large, p.thumb]).filter(Boolean);
+  const keys = JSON.parse(old.photos || '[]').flatMap((p) => [p.orig, p.large, p.thumb, p.ar]).filter(Boolean);
   if (keys.length) await env.PHOTOS.delete(keys);
   await env.DB.batch([
     env.DB.prepare('DELETE FROM products WHERE painting_id = ?').bind(params.id),
