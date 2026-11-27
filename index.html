@@ -269,26 +269,17 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .swatch{width:26px;height:26px;border-radius:50%;border:1px solid var(--rule);cursor:pointer;padding:0}
 .swatch[aria-pressed="true"]{box-shadow:0 0 0 2px var(--wall),0 0 0 4px var(--gold)}
 
-.room{position:relative;width:100%;aspect-ratio:360/270;max-width:100%;overflow:hidden;background:var(--wallc,#efebe3);perspective:1100px;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
-.room .scene{position:absolute;inset:-2% -3%;transform-style:preserve-3d;transform-origin:50% 45%;will-change:transform}
-.room .wallbg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 30% 25%,rgba(255,255,255,.22),rgba(0,0,0,.10) 85%),var(--wallc,#efebe3);transition:background-color .4s}
-.room .room-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.room .floor{position:absolute;left:0;right:0;bottom:0;height:11%;background:repeating-linear-gradient(90deg,rgba(0,0,0,.06) 0 1px,transparent 1px 9%),linear-gradient(#b08d68,#8e6e4f)}
-.room .skirting{position:absolute;left:0;right:0;bottom:11%;height:1.6%;background:#f6f3ec;box-shadow:0 -1px 0 rgba(0,0,0,.08),0 2px 3px rgba(0,0,0,.12)}
-.room .furn{position:absolute;bottom:11%;transform:translateX(-50%);filter:drop-shadow(0 6px 6px rgba(0,0,0,.18))}
+.room{position:relative;width:100%;aspect-ratio:360/270;max-width:100%;overflow:hidden;background:var(--wallc,#efebe3);transition:background-color .4s}
+.room .floor{position:absolute;left:0;right:0;bottom:0;height:11%;background:linear-gradient(#b08d68,#8e6e4f)}
+.room .skirting{position:absolute;left:0;right:0;bottom:11%;height:1.4%;background:rgba(255,255,255,.55);box-shadow:0 1px 0 rgba(0,0,0,.08)}
+.room .furn{position:absolute;bottom:11%;transform:translateX(-50%);transition:transform .2s ease-out}
 .room .furn svg{display:block;width:100%;height:auto}
-.room .pbox{position:absolute;transform-style:preserve-3d}
-.room .pf{position:absolute;inset:0;box-sizing:border-box;overflow:hidden}
-.room .pf canvas{display:block;width:100%;height:100%}
-.room .pe{position:absolute;overflow:hidden}
-.room .pe canvas{display:block;width:100%;height:100%}
-.room .wshadow{position:absolute;inset:0;background:rgba(0,0,0,.42)}
-.room .cshadow{position:absolute;inset:0;box-shadow:0 0 2px 1px rgba(0,0,0,.25)}
-.room .glare{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(255,250,235,.16),rgba(255,250,235,0) 45%,rgba(0,0,0,.08))}
-.room .glare.r{background:linear-gradient(245deg,rgba(255,250,235,.16),rgba(255,250,235,0) 45%,rgba(0,0,0,.08))}
+.room .hung{position:absolute;transform-style:preserve-3d;perspective:1200px}
+.room .hung .pic{width:100%;height:100%;box-shadow:6px 10px 18px rgba(0,0,0,.28),1px 1px 0 rgba(0,0,0,.2);transition:transform .2s ease-out}
+.room .hung canvas{display:block;width:100%;height:100%}
 .room .light{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .5s;background:radial-gradient(ellipse 38% 46% at var(--lx,50%) var(--ly,35%),rgba(255,214,150,.18),rgba(20,14,8,.62) 70%)}
 .room.evening .light{opacity:1}
-.room .scale-note{position:absolute;left:10px;top:10px;font:500 12px var(--font-body);color:rgba(0,0,0,.7);background:rgba(255,255,255,.7);padding:3px 7px;border-radius:2px}
+.room .scale-note{position:absolute;left:10px;top:10px;font:500 12px var(--font-body);color:rgba(0,0,0,.65);background:rgba(255,255,255,.6);padding:3px 7px;border-radius:2px}
 .room .plant{position:absolute;bottom:11%;transform:translateX(-50%)}
 </style>
 </head>
@@ -585,8 +576,7 @@ function vPiece(w){
       <div id="pane-wall" hidden>
         <div class="room" id="room"></div>
         <div class="v-controls">
-          <div class="seg" id="roomSeg"></div>
-          <div class="seg"><button class="chip" type="button" data-view="-22">From the left</button><button class="chip" type="button" data-view="0" aria-pressed="true">Straight on</button><button class="chip" type="button" data-view="22">From the right</button></div>
+          <div class="seg" id="roomSeg"><button class="chip" type="button" data-room="sofa" aria-pressed="true">Living room</button><button class="chip" type="button" data-room="bed">Bedroom</button><button class="chip" type="button" data-room="console">Hallway</button></div>
           <div class="seg" id="wallSeg">${[["#efebe3","Warm white"],["#b9c2ad","Sage"],["#c9b3a6","Clay"],["#3d4143","Charcoal"]].map(([c,n],i)=>`<button class="swatch" type="button" style="background:${c}" data-wall="${c}" aria-label="${n} wall" title="${n}" aria-pressed="${i===0}"></button>`).join("")}<button class="chip" type="button" id="evening" aria-pressed="false">Evening light</button></div>
         </div>
       </div>
@@ -968,89 +958,36 @@ const FURN = {
 };
 const PLANT=`<svg viewBox="0 0 50 130"><path d="M25 70 C10 40 0 30 4 10 C14 26 22 40 25 70 Z" fill="#6f8a5a"/><path d="M25 70 C40 36 48 26 46 6 C34 24 28 42 25 70 Z" fill="#7d9a64"/><path d="M25 72 C18 50 20 30 25 18 C30 30 32 50 25 72 Z" fill="#5f7a4b"/><path d="M12 82 h26 l-4 48 h-18 z" fill="#c9b9a0"/></svg>`;
 let roomRerender = null;
-// Photo rooms. Each photo is shot straight at the wall; `cm` = how many cm of wall the full photo width shows,
-// `x` = centre of the painting (fraction of width), `y` = where its bottom edge sits (fraction of height),
-// `light` = side the window is on. Photos live in /rooms/ as ~1600 px WebP (about 100 KB), loaded only when chosen.
-const PHOTO_ROOMS = [
-  // {id:"victorian",label:"Victorian lounge",src:"/rooms/victorian.webp",ar:3/2,cm:330,x:.5,y:.42,light:"left",note:"fireplace 150 cm wide"},
-];
-const DRAWN_ROOMS = [["sofa","Living room"],["bed","Bedroom"],["console","Hallway"]];
 function roomView(host,w){
-  const rooms=[...PHOTO_ROOMS.map(r=>[r.id,r.label]),...DRAWN_ROOMS];
-  const st={room:rooms[0][0],wall:"#efebe3",evening:false,ang:0};
-  let scene=null,px=0,drag=null,anim=0,swayed=false;
-  const segR=$("#roomSeg");
-  segR.innerHTML=rooms.map(([k,l],i)=>`<button class="chip" type="button" data-room="${k}" aria-pressed="${i===0}">${l}</button>`).join("");
-  const setAng=a=>{st.ang=clamp(a,-30,30); if(scene) scene.style.transform=`scale(${(1+Math.abs(st.ang)/200).toFixed(3)}) rotateY(${st.ang.toFixed(2)}deg)`;
-    document.querySelectorAll("[data-view]").forEach(c=>c.setAttribute("aria-pressed",Math.abs(+c.dataset.view-st.ang)<4))};
-  const animTo=(to,ms=700,then)=>{cancelAnimationFrame(anim);const from=st.ang,t0=performance.now();
-    const step=t=>{const k=Math.min(1,(t-t0)/ms),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;setAng(from+(to-from)*e);if(k<1)anim=requestAnimationFrame(step);else if(then)then()};anim=requestAnimationFrame(step)};
-  // painting as a real object: front, four edges standing off the wall, soft shadow on the wall
-  const paintingBox=(left,top,pw,ph,fr)=>{
-    const fwc=((fr.cm||0)+(fr.gap||0)), ow=pw+2*fwc*px, oh=ph+2*fwc*px, d=Math.max(3,(fr.bg?Math.max(w.depth,3.5):w.depth)*px);
-    const box=document.createElement("div"); box.className="pbox"; box.style.cssText=`left:${left-ow/2}px;top:${top}px;width:${ow}px;height:${oh}px`;
-    const lightR=(PHOTO_ROOMS.find(r=>r.id===st.room)||{}).light==="right";
-    box.innerHTML=`<i class="wshadow" style="transform:translate(${(lightR?-1:1)*(d*.7+2)}px,${d*.9+3}px);filter:blur(${(d*.9+4).toFixed(1)}px)"></i><i class="cshadow"></i>`;
-    const front=document.createElement("div"); front.className="pf"; front.style.transform=`translateZ(${d}px)`;
-    if(fr.bg){front.style.background=fr.bg;front.style.padding=(fr.cm*px).toFixed(1)+"px"}
-    const inner=document.createElement("div"); inner.style.cssText=`width:100%;height:100%;box-sizing:border-box;${fr.gap?`padding:${(fr.gap*px).toFixed(1)}px;background:#1d1d1b`:""}`;
-    const art=paintedCanvas(w,pw,ph); inner.appendChild(art); front.appendChild(inner);
-    front.insertAdjacentHTML("beforeend",`<i class="glare${lightR?" r":""}"></i>`);
-    box.appendChild(front);
-    // edges: painted edges are a thin slice of the picture, a frame shows its moulding
-    const k=Math.max(2,Math.round(3*DPR())), fw=art.width, fh=art.height;
-    const edge=(css,sx,sy,sw,sh,cw,ch,shade)=>{const e=document.createElement("div");e.className="pe";e.style.cssText=css;
-      if(fr.bg) e.style.background=fr.bg; else {const c=document.createElement("canvas");c.width=Math.max(2,Math.round(cw*DPR()));c.height=Math.max(2,Math.round(ch*DPR()));c.getContext("2d").drawImage(art,sx,sy,sw,sh,0,0,c.width,c.height);e.appendChild(c)}
-      e.insertAdjacentHTML("beforeend",`<i style="position:absolute;inset:0;background:#000;opacity:${shade}"></i>`);box.appendChild(e)};
-    edge(`left:0;top:0;width:${d}px;height:${oh}px;transform-origin:0 0;transform:rotateY(-90deg)`,0,0,k,fh,d,oh,lightR?.35:.08);
-    edge(`left:${ow}px;top:0;width:${d}px;height:${oh}px;transform-origin:0 0;transform:rotateY(-90deg)`,fw-k,0,k,fh,d,oh,lightR?.08:.35);
-    edge(`left:0;top:0;width:${ow}px;height:${d}px;transform-origin:0 0;transform:rotateX(90deg)`,0,0,fw,k,ow,d,.05);
-    edge(`left:0;top:${oh}px;width:${ow}px;height:${d}px;transform-origin:0 0;transform:rotateX(90deg)`,0,fh-k,fw,k,ow,d,.45);
-    return {box,ow,oh};
-  };
+  const st={room:"sofa",wall:"#efebe3",evening:false};
+  let px=0,pic=null,furn=null;
   const render=()=>{
-    const fr=FRAMES.find(f=>f.id===currentFrame)||FRAMES[0], fwc=((fr.cm||0)+(fr.gap||0));
-    const P=PHOTO_ROOMS.find(r=>r.id===st.room);
-    host.style.aspectRatio=P?String(P.ar):"360/270";
-    const Wd=host.clientWidth, Hd=host.clientHeight||Wd*.75;
+    const Wd=host.clientWidth; px=Wd/360; const F=FURN[st.room]; const floorCm=240.3;
+    let gap=22; if(F.h+gap+w.h>232) gap=Math.max(8,232-F.h-w.h);
+    const fr=FRAMES.find(f=>f.id===currentFrame)||FRAMES[0], fw=((fr.cm||0)+(fr.gap||0));
+    const top=(floorCm-(F.h+gap+w.h+fw))*px, pw=w.w*px, ph=w.h*px, ow=pw+2*fw*px, oh=ph+2*fw*px;
     host.style.setProperty("--wallc",st.wall);
-    host.innerHTML=`<div class="scene"></div><div class="light"></div><span class="scale-note"></span>`;
-    scene=host.querySelector(".scene");
-    let left,top,label;
-    if(P){
-      px=Wd/P.cm; const ph=w.h*px;
-      scene.innerHTML=`<img class="room-photo" src="${P.src}" alt="" decoding="async">`;
-      left=P.x*Wd; top=P.y*Hd-ph-2*fwc*px; label=P.note;
-    }else{
-      px=Wd/360; const F=FURN[st.room], floorCm=240.3;
-      let gap=22; if(F.h+gap+w.h>232) gap=Math.max(8,232-F.h-w.h);
-      top=(floorCm-(F.h+gap+w.h+fwc))*px; left=Wd/2; label=F.label;
-      scene.innerHTML=`<div class="wallbg"></div><div class="skirting"></div><div class="floor"></div>
-        ${st.room==="sofa"?`<div class="plant" style="left:86%;width:${50*px}px">${PLANT}</div>`:""}
-        <div class="furn" style="left:50%;width:${F.w*px}px">${F.svg}</div>`;
-    }
-    const pb=paintingBox(left,top,w.w*px,w.h*px,fr);
-    scene.appendChild(pb.box);
-    host.querySelector(".light").style.cssText=`--lx:50%;--ly:${((top+pb.oh/2)/Hd*100).toFixed(1)}%`;
-    host.querySelector(".scale-note").textContent=`True scale · ${label} · painting ${w.w} × ${w.h} cm${w.noSize?" (approximate)":""}${fr.bg?" · "+fr.name.toLowerCase():""}`;
+    host.innerHTML=`<div class="skirting"></div><div class="floor"></div>
+      ${st.room==="sofa"?`<div class="plant" style="left:86%;width:${50*px}px">${PLANT}</div>`:""}
+      <div class="furn" style="left:50%;width:${F.w*px}px">${F.svg}</div>
+      <div class="hung" style="left:calc(50% - ${ow/2}px);top:${top}px;width:${ow}px;height:${oh}px"><div class="pic" style="${fr.bg?`background:${fr.bg};padding:${(fr.cm*px).toFixed(1)}px`:""}"><div class="inner" style="${fr.gap?`padding:${(fr.gap*px).toFixed(1)}px;background:#1d1d1b`:""};width:100%;height:100%;box-sizing:border-box"></div></div></div>
+      <div class="light" style="--lx:50%;--ly:${((top+oh/2)/host.clientHeight*100).toFixed(1)}%"></div>
+      <span class="scale-note">True scale · ${F.label} · painting ${w.w} × ${w.h} cm${w.noSize?" (approximate)":""}${fr.bg?" · "+fr.name.toLowerCase():""}</span>`;
     host.classList.toggle("evening",st.evening);
-    host.classList.toggle("photo",!!P);
-    $("#wallSeg").querySelectorAll("[data-wall]").forEach(b=>b.hidden=!!P);
-    setAng(st.ang);
-    // once, gently show that it can be seen from the side
-    if(!swayed&&!REDUCED){swayed=true;setTimeout(()=>{if(!drag&&st.ang===0)animTo(18,900,()=>animTo(0,900))},500)}
+    pic=host.querySelector(".pic"); furn=host.querySelector(".furn");
+    host.querySelector(".inner").appendChild(paintedCanvas(w,pw,ph));
   };
   render();
   roomRerender = render;
-  host.addEventListener("pointerdown",e=>{cancelAnimationFrame(anim);drag={x:e.clientX,a:st.ang};host.setPointerCapture(e.pointerId)});
-  host.addEventListener("pointermove",e=>{if(!drag)return;setAng(drag.a+(e.clientX-drag.x)/host.clientWidth*70)});
-  const up=()=>{drag=null};host.addEventListener("pointerup",up);host.addEventListener("pointercancel",up);
-  document.querySelectorAll("[data-view]").forEach(c=>c.addEventListener("click",()=>animTo(+c.dataset.view)));
-  segR.querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>{st.room=b.dataset.room;segR.querySelectorAll("[data-room]").forEach(x=>x.setAttribute("aria-pressed",x===b));render()}));
+  if(FINE){
+    const mv=e=>{const r=host.getBoundingClientRect();const dx=(e.clientX-r.left)/r.width-.5,dy=(e.clientY-r.top)/r.height-.5;pic.style.transform=`perspective(900px) rotateY(${(dx*10).toFixed(2)}deg) rotateX(${(-dy*6).toFixed(2)}deg)`;furn.style.transform=`translateX(calc(-50% + ${(-dx*10).toFixed(1)}px))`};
+    host.addEventListener("pointermove",mv,{passive:true});
+    host.addEventListener("pointerleave",()=>{pic.style.transform="";furn.style.transform=""});
+  }
+  document.querySelectorAll("[data-room]").forEach(b=>b.addEventListener("click",()=>{st.room=b.dataset.room;document.querySelectorAll("[data-room]").forEach(x=>x.setAttribute("aria-pressed",x===b));render()}));
   document.querySelectorAll("[data-wall]").forEach(b=>b.addEventListener("click",()=>{st.wall=b.dataset.wall;document.querySelectorAll("[data-wall]").forEach(x=>x.setAttribute("aria-pressed",x===b));host.style.setProperty("--wallc",st.wall)}));
   const ev=$("#evening");ev.addEventListener("click",()=>{st.evening=!st.evening;ev.setAttribute("aria-pressed",st.evening);host.classList.toggle("evening",st.evening)});
-  const ro=new ResizeObserver(()=>{if(Math.abs(host.clientWidth*(1/(PHOTO_ROOMS.find(r=>r.id===st.room)||{cm:360}).cm)-px)>.05)render()});ro.observe(host);
-  onCleanup(()=>{ro.disconnect();cancelAnimationFrame(anim)});
+  const ro=new ResizeObserver(()=>{if(Math.abs(host.clientWidth/360-px)>.05)render()});ro.observe(host);onCleanup(()=>ro.disconnect());
 }
 
 /* ---------- 4. gentle tilt on gallery cards (mouse only) ---------- */
