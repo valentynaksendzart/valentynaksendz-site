@@ -953,7 +953,8 @@ function buildCarousel(){
     const availW=Math.min(vw*.76,420), availH=H-(i===0?INTRO:0)-150;
     const fac=clamp(.6+.4*Math.sqrt(w.w*w.h/8000),.65,1);
     const sc=Math.min(availW/w.w,availH/w.h)*fac, W=Math.round(w.w*sc), Hh=Math.round(w.h*sc);
-    return `<section class="cw-slide" style="height:${H}px"><div class="cw-wall"></div><i class="cw-glow"></i>
+    const sh=Math.min(H,Hh+(i===0?INTRO:0)+(i===0?190:140)); // slide only as tall as its painting + title, so paintings sit closer together
+    return `<section class="cw-slide" style="height:${sh}px"><div class="cw-wall"></div><i class="cw-glow"></i>
       ${i===0?`<div class="cine-intro wrap"><h1>Wildflower Artist</h1><div class="tagline">Nature in every brushstroke</div><div class="ctas"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="#prints">Prints</a></div></div>`:""}
       <a class="cw-art${isMulti(w)?" multi":""}" href="#${w.id}" style="width:${W}px;height:${Hh}px" aria-label="${esc(w.title)}"><canvas data-cw="${w.id}"></canvas></a>
       <a class="cw-plate" href="#${w.id}"><b>${esc(w.title)}</b><span>${w.status==="sold"?"Sold":money(w.price)}</span></a>
@@ -982,8 +983,8 @@ function buildCarousel(){
   const upd=()=>{
     raf=0; const vh=innerHeight, mid=(hdr+vh)/2, rs=parts.map(p=>p.sl.getBoundingClientRect());
     parts.forEach((p,i)=>{const r=rs[i]; if(r.bottom<-80||r.top>vh+80) return;
-      const rel=clamp((r.top+r.height/2-mid)/r.height,-1,1), a=Math.abs(rel);
-      p.art.style.transform=`rotateX(${(rel*6).toFixed(2)}deg) scale(${(1-a*.07).toFixed(3)})`;
+      const rel=clamp((r.top+r.height/2-mid)/(vh*.6),-1,1), a=Math.abs(rel);
+      p.art.style.transform=`rotateX(${(rel*6).toFixed(2)}deg) scale(${(1.04-a*.16).toFixed(3)})`;
       p.glow.style.opacity=(1-a*.8).toFixed(2);});
     if(cue) cue.style.opacity=clamp(1-scrollY/120,0,1);
   };
