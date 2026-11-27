@@ -258,12 +258,12 @@ html.cw-home #view,html.cw-home footer.site{display:none}
 .cw-slide.gone{pointer-events:none}
 .cw-end{pointer-events:none}.cw-end a{pointer-events:auto}
 .cw-plate{background:rgba(14,40,33,.78);border-radius:12px;padding:5px 16px 7px}
-.cw-pop-bg{position:fixed;inset:0;z-index:4;background:rgba(8,24,19,.78);opacity:0;transition:opacity .45s ease}
+.cw-pop-bg{position:fixed;inset:0;z-index:3;background:rgba(8,24,19,.78);opacity:0;transition:opacity .45s ease}
 .cw-pop-bg.show{opacity:1}
-.cw-pop{position:fixed;z-index:5;display:block;transform-origin:0 0;transition:transform .6s cubic-bezier(.3,0,.2,1);box-shadow:0 0 0 4px #d9bc6e,0 26px 50px rgba(0,0,0,.6)}
+.cw-pop{position:fixed;z-index:4;display:block;transform-origin:0 0;transition:transform .6s cubic-bezier(.3,0,.2,1);box-shadow:0 0 0 4px #d9bc6e,0 26px 50px rgba(0,0,0,.6)}
 .cw-pop.multi{box-shadow:none}
 .cw-pop canvas{display:block;width:100%;height:100%}
-.cw-pop-plate{position:fixed;z-index:5;text-align:center;text-decoration:none;opacity:0;transition:opacity .4s ease .25s}
+.cw-pop-plate{position:fixed;z-index:4;text-align:center;text-decoration:none;opacity:0;transition:opacity .4s ease .25s}
 .cw-pop-plate b{display:block;font:600 1.45rem/1.2 var(--font-display);color:var(--gold)}
 .cw-pop-plate span{display:block;margin-top:2px;font:500 1.05rem var(--font-body);color:var(--hall-ink)}
 .cw-back canvas{display:block;width:100%;height:100%}
@@ -973,11 +973,16 @@ function paintedCanvas(w,W,H,only){const c=document.createElement("canvas");c.wi
 function loop(step){let id=0,alive=true;const tick=t=>{id=0;if(alive&&step(t))id=requestAnimationFrame(tick)};const kick=()=>{if(alive&&!id)id=requestAnimationFrame(tick)};onCleanup(()=>{alive=false;cancelAnimationFrame(id)});return kick}
 
 /* ---------- 1. cinematic walk-through hall (home) ---------- */
+// the phone's height with its browser bars shown (100svh): unlike innerHeight it does not change as Safari hides its toolbar,
+// so slides and the wall are laid out the same way every time the home page is built
+function stableVH(){const d=document.createElement("div");d.style.cssText="position:fixed;top:0;left:0;width:1px;height:100vh;height:100svh;visibility:hidden;pointer-events:none";
+  document.body.appendChild(d);const h=d.offsetHeight;d.remove();return h>200?Math.min(h,innerHeight+200):innerHeight}
+let CW_END=false; // the visitor left the home carousel from the finished wall: "Back to gallery" returns to it
 function buildCarousel(){
   const el=$("#cine"); el.hidden=false; el.className="cw";
   const hdr=document.querySelector("header.site").offsetHeight;
   el.style.setProperty("--hdr",hdr+"px");
-  const vw=innerWidth, H=Math.max(480,innerHeight-hdr), INTRO=112, still=REDUCED;
+  const VH=stableVH(), vw=innerWidth, H=Math.max(480,VH-hdr), INTRO=112, still=REDUCED;
   const slide=(w,i)=>{
     const availW=Math.min(vw*.76,420), availH=H-(i===0?INTRO:0)-150;
     const fac=clamp(.6+.4*Math.sqrt(w.w*w.h/8000),.65,1);
@@ -1011,7 +1016,7 @@ function buildCarousel(){
   // When 15% of a painting is hidden under the header it flies back onto its own place on the wall; scrolling down brings it back.
   document.documentElement.classList.add("cw-home");
   const back=document.createElement("div"); back.className="cw-back"; el.prepend(back);
-  const n=parts.length, GAP=8, PADX=12, BW=vw-2*PADX, BH=innerHeight-hdr, HMAX=Math.max(160,BH-110-24);
+  const n=parts.length, GAP=18, PADX=14, BW=vw-2*PADX, BH=VH-hdr, HMAX=Math.max(160,BH-110-24);
   const works=parts.map(p=>WORKS.find(x=>x.id===p.art.querySelector("canvas").dataset.cw));
   const asp=works.map(w=>w.w/w.h);
   const rowsFor=T=>{const rows=[]; let cur=[],sum=0;
@@ -1021,11 +1026,15 @@ function buildCarousel(){
       let h=(last&&nat<BW*.7)?T:(BW-GAP*(r.length-1))/sm; h=Math.min(h,HMAX*.45); return {r,h,sm}})};
   const total=rows=>rows.reduce((q,x)=>q+x.h,0)+GAP*(rows.length-1);
   let lo=24,hi=HMAX,best=rowsFor(lo); for(let k=0;k<22;k++){const mid=(lo+hi)/2, rr=rowsFor(mid); if(total(rr)<=HMAX){best=rr;lo=mid}else hi=mid}
+  // hung by hand, not on a grid: each painting is a little smaller than its cell and sits off-centre in it,
+  // so the gaps above, below and between paintings differ. The jitter comes from the painting's id, so the wall looks the same on every visit.
+  const rnd=(id,k)=>{let h=2166136261^k; for(let c=0;c<id.length;c++){h^=id.charCodeAt(c);h=Math.imul(h,16777619)} h^=h>>>13; h=Math.imul(h,1274126177); return ((h^h>>>16)>>>0)/4294967296};
   let y=(HMAX-total(best))/2+12;
-  best.forEach(row=>{const rw=row.sm*row.h+GAP*(row.r.length-1); let x=PADX+(BW-rw)/2;
-    row.r.forEach(i=>{const w=works[i], sw=Math.round(asp[i]*row.h), sh=Math.round(row.h), sp=document.createElement("i");
-      sp.className=isMulti(w)?"multi":""; sp.style.cssText=`left:${Math.round(x)}px;top:${Math.round(y)}px;width:${sw}px;height:${sh}px`;
-      sp.innerHTML="<canvas></canvas>"; sp.dataset.id=w.id; back.appendChild(sp); parts[i].spot=sp; parts[i].w=w; parts[i].away=false; x+=sw+GAP});
+  best.forEach((row,ri)=>{const rw=row.sm*row.h+GAP*(row.r.length-1); let x=PADX+(BW-rw)/2;
+    row.r.forEach(i=>{const w=works[i], cw=asp[i]*row.h, ch=row.h, s=.8+.14*rnd(w.id,1), sw=Math.round(cw*s), sh=Math.round(ch*s),
+        dx=(cw-sw)*rnd(w.id,2), dy=(ch-sh)*(.15+.7*rnd(w.id,3)), sp=document.createElement("i");
+      sp.className=isMulti(w)?"multi":""; sp.style.cssText=`left:${Math.round(x+dx)}px;top:${Math.round(y+dy)}px;width:${sw}px;height:${sh}px`;
+      sp.innerHTML="<canvas></canvas>"; sp.dataset.id=w.id; back.appendChild(sp); parts[i].spot=sp; parts[i].w=w; parts[i].away=false; x+=cw+GAP});
     y+=row.h+GAP});
   // the wall paintings are painted straight from the artwork (small canvases), a few at a time
   parts.forEach((p,i)=>setTimeout(()=>{const cv=p.spot.firstChild, k=Math.min(window.devicePixelRatio||1,1.5), W=Math.round(p.spot.offsetWidth*k)||1, H=Math.round(p.spot.offsetHeight*k)||1; cv.width=W; cv.height=H; try{paintWork(cv.getContext("2d"),W,H,p.w)}catch(e){}},80+40*i));
@@ -1038,7 +1047,7 @@ function buildCarousel(){
     const f=document.createElement("div"); f.className="cw-fly"+(isMulti(p.w)?" multi":""); f.style.cssText=`left:${a.left}px;top:${a.top}px;width:${a.width}px;height:${a.height}px`;
     f.innerHTML="<canvas></canvas>"; document.body.appendChild(f); copy(src,f.firstChild); flies.add(f);
     requestAnimationFrame(()=>requestAnimationFrame(()=>{f.style.transform=`translate(${t.left-a.left}px,${t.top-a.top}px) scale(${t.width/a.width},${t.height/a.height})`; f.style.boxShadow="0 0 0 2px rgba(201,169,90,.55),0 6px 10px rgba(0,0,0,.45)"}));
-    setTimeout(()=>{p.spot.classList.add("in"); f.style.opacity=0},820);
+    setTimeout(()=>{if(p.away)p.spot.classList.add("in"); f.style.opacity=0},820); // scrolled back meanwhile: it stays in the stack
     setTimeout(()=>{f.remove(); flies.delete(f)},1400);
   };
   const unfly=p=>{p.spot.classList.remove("in"); p.sl.classList.remove("gone")};
@@ -1067,7 +1076,7 @@ function buildCarousel(){
   };
   const on=()=>{if(!raf)raf=requestAnimationFrame(upd)};
   addEventListener("scroll",on,{passive:true});
-  onCleanup(()=>{removeEventListener("scroll",on);cancelAnimationFrame(raf);flies.forEach(f=>f.remove());if(pop){pop.art.remove();pop.bg.remove();pop.plate.remove();pop=null}document.documentElement.classList.remove("cw-home");io&&io.disconnect()});
+  onCleanup(()=>{CW_END=back.classList.contains("full");removeEventListener("scroll",on);cancelAnimationFrame(raf);flies.forEach(f=>f.remove());if(pop){pop.art.remove();pop.bg.remove();pop.plate.remove();pop=null}document.documentElement.classList.remove("cw-home");io&&io.disconnect()});
   // coming back from a painting page the scroll position is restored just after this runs: that first jump puts paintings on the wall without flying
   setTimeout(on,0); on();
 }
@@ -1259,6 +1268,7 @@ if(FINE && !REDUCED){
   addEventListener("hashchange",()=>set(false));
 })();
 let prevH=null, backNext=false, BACKH=null; const POS={};
+try{history.scrollRestoration="manual"}catch(e){} // the router restores positions itself; Safari's own restore fought it
 addEventListener("popstate",()=>{backNext=true});
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-back]"))backNext=true});
 function route(){
@@ -1285,7 +1295,8 @@ function route(){
   if(!w && !THEMES[h] && !["gallery","prints","cards","shipping","about"].includes(h)) buildHall();
   document.querySelectorAll("nav.main a").forEach(a=>{if(a.dataset.nav===nav)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   setMeta(w,h);
-  window.scrollTo(0,restore);
+  // back to the home carousel after opening a painting from the finished wall: go to the wall again, even if the page height changed meanwhile
+  window.scrollTo(0,restore&&h==="home"&&CW_END&&$("#cine").classList.contains("cw")?document.documentElement.scrollHeight:restore);
 }
 /* Page title + description per view (search engines and browser tabs). */
 const META_DESC = document.querySelector('meta[name="description"]').content;
