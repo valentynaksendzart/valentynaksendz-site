@@ -670,6 +670,9 @@ const AR_IOS=AR_FORCE==="ios"||(()=>{try{return document.createElement("a").relL
 const AR_ANDROID=AR_FORCE==="android"||(!AR_IOS&&/Android/i.test(navigator.userAgent));
 const arWay=w=>!w||w.noSize||!(w.w>0&&w.h>0)?null:AR_IOS?"ios":AR_ANDROID&&w.ar?"android":null;
 const arSpec=(w,tw,th)=>({pw:isMulti(w)?w.pw:w.w,h:w.h,panels:w.panels||1,gap:w.gap||0,depth:w.depth,tw,th});
+// If Android could not open Scene Viewer it sends the visitor back here with ?arfail=1: say so, then clean the address
+const AR_FAILED=/[?&]arfail=1/.test(location.search);
+if(AR_FAILED){try{history.replaceState(null,"",location.pathname+location.search.replace(/([?&])arfail=1&?/,"$1").replace(/[?&]$/,"")+location.hash)}catch(e){}}
 const arCache={};
 async function arUsdzUrl(w){
   const key=w.id+"|"+w.w+"|"+w.h+"|"+w.depth; if(arCache[key]) return arCache[key];
@@ -683,8 +686,8 @@ async function arUsdzUrl(w){
 }
 function arAndroidUrl(w){
   const file=location.origin+"/ar/"+encodeURIComponent(w.id.replace(/^p-/,""))+".glb?v="+hashSeed([w.w,w.h,w.depth,w.gap,w.photos&&w.photos[0]&&w.photos[0].src].join("|"));
-  return "intent://arvr.google.com/scene-viewer/1.0?file="+encodeURIComponent(file)+"&mode=ar_only&enable_vertical_placement=true&resizable=false&title="+encodeURIComponent(w.title)
-    +"#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url="+encodeURIComponent(location.href)+";end;";
+  return "intent://arvr.google.com/scene-viewer/1.0?file="+encodeURIComponent(file)+"&mode=ar_preferred&enable_vertical_placement=true&resizable=false&title="+encodeURIComponent(w.title)
+    +"#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url="+encodeURIComponent(location.origin+location.pathname+"?arfail=1"+location.hash)+";end;";
 }
 function bindAR(w){
   const box=$("#arBox"); if(!box) return;
@@ -711,7 +714,9 @@ function bindAR(w){
     }catch(e){fail()}
   }
   function reset(){box.innerHTML=`<button class="btn wide" type="button" id="arGo">See it on your own wall</button><p>Uses your phone's camera. The painting appears on your wall at its real size, ${sizeShort(w)}.</p>`;$("#arGo").addEventListener("click",intro)}
+  const failAndroid=()=>{box.innerHTML=`<p style="color:var(--ink)">Your phone did not open the camera view. It works in <b>Chrome</b> on phones with <b>Google Play Services for AR</b> installed. Please try this page in Chrome, or use the <b>On a wall</b> tab above to see the painting in a room at its real size.</p><div class="ar-row"><button class="btn ghost" type="button" id="arNo">OK</button></div>`;$("#arNo").addEventListener("click",reset)};
   $("#arGo").addEventListener("click",intro);
+  if(AR_FAILED&&way==="android"&&!window.__arFailShown){window.__arFailShown=1;failAndroid()}
 }
 const seenTip=()=>{try{return localStorage.getItem("tip1")==="1"}catch(e){return false}};
 function vPiece(w){
