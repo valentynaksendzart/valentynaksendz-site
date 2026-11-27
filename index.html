@@ -244,8 +244,6 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .cw-slide.on .cw-art{transform:scale(1.04);box-shadow:0 0 0 4px #d9bc6e,0 26px 50px rgba(0,0,0,.6)}
 .cw-glow{opacity:.35;transition:opacity .9s ease}
 .cw-slide.on .cw-glow{opacity:1}
-html.cw-snap{scroll-snap-type:y proximity;scroll-padding-top:var(--hdr,62px)}
-.cw-slide{scroll-snap-align:center}
 @media (prefers-reduced-motion:reduce){.cw-art{transform:none;transition:none}}
 .cw-art canvas{display:block;width:100%;height:100%}
 .cw-plate{display:block;text-align:center;text-decoration:none;max-width:88%}
@@ -986,7 +984,6 @@ function buildCarousel(){
   if(still) return onCleanup(()=>io&&io.disconnect());
   // focus: while the page moves every painting stays still and the same size; once scrolling stops,
   // the painting nearest the middle of the screen gently grows and its light comes on (CSS transition)
-  const root=document.documentElement; root.classList.add("cw-snap"); root.style.setProperty("--hdr",hdr+"px");
   let raf=0, idle=0, cur=null;
   const near=()=>{const vh=innerHeight, mid=(hdr+vh)/2; let best=null, bd=1e9;
     parts.forEach(p=>{const r=p.sl.getBoundingClientRect(), d=Math.abs(r.top+r.height/2-mid); if(d<bd){bd=d;best=p}});
@@ -998,7 +995,7 @@ function buildCarousel(){
   };
   const on=()=>{if(!raf)raf=requestAnimationFrame(upd); clearTimeout(idle); idle=setTimeout(()=>setFocus(near()),140)};
   addEventListener("scroll",on,{passive:true}); addEventListener("resize",on);
-  onCleanup(()=>{removeEventListener("scroll",on);removeEventListener("resize",on);cancelAnimationFrame(raf);clearTimeout(idle);root.classList.remove("cw-snap");io&&io.disconnect()});
+  onCleanup(()=>{removeEventListener("scroll",on);removeEventListener("resize",on);cancelAnimationFrame(raf);clearTimeout(idle);io&&io.disconnect()});
   on();
 }
 
