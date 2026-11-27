@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#183D32">
 <style>[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Valentyna Ksendz Art</title>
-<meta name="description" content="Original oil and acrylic paintings by Valentyna Ksendz: wildflowers, impressionist landscapes, impasto and splash technique. Limited-edition prints. Worldwide shipping.">
+<meta name="description" content="Original oil and acrylic paintings by Valentyna Ksendz: wildflowers, floral art, water lilies, irises, farmyard animals and splash technique. Limited-edition prints. Worldwide shipping.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Karla:wght@400;500;700&display=swap">
 <style>
@@ -324,10 +324,16 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 <script>
 /* ---------- DATA (all placeholder content; replace with Valentyna's real works) ---------- */
 const THEMES = {
-  wildflowers:{name:"Wildflowers",blurb:"Poppies, cornflowers, chamomile and meadow grasses, painted the way a field feels in June.",pal:["#5f7d3a","#8aa35a","#c8d49a","#d23b2a","#3f5bb0","#f4f1e6","#e9b93c"],style:"meadow"},
-  impressions:{name:"Impressions",blurb:"Soft, Monet-inspired light: ponds, river mist and gardens seen through half-closed eyes.",pal:["#8fa8c8","#b9c7dd","#c7b8d8","#a8c4a0","#e8d9b5","#6f88a8","#f1e8d8"],style:"monet"},
-  impasto:{name:"Impasto",blurb:"Thick, sculpted paint laid on with knife and brush. Up close it is pure texture; step back and the flowers appear.",pal:["#e7c33a","#d9822b","#b23a3a","#f3eee0","#5a7a3a","#2f3a5a","#e9a3b0"],style:"impasto"},
-  splash:{name:"Splash & Pour",blurb:"Acrylic thrown, poured and dabbed with gloves, sticks, knives and sponges, then gently guided into an image.",pal:["#1f2a44","#3a6fb0","#e05a7a","#f2c14e","#7fc8a9","#f6f4ee","#a26bd1"],style:"splash"}
+  // "draw" = how the placeholder picture is painted while there is no photo; "styleName" = default Style line (a painting can set its own in the admin)
+  wildflowers:{name:"Wildflowers",blurb:"Poppies, cornflowers, chamomile and meadow grasses, painted the way a field feels in June.",pal:["#5f7d3a","#8aa35a","#c8d49a","#d23b2a","#3f5bb0","#f4f1e6","#e9b93c"],style:"meadow",styleName:"Contemporary impressionism"},
+  floral:{name:"Floral Art",blurb:"Garden flowers up close: peonies, roses, poppies and sweet peas, painted with love for every petal.",pal:["#e9a3b0","#d23b2a","#f3eee0","#e7c33a","#5a7a3a","#c7b8d8","#2f3a5a"],style:"impasto",styleName:"Floral art"},
+  waterlilies:{name:"Water Lilies",blurb:"Still ponds, floating lilies and reflections of the sky, in the gentle light of a summer afternoon.",pal:["#6f88a8","#8fa8c8","#a8c4a0","#e9b7c9","#f1e8d8","#3f6a5a","#c7b8d8"],style:"monet",styleName:"Impressionism, Monet-inspired"},
+  irises:{name:"Irises",blurb:"Tall blue and violet irises by the water and in the garden, with their elegant, curling petals.",pal:["#3f5bb0","#6a4fa0","#a26bd1","#e9b93c","#5f7d3a","#8aa35a","#f4f1e6"],style:"meadow",styleName:"Floral art"},
+  farmyard:{name:"Farmyard Art",blurb:"Farm animals with real character: hens, cows, sheep and more, in warm countryside colours.",pal:["#b08d68","#e8d9b5","#c86b3c","#5f7d3a","#f4f1e6","#3b3430","#8aa35a"],style:"meadow",styleName:"Farmyard art"},
+  impressions:{name:"Impressions",blurb:"Soft, Monet-inspired light: ponds, river mist and gardens seen through half-closed eyes.",pal:["#8fa8c8","#b9c7dd","#c7b8d8","#a8c4a0","#e8d9b5","#6f88a8","#f1e8d8"],style:"monet",styleName:"Impressionism, Monet-inspired"},
+  splash:{name:"Splash & Pour",blurb:"Acrylic thrown, poured and dabbed with gloves, sticks, knives and sponges, then gently guided into an image.",pal:["#1f2a44","#3a6fb0","#e05a7a","#f2c14e","#7fc8a9","#f6f4ee","#a26bd1"],style:"splash",styleName:"Acrylic splash & pour"},
+  // removed for now at Valentyna's request; kept only so an older painting with this theme still opens
+  impasto:{name:"Impasto",hidden:true,blurb:"Thick, sculpted paint laid on with knife and brush.",pal:["#e7c33a","#d9822b","#b23a3a","#f3eee0","#5a7a3a","#2f3a5a","#e9a3b0"],style:"impasto",styleName:"Impasto, palette knife"}
 };
 // sizes in cm (w × h)
 // SAMPLE works: shown only where the admin API is not available (e.g. the old GitHub Pages preview).
@@ -344,10 +350,10 @@ let WORKS = [
   {id:"river-fog",theme:"impressions",title:"Fog over the River",w:50,h:70,medium:"Oil",support:"Linen canvas",year:2024,price:780,seed:41,status:"sold",
    story:"The river at 6 a.m. in October. You can only guess where the far bank is.",
    reel:null,prints:{paper:{price:60,sold:10},canvas:{price:160,sold:5}}},
-  {id:"rain-peonies",theme:"impasto",title:"Peonies, Heavy with Rain",w:50,h:60,medium:"Oil",support:"Linen canvas",year:2025,price:890,seed:53,status:"available",
+  {id:"rain-peonies",theme:"floral",title:"Peonies, Heavy with Rain",w:50,h:60,medium:"Oil",support:"Linen canvas",year:2025,price:890,seed:53,status:"available",
    story:"Peonies always collapse after the first rain. I built them up with the knife so the petals stand off the canvas.",
    reel:"https://www.instagram.com/valentynaart_uk/",prints:{paper:{price:60,sold:2},canvas:{price:170,sold:0}}},
-  {id:"sunflowers-storm",theme:"impasto",title:"Sunflowers After the Storm",w:80,h:100,medium:"Oil",support:"Linen canvas",year:2025,price:1650,seed:67,status:"available",
+  {id:"sunflowers-storm",theme:"floral",title:"Sunflowers After the Storm",w:80,h:100,medium:"Oil",support:"Linen canvas",year:2025,price:1650,seed:67,status:"available",
    story:"A whole field bent over by wind, then turning back to the sun the next morning. The paint is almost a centimetre thick in places.",
    reel:null,prints:{paper:{price:75,sold:5},canvas:{price:210,sold:3}}},
   {id:"meadow-thrown",theme:"splash",title:"Meadow, Thrown",w:60,h:60,medium:"Acrylic",support:"Linen canvas",year:2025,price:720,seed:79,status:"available",
@@ -377,7 +383,7 @@ async function loadWorks(){
       const ph=photos[0], noSize=!(p.w>0&&p.h>0), ar=ph&&ph.w&&ph.h?ph.w/ph.h:.75;
       const w=noSize?Math.round(ar>=1?60:60*ar):p.w, h=noSize?Math.round(ar>=1?60/ar:60):p.h;
       return {
-      id:"p-"+p.id, theme:THEMES[p.theme]?p.theme:Object.keys(THEMES)[0], title:p.title||"Untitled", w, h, noSize, medium:p.medium||"Oil", support:p.support||"Linen canvas",
+      id:"p-"+p.id, theme:THEMES[p.theme]?p.theme:Object.keys(THEMES)[0], title:p.title||"Untitled", w, h, noSize, medium:p.medium||"Oil", support:p.support||"Linen canvas", style:p.style||"",
       year:p.year||"", price:p.price||0, status:p.status, story:p.story||"", reel:p.reel||null, seed:hashSeed(p.id),
       prints:{paper:p.prints&&p.prints.paper, canvas:p.prints&&p.prints.canvas}, cards:(p.cards||[]).filter(c=>c.price>0), sku:p.sku||"",
       photos, back, depth:p.depth>0?p.depth:(Math.max(w,h)>=70?3.8:1.8), depthGuess:!(p.depth>0)
@@ -407,7 +413,9 @@ const CAN3D = typeof CSS!=="undefined" && CSS.supports && CSS.supports("transfor
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const FINE = matchMedia("(pointer: fine)").matches;
 const ROLL_OVER_CM = 70; // guess: longest side above this ships rolled
-const STYLE_NAMES = {meadow:"Contemporary impressionism",monet:"Impressionism, Monet-inspired",impasto:"Impasto, palette knife",splash:"Acrylic splash & pour"};
+const styleOf = w => w.style || THEMES[w.theme].styleName;
+// themes shown in lists: on the live site only those with paintings; hidden ones only if a painting still uses them
+const shownThemes = () => Object.entries(THEMES).filter(([k,t])=>LIVE?WORKS.some(w=>w.theme===k):!t.hidden);
 
 const COUNTRIES = [
   {v:"uk",n:"United Kingdom",zone:"Domestic",ok:true,wood:true},
@@ -520,7 +528,7 @@ function workCard(w){
     <span class="spec">${w.medium} on ${w.support.toLowerCase()} · ${w.noSize?"size on request":w.w+" × "+w.h+" cm"}</span></a>`;
 }
 function vHome(){
-  const themeList = Object.entries(THEMES).filter(([k])=>!LIVE||WORKS.some(w=>w.theme===k));
+  const themeList = shownThemes();
   return `<div class="ship-strip" style="padding-block:28px 0;margin-top:0"><span><b>Worldwide shipping</b> with insurance</span><span><b>Stretched canvas</b> originals</span><span><b>Editions of ${EDITION}</b>, signed &amp; numbered</span><span><b>Turn every painting in 3D</b> and try it on your wall</span></div>
   ${themeList.length?`<section>
     <div class="sec-head"><h2>${themeList.length===4?"Four ways I paint":"The ways I paint"}</h2><a href="#gallery" class="label">All paintings →</a></div>
@@ -535,7 +543,7 @@ function vGallery(theme){
   const list = theme?WORKS.filter(w=>w.theme===theme):WORKS;
   const t = theme&&THEMES[theme];
   return `<div class="page-head"><span class="label">${t?"Theme":"Paintings"}</span><h1 style="margin-top:8px">${t?t.name:"All paintings"}</h1>${t?`<p class="theme-intro">${t.blurb}</p>`:`<p>Original works, grouped by the way they are painted.</p>`}</div>
-  <div class="filter" style="margin-top:24px"><a href="#gallery" ${!theme?'aria-current="page"':""}>All</a>${Object.entries(THEMES).map(([k,x])=>`<a href="#${k}" ${theme===k?'aria-current="page"':""}>${x.name}</a>`).join("")}</div>
+  <div class="filter" style="margin-top:24px"><a href="#gallery" ${!theme?'aria-current="page"':""}>All</a>${shownThemes().map(([k,x])=>`<a href="#${k}" ${theme===k?'aria-current="page"':""}>${x.name}</a>`).join("")}</div>
   ${list.length?`<div class="grid">${list.map(workCard).join("")}</div>`:(WORKS.length?`<p style="margin-top:24px">No paintings in this theme yet. <a href="#gallery">See all paintings</a></p>`:emptyHTML())}`;
 }
 function packHTML(w,c){
@@ -586,7 +594,7 @@ function vPiece(w){
         <dt>Size</dt><dd>${sizeText(w)}</dd>
         <dt>Medium</dt><dd>${w.medium}</dd>
         <dt>Support</dt><dd>${w.support}, ${w.depth} cm deep stretcher${w.depthGuess===false?"":`, painted edges <span class="guess">guess</span>`}</dd>
-        <dt>Style</dt><dd>${STYLE_NAMES[t.style]}</dd>
+        <dt>Style</dt><dd>${esc(styleOf(w))}</dd>
         <dt>Year</dt><dd>${w.year}</dd>
         <dt>Signed</dt><dd>Signed on the front, certificate of authenticity included <span class="guess">guess</span></dd>
       </dl></div>
