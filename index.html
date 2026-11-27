@@ -768,74 +768,6 @@ const onCleanup = f => cleanups.push(f);
 const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
 const DPR = () => Math.min(window.devicePixelRatio||1, 1.5); // cap pixel density: keeps old phones fast
 function paintedCanvas(w,W,H){const c=document.createElement("canvas");c.width=Math.max(2,Math.round(W*DPR()));c.height=Math.max(2,Math.round(H*DPR()));paintWork(c.getContext("2d"),c.width,c.height,w);return c}
-// Back of a stretched canvas, drawn once: raw cotton, pine stretcher bars with mitred corners and wedges,
-// canvas folded over the bars and stapled, and cross braces that depend on the size, like real stretchers:
-// up to 60 cm no brace, up to 120 cm one, longer two or three; the short side gets one past 76 cm.
-function braceCount(cm,long){ return long ? (cm<=60?0:cm<=120?1:cm<=180?2:3) : (cm<=76?0:cm<=150?1:2); }
-function stretcherBack(w,W,H){
-  const c=document.createElement("canvas"); c.width=Math.max(2,Math.round(W*DPR())); c.height=Math.max(2,Math.round(H*DPR()));
-  const x=c.getContext("2d"), k=c.width/w.w, r=mulberry(w.seed||7), L=Math.max(w.w,w.h);
-  const bw=(L<35?3:w.depth>=3?4.6:4)*k, wrap=Math.min(bw*.42,1.6*k), cb=bw*.78;
-  // raw cotton with a fine weave
-  x.fillStyle="#e7e1d4"; x.fillRect(0,0,c.width,c.height);
-  const t=document.createElement("canvas"); t.width=t.height=4; const tx=t.getContext("2d");
-  tx.fillStyle="rgba(120,105,80,.05)"; tx.fillRect(0,0,4,1); tx.fillRect(0,2,4,1); tx.fillStyle="rgba(255,255,255,.08)"; tx.fillRect(1,0,1,4);
-  x.fillStyle=x.createPattern(t,"repeat"); x.fillRect(0,0,c.width,c.height);
-  // a little uneven light on the cloth
-  let g=x.createRadialGradient(c.width*.4,c.height*.35,0,c.width*.5,c.height*.5,Math.max(c.width,c.height)*.75);
-  g.addColorStop(0,"rgba(255,255,255,.10)"); g.addColorStop(1,"rgba(60,45,25,.12)"); x.fillStyle=g; x.fillRect(0,0,c.width,c.height);
-  // braces
-  const nx=braceCount(w.w,w.w>=w.h), ny=braceCount(w.h,w.h>w.w);
-  const vx=[...Array(nx)].map((_,i)=>c.width*(i+1)/(nx+1)), hy=[...Array(ny)].map((_,i)=>c.height*(i+1)/(ny+1));
-  // wood bar along x (horizontal) or y (vertical), with soft shadow on the cloth
-  const bar=(x0,y0,len,th,horiz,shadow)=>{
-    x.save();
-    if(shadow){x.fillStyle="rgba(40,28,12,.16)"; horiz?x.fillRect(x0,y0+th,len,th*.22):x.fillRect(x0+th,y0,th*.22,len)}
-    g=horiz?x.createLinearGradient(0,y0,0,y0+th):x.createLinearGradient(x0,0,x0+th,0);
-    g.addColorStop(0,"#c9a36d"); g.addColorStop(.15,"#e2c596"); g.addColorStop(.6,"#d6b27c"); g.addColorStop(1,"#b38955");
-    x.fillStyle=g; horiz?x.fillRect(x0,y0,len,th):x.fillRect(x0,y0,th,len);
-    x.beginPath(); horiz?x.rect(x0,y0,len,th):x.rect(x0,y0,th,len); x.clip();
-    const n=Math.min(60,Math.round(len/(k*2.5)));
-    for(let i=0;i<n;i++){ // grain
-      x.strokeStyle=`rgba(${120+r()*30|0},${80+r()*20|0},40,${.10+r()*.18})`; x.lineWidth=Math.max(.6,k*(.05+r()*.12));
-      const o=r()*th, a=r()*len, b=a+len*(.2+r()*.6), wob=(r()-.5)*th*.25;
-      x.beginPath(); if(horiz){x.moveTo(x0+a,y0+o);x.quadraticCurveTo(x0+(a+b)/2,y0+o+wob,x0+b,y0+o)}else{x.moveTo(x0+o,y0+a);x.quadraticCurveTo(x0+o+wob,y0+(a+b)/2,x0+o,y0+b)} x.stroke();
-    }
-    if(len>30*k&&r()<.7){ // a pine knot
-      const kx=horiz?x0+len*(.15+r()*.7):x0+th*(.3+r()*.4), ky=horiz?y0+th*(.3+r()*.4):y0+len*(.15+r()*.7);
-      x.fillStyle="rgba(120,70,30,.55)"; x.beginPath(); x.ellipse(kx,ky,horiz?th*.22:th*.14,horiz?th*.14:th*.22,0,0,7); x.fill();
-      x.strokeStyle="rgba(120,70,30,.25)"; x.lineWidth=k*.15; x.beginPath(); x.ellipse(kx,ky,horiz?th*.36:th*.24,horiz?th*.24:th*.36,0,0,7); x.stroke();
-    }
-    x.restore();
-  };
-  vx.forEach(px=>bar(px-cb/2,bw,c.height-2*bw,cb,false,true));
-  hy.forEach(py=>bar(bw,py-cb/2,c.width-2*bw,cb,true,true));
-  // where braces cross: a half-lap joint line
-  vx.forEach(px=>hy.forEach(py=>{x.strokeStyle="rgba(90,60,30,.45)";x.lineWidth=Math.max(1,k*.12);x.strokeRect(px-cb/2,py-cb/2,cb,cb)}));
-  // outer frame (shadow first), then mitres
-  x.fillStyle="rgba(40,28,12,.18)"; x.fillRect(bw,bw,c.width-2*bw,bw*.25); x.fillRect(bw,bw,bw*.25,c.height-2*bw);
-  bar(0,0,c.width,bw,true); bar(0,c.height-bw,c.width,bw,true); bar(0,0,bw,c.height,false); bar(c.width-bw,0,bw,c.height,false);
-  x.strokeStyle="rgba(80,55,25,.55)"; x.lineWidth=Math.max(1,k*.1);
-  [[0,0,1,1],[c.width,0,-1,1],[0,c.height,1,-1],[c.width,c.height,-1,-1]].forEach(([ox,oy,sx,sy])=>{
-    x.beginPath(); x.moveTo(ox,oy); x.lineTo(ox+sx*bw,oy+sy*bw); x.stroke();
-    // corner wedges (keys) in the inner corner
-    const kk=bw*.9; x.fillStyle="#a97d47"; x.beginPath(); x.moveTo(ox+sx*bw,oy+sy*bw); x.lineTo(ox+sx*(bw+kk),oy+sy*bw); x.lineTo(ox+sx*bw,oy+sy*(bw+kk*.35)); x.fill();
-    x.beginPath(); x.moveTo(ox+sx*bw,oy+sy*bw); x.lineTo(ox+sx*bw,oy+sy*(bw+kk)); x.lineTo(ox+sx*(bw+kk*.35),oy+sy*bw); x.fill();
-  });
-  // inner edge of the frame
-  x.strokeStyle="rgba(70,48,20,.45)"; x.lineWidth=Math.max(1,k*.12); x.strokeRect(bw,bw,c.width-2*bw,c.height-2*bw);
-  // canvas folded over the bars, with staples
-  x.fillStyle="#ddd6c7"; x.fillRect(0,0,c.width,wrap); x.fillRect(0,c.height-wrap,c.width,wrap); x.fillRect(0,0,wrap,c.height); x.fillRect(c.width-wrap,0,wrap,c.height);
-  x.strokeStyle="rgba(90,75,55,.35)"; x.lineWidth=Math.max(1,k*.08); x.strokeRect(wrap,wrap,c.width-2*wrap,c.height-2*wrap);
-  [[0,0],[c.width,0],[0,c.height],[c.width,c.height]].forEach(([ox,oy])=>{ // folded corners
-    x.fillStyle="#d2cab9"; x.beginPath(); x.moveTo(ox,oy); x.lineTo(ox+(ox?-1:1)*wrap*2.2,oy); x.lineTo(ox,oy+(oy?-1:1)*wrap*2.2); x.fill();
-  });
-  const step=8*k, sl=1.1*k, sw=Math.max(1,k*.22); x.fillStyle="#8d9196";
-  for(let p=step*.75;p<c.width-step*.5;p+=step){x.fillRect(p-sl/2,wrap*.45,sl,sw);x.fillRect(p-sl/2,c.height-wrap*.55,sl,sw)}
-  for(let p=step*.75;p<c.height-step*.5;p+=step){x.fillRect(wrap*.45,p-sl/2,sw,sl);x.fillRect(c.width-wrap*.55,p-sl/2,sw,sl)}
-  x.strokeStyle="rgba(0,0,0,.25)"; x.lineWidth=1; x.strokeRect(.5,.5,c.width-1,c.height-1);
-  return c;
-}
 // run a rAF loop only while `step` returns true; returns a kick() to restart it
 function loop(step){let id=0,alive=true;const tick=t=>{id=0;if(alive&&step(t))id=requestAnimationFrame(tick)};const kick=()=>{if(alive&&!id)id=requestAnimationFrame(tick)};onCleanup(()=>{alive=false;cancelAnimationFrame(id)});return kick}
 
@@ -915,8 +847,7 @@ function viewer3D(host,w){
   const back=mk("back",W,H,`rotateY(180deg) translateZ(${D/2}px)`,[0,0,-1]);
   const bar=Math.max(6,Math.round(4.5*s));
   if(w.back&&w.back.src) back.insertAdjacentHTML("afterbegin",`<img class="back-photo" src="${esc(w.back.src)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`);
-  else{ const bc=stretcherBack(w,W,H); bc.className="bars"; bc.style.cssText="position:absolute;inset:0;width:100%;height:100%"; back.prepend(bc);
-    back.querySelector(".shade").insertAdjacentHTML("beforebegin",`<div class="label-sticker">${esc(w.title)}<br>Valentyna Ksendz, ${w.year}<br>${w.noSize?"":w.w+" × "+w.h+" cm · "}${esc(w.medium.toLowerCase())} on ${esc(w.support.toLowerCase())}</div>`); }
+  else back.insertAdjacentHTML("afterbegin",`<div class="bars" style="box-shadow:inset 0 0 0 ${bar}px #c4a57a, inset 0 0 0 ${bar+1}px rgba(0,0,0,.15)"></div>${Math.max(w.w,w.h)>=60?`<div style="position:absolute;left:${bar}px;right:${bar}px;top:50%;height:${bar}px;margin-top:-${bar/2}px;background:#c4a57a;box-shadow:0 1px 0 rgba(0,0,0,.15)"></div>`:""}<div class="label-sticker">${esc(w.title)}<br>Valentyna Ksendz, ${w.year}<br>${w.noSize?"":w.w+" × "+w.h+" cm · "}${esc(w.medium.toLowerCase())} on ${esc(w.support.toLowerCase())}</div>`);
   mk("side",D,H,`translateX(${(W-D)/2}px) rotateY(90deg) translateZ(${W/2}px)`,[1,0,0],slice(fw-k,0,k,fh,D,H));
   mk("side",D,H,`translateX(${(W-D)/2}px) rotateY(-90deg) translateZ(${W/2}px)`,[-1,0,0],slice(0,0,k,fh,D,H));
   mk("side",W,D,`translateY(${(H-D)/2}px) rotateX(90deg) translateZ(${H/2}px)`,[0,-1,0],slice(0,0,fw,k,W,D));
