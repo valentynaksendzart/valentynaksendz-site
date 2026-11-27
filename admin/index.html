@@ -92,7 +92,11 @@ textarea{min-height:130px;resize:vertical}
 
 <script>
 "use strict";
-const THEMES = [["wildflowers","Полевые цветы"],["impressions","Импрессионизм"],["impasto","Импасто"],["splash","Всплеск и заливка"]];
+// "impasto" removed for now at Valentyna's request (older paintings keep it until changed)
+const THEMES = [["wildflowers","Полевые цветы"],["floral","Цветы (Floral art)"],["waterlilies","Кувшинки"],["irises","Ирисы"],["farmyard","Фермерские животные"],["impressions","Импрессионизм"],["splash","Всплеск и заливка"]];
+// style shown on the site; empty = the theme's usual style (keep in sync with THEME_STYLE in /index.html)
+const STYLES = ["Floral art","Botanical art","Contemporary impressionism","Impressionism, Monet-inspired","Farmyard art","Acrylic splash & pour","Impasto, palette knife"];
+const THEME_STYLE = {wildflowers:"Contemporary impressionism",floral:"Floral art",waterlilies:"Impressionism, Monet-inspired",irises:"Floral art",farmyard:"Farmyard art",impressions:"Impressionism, Monet-inspired",splash:"Acrylic splash & pour",impasto:"Impasto, palette knife"};
 const MEDIUMS = [["Oil","Масло"],["Acrylic","Акрил"],["Mixed media","Смешанная техника"]];
 const SUPPORTS = [["Linen canvas","Льняной холст"],["Cotton canvas","Хлопковый холст"],["Canvas board","Холст на картоне"],["Paper","Бумага"]];
 const STATUS_RU = {available:"На сайте",sold:"Продано",draft:"Черновик"};
@@ -196,6 +200,10 @@ async function edit(id) {
             <div class="chips" role="group" aria-label="Тема" id="themes">
               ${THEMES.map(([k,t]) => `<button class="chip green" data-theme="${k}" aria-pressed="${cur.theme===k}">${t}</button>`).join("")}
             </div></div>
+          <label>Стиль (на английском, так его увидят покупатели)
+            <input type="text" data-k="style" list="styles" value="${esc(cur.style)}" placeholder="${esc(THEME_STYLE[cur.theme] || "")}" id="style"></label>
+          <datalist id="styles">${STYLES.map(x => `<option value="${esc(x)}">`).join("")}</datalist>
+          <div class="hint" style="margin-top:-8px">Нажмите на поле и выберите из списка или напишите свой. Если оставить пустым, на сайте будет: «<span id="styleDef">${esc(THEME_STYLE[cur.theme] || "")}</span>».</div>
           <div class="two">
             <label>Техника<select data-k="medium">${opt(MEDIUMS, cur.medium)}</select></label>
             <label>Основа<select data-k="support">${opt(SUPPORTS, cur.support)}</select></label>
@@ -235,6 +243,8 @@ async function edit(id) {
   $app.querySelectorAll("[data-theme]").forEach(b => b.onclick = () => {
     cur.theme = b.dataset.theme;
     $app.querySelectorAll("[data-theme]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    const def = THEME_STYLE[cur.theme] || "";
+    $app.querySelector("#style").placeholder = def; $app.querySelector("#styleDef").textContent = def;
     queueSave();
   });
   $app.querySelectorAll("[data-pk]").forEach(b => b.onclick = () => {

@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#183D32">
 <style>[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Valentyna Ksendz Art</title>
-<meta name="description" content="Original oil and acrylic paintings by Valentyna Ksendz: wildflowers, impressionist landscapes, impasto and splash technique. Limited-edition prints. Worldwide shipping.">
+<meta name="description" content="Original oil and acrylic paintings by Valentyna Ksendz: wildflowers, floral art, water lilies, irises, farmyard animals and splash technique. Limited-edition prints. Worldwide shipping.">
 <link rel="canonical" href="https://valentynaksendz-site.pages.dev/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Valentyna Ksendz Art">
@@ -14,7 +14,7 @@
 <meta property="og:description" content="Original botanical paintings and wildflower art by Valentyna Ksendz. Limited-edition prints. Worldwide shipping from the UK.">
 <meta property="og:url" content="https://valentynaksendz-site.pages.dev/">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Valentyna Ksendz","jobTitle":"Artist","description":"Wildflower artist: original botanical paintings and limited-edition prints.","url":"https://valentynaksendz-site.pages.dev/","sameAs":["https://www.instagram.com/valentynaart_uk/"],"knowsAbout":["Botanical art","Wildflower painting","Impasto"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Valentyna Ksendz","jobTitle":"Artist","description":"Wildflower artist: original botanical paintings and limited-edition prints.","url":"https://valentynaksendz-site.pages.dev/","sameAs":["https://www.instagram.com/valentynaart_uk/"],"knowsAbout":["Botanical art","Wildflower painting","Floral art","Water lilies"]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Karla:wght@400;500;700&display=swap">
@@ -48,6 +48,7 @@ p{margin:0}
 .label{font-family:var(--font-body);font-size:.8rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .guess{display:inline-block;font-family:var(--font-body);font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--flag);background:var(--flag-bg);border:1px dashed var(--flag);padding:1px 6px;border-radius:3px;vertical-align:middle;white-space:nowrap}
 .draftbar{background:var(--flag-bg);color:var(--flag);font-family:var(--font-body);font-size:.85rem;text-align:center;padding-block:6px}
+@media (max-width:760px){.draftbar{font-size:.72rem;padding-block:4px;line-height:1.4}}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 /* header */
@@ -59,6 +60,19 @@ header.site .wrap{display:flex;align-items:center;justify-content:space-between;
 nav.main{display:flex;gap:18px;flex-wrap:wrap}
 nav.main a{text-decoration:none;font-size:1.05rem;color:var(--muted);padding-block:4px;border-bottom:1px solid transparent}
 nav.main a:hover,nav.main a[aria-current="page"]{color:var(--gold);border-bottom-color:var(--gold)}
+.menu-btn{display:none;font:500 1rem var(--font-body);color:var(--gold);background:none;border:1px solid var(--gold-deep);border-radius:3px;padding:6px 12px;cursor:pointer}
+@media (max-width:760px){
+  header.site .wrap{flex-wrap:nowrap;gap:10px;padding-block:6px}
+  .brand{font-size:1.15rem;margin-right:auto;white-space:nowrap}
+  .menu-btn{padding:3px 10px;font-size:.9rem}
+  .brand small{display:none}
+  .menu-btn{display:block}
+  nav.main .cur{padding:12px 0 4px}
+  nav.main{display:none;position:absolute;left:0;right:0;top:100%;background:var(--wall);border-bottom:1px solid var(--rule);flex-direction:column;gap:0;padding:4px 16px 12px}
+  header.site.open nav.main{display:flex}
+  nav.main a{font-size:1.15rem;padding:12px 0;border-bottom:1px solid var(--rule)}
+  nav.main a:last-child{border-bottom:0}
+}
 
 main{padding-block:0 64px}
 section{padding-block:48px}
@@ -125,7 +139,9 @@ section{padding-block:48px}
 .card dt,.card dd{margin:0;padding:10px 0;border-bottom:1px solid var(--rule);font-size:1.02rem}
 .card dt{font-family:var(--font-body);font-size:.78rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:12px}
 .card-box{margin-top:26px;padding-top:20px;border-top:1px solid rgba(217,188,110,.3);display:flex;flex-direction:column;gap:10px;align-items:flex-start}.card-box h3{margin:0}.card-item .btn{margin-top:10px}.card-item a{color:inherit;text-decoration:none}
-.price-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:26px;flex-wrap:wrap}
+.price-row{display:flex;align-items:center;gap:12px;margin-top:26px;flex-wrap:wrap}
+.price-row .label{margin-left:auto}
+.cur-mini select{font:500 1rem var(--font-body);color:var(--gold);background:var(--wall);border:1px solid var(--gold-deep);border-radius:3px;padding:6px 8px;cursor:pointer}
 .price-big{font-family:var(--font-display);font-weight:600;color:var(--gold);font-size:2.4rem}
 .buy-note{margin-top:10px;font-size:.95rem;color:var(--muted);min-height:1.4em}
 
@@ -140,6 +156,16 @@ section{padding-block:48px}
 .pack b{display:block;color:var(--ink)}
 .pack.no{color:var(--flag)}
 .terms a.more{font-size:1rem;color:var(--gold)}
+/* calm, collapsible extras on the painting page */
+details.terms,details.frames{padding:0 20px}
+details.terms[open],details.frames[open]{padding-bottom:18px}
+details > summary{cursor:pointer;list-style:none;font:700 1.05rem var(--font-body);color:var(--ink);padding:16px 0;display:flex;justify-content:space-between;align-items:center;gap:12px}
+details > summary::-webkit-details-marker{display:none}
+details > summary::after{content:"+";font-size:1.5rem;line-height:1;color:var(--gold)}
+details[open] > summary::after{content:"–"}
+details.more{border-bottom:1px solid var(--rule)}
+details.more > summary{font-weight:500;color:var(--muted);font-size:1rem;padding:12px 0}
+details.more p{font-size:1rem;color:var(--muted);padding-bottom:10px}
 
 .prints{margin-top:28px;border:1px solid var(--gold-deep);padding:20px;display:flex;flex-direction:column;gap:14px}
 .prints h2{font-size:1.7rem}
@@ -198,26 +224,63 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
   @keyframes fade{from{opacity:.4}to{opacity:1}}
 }
 
+
+/* ---------- phone home: wall carousel (one painting per screen, parallax wall) ---------- */
+.cw{background:#12302a;color:var(--hall-ink)}
+.cw-slide{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;perspective:900px}
+.cw-wall{position:absolute;left:0;right:0;top:-25%;bottom:-25%;background:linear-gradient(180deg,#1f4a3d,#183D32);will-change:transform}
+.cw-wall::before{content:"";position:absolute;left:0;right:0;top:21.3%;height:0;border-top:2px solid rgba(217,188,110,.3);box-shadow:0 7px 12px rgba(0,0,0,.22)}
+.cw-wall::after{content:"";position:absolute;left:0;right:0;top:71.3%;bottom:0;background:rgba(0,0,0,.2);border-top:2px solid rgba(217,188,110,.22);box-shadow:inset 0 10px 14px rgba(0,0,0,.18)}
+.cw-glow{position:absolute;left:50%;top:-12%;width:150%;height:75%;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 0,rgba(255,226,170,.26),transparent 68%);pointer-events:none}
+.cw-slide > .cine-intro,.cw-art,.cw-plate{position:relative;z-index:1}
+.cw-art{display:block;box-shadow:0 0 0 4px #c9a95a,0 18px 36px rgba(0,0,0,.55);will-change:transform}
+.cw-art canvas{display:block;width:100%;height:100%}
+.cw-plate{display:block;text-align:center;text-decoration:none;max-width:88%}
+.cw-plate b{display:block;font:600 1.45rem/1.2 var(--font-display);color:var(--gold)}
+.cw-plate span{display:block;margin-top:2px;font:500 1.05rem var(--font-body);color:var(--hall-ink)}
+.cw .scroll-cue{z-index:1}
+.cw-end{padding:30px 16px 40px;display:flex;justify-content:center;background:#12302a}
+
 /* ---------- cinematic gallery hall (home) ---------- */
 :root{--hall-bg:#0f2a22;--hall-ink:#f4eedd;--hall-muted:#cfd6c9;--hall-wall:#183D32;--hall-floor:#2a211b;--spot:rgba(255,226,170,.16)}
-#cine{position:relative;height:300vh;background:var(--hall-bg);color:var(--hall-ink)}
+#cine{position:relative;background:var(--hall-bg);color:var(--hall-ink)}
+#cine .track{position:relative;height:300vh}
+#cine.static .track{height:auto}
 #cine[hidden]{display:none}
-#cine.static{height:auto}
-#cine .stage{position:sticky;top:calc(env(safe-area-inset-top, 0px) + var(--hdr,62px));height:calc(100vh - var(--hdr,62px));height:calc(100svh - var(--hdr,62px));min-height:460px;overflow:hidden;perspective:var(--persp,800px);perspective-origin:50% 42%;background:radial-gradient(ellipse at 50% 35%,#24564a 0%,var(--hall-bg) 72%)}
+#cine .stage{position:sticky;top:calc(env(safe-area-inset-top, 0px) + var(--hdr,62px));height:calc(100vh - var(--hdr,62px));height:calc(100svh - var(--hdr,62px));min-height:460px;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,#24564a 0%,var(--hall-bg) 72%)}
 #cine.static .stage{position:relative;height:620px}
+#cine .zoomer{position:absolute;inset:0;perspective:var(--persp,800px);perspective-origin:50% 42%;transform:scale(var(--zoom,1));transform-origin:50% 42%}
 .world{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;will-change:transform}
 .world > *{position:absolute;transform-style:preserve-3d;backface-visibility:hidden}
-.hall-floor{background:repeating-linear-gradient(90deg,#2d241d 0 58px,#251d17 58px 60px),var(--hall-floor);transform-origin:50% 0}
+.hall-floor{background:repeating-linear-gradient(90deg,rgba(0,0,0,.35) 0 2px,transparent 2px 55px),linear-gradient(90deg,#4a3a2c,#5c4834 50%,#4a3a2c),var(--hall-floor);transform-origin:50% 0}
+.hall-ceil{transform-origin:50% 0;background:radial-gradient(circle at 50% 50%,rgba(255,236,190,.9) 0 7px,rgba(255,220,150,.25) 9px,transparent 30px) 0 0/100% 260px,linear-gradient(90deg,#14352b,#1b4236 50%,#14352b)}
 .hall-floor::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(15,42,34,.9),rgba(15,42,34,0) 30%)}
 .hall-wall{background:linear-gradient(180deg,#1f4a3d,var(--hall-wall));transform-origin:0 50%}
-.hall-end{background:radial-gradient(ellipse at 50% 30%,#245446,var(--hall-wall) 70%)}
-.hall-art{display:block;box-shadow:0 0 0 5px #c9a95a,0 0 90px 30px var(--spot),0 20px 40px rgba(0,0,0,.6)}
+.hall-end{background:linear-gradient(180deg,#1f4a3d,var(--hall-wall))}
+.hall-art{display:block;box-shadow:0 0 0 5px #c9a95a,0 20px 40px rgba(0,0,0,.6)}
 .hall-art canvas{display:block;width:100%;height:100%}
 .hall-art:focus-visible{outline:3px solid var(--accent)}
-.hall-plate{position:absolute;left:50%;top:calc(100% + 18px);transform:translateX(-50%);white-space:nowrap;font:500 12px/1.3 var(--font-body);letter-spacing:.06em;color:var(--hall-muted);text-align:center}
+.hall-plate{position:absolute;left:50%;top:calc(100% + 14px);transform:translateX(-50%);white-space:nowrap;font:600 22px/1.3 var(--font-body);letter-spacing:.02em;color:var(--hall-ink);text-align:center}
 .cine-copy{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding-block:0 9vh;pointer-events:none;background:linear-gradient(to top,rgba(15,42,34,.94) 0%,rgba(15,42,34,.82) 38%,rgba(15,42,34,0) 68%)}
-@media (max-width:700px){.world{top:30%}.cine-copy{padding-block:0 6vh;background:linear-gradient(to top,rgba(15,42,34,.96) 0%,rgba(15,42,34,.88) 50%,rgba(15,42,34,0) 72%)}}
 .cine-copy .wrap{width:100%}
+.cine-intro{padding-block:28px 22px;text-align:center}
+@media (max-width:760px){
+  .draftbar{display:none}
+  .cine-intro{padding-block:8px 6px}
+  .cine-intro h1{font-size:1.45rem}
+  .cine-intro .tagline{font-size:.98rem;margin-top:0}
+  .cine-intro .ctas{margin-top:8px;gap:8px}
+  .cine-intro .btn{padding:7px 14px;font-size:.95rem}
+  #cine .stage{min-height:360px}
+  #cine .zoomer{transform-origin:50% 38%}
+  .world{top:38%}
+  .hall-plate{font-size:24px}
+}
+.cine-intro h1{font-size:clamp(2rem,6vw,3.4rem);color:var(--gold)}
+.cine-intro .tagline{font-family:var(--font-display);font-style:italic;font-size:clamp(1.25rem,3vw,1.7rem);color:var(--gold);margin-top:4px}
+.cine-intro .ctas{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.cine-intro .btn{background:var(--gold);color:var(--accent-ink);border-color:var(--gold)}
+.cine-intro .btn.ghost{background:transparent;color:var(--gold)}
 .cine-copy h1{font-size:clamp(2.2rem,6vw,4.6rem);max-width:12em;text-shadow:0 2px 30px rgba(0,0,0,.6)}
 .cine-copy h1{color:var(--gold)}
 .cine-copy .tagline{font-family:var(--font-display);font-style:italic;font-size:clamp(1.4rem,3vw,2.1rem);color:var(--gold);margin-top:6px}
@@ -300,7 +363,8 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 <header class="site">
   <div class="wrap">
     <a class="brand" href="#home">Valentyna Ksendz<small>Wildflower artist · Original paintings</small></a>
-    <nav class="main" aria-label="Main">
+    <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="main" aria-label="Main" id="mainNav">
       <a href="#gallery" data-nav="gallery">Paintings</a>
       <a href="#prints" data-nav="prints">Prints</a>
       <a href="#cards" data-nav="cards">Cards</a>
@@ -333,10 +397,16 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 <script>
 /* ---------- DATA (all placeholder content; replace with Valentyna's real works) ---------- */
 const THEMES = {
-  wildflowers:{name:"Wildflowers",blurb:"Poppies, cornflowers, chamomile and meadow grasses, painted the way a field feels in June.",pal:["#5f7d3a","#8aa35a","#c8d49a","#d23b2a","#3f5bb0","#f4f1e6","#e9b93c"],style:"meadow"},
-  impressions:{name:"Impressions",blurb:"Soft, Monet-inspired light: ponds, river mist and gardens seen through half-closed eyes.",pal:["#8fa8c8","#b9c7dd","#c7b8d8","#a8c4a0","#e8d9b5","#6f88a8","#f1e8d8"],style:"monet"},
-  impasto:{name:"Impasto",blurb:"Thick, sculpted paint laid on with knife and brush. Up close it is pure texture; step back and the flowers appear.",pal:["#e7c33a","#d9822b","#b23a3a","#f3eee0","#5a7a3a","#2f3a5a","#e9a3b0"],style:"impasto"},
-  splash:{name:"Splash & Pour",blurb:"Acrylic thrown, poured and dabbed with gloves, sticks, knives and sponges, then gently guided into an image.",pal:["#1f2a44","#3a6fb0","#e05a7a","#f2c14e","#7fc8a9","#f6f4ee","#a26bd1"],style:"splash"}
+  // "draw" = how the placeholder picture is painted while there is no photo; "styleName" = default Style line (a painting can set its own in the admin)
+  wildflowers:{name:"Wildflowers",blurb:"Poppies, cornflowers, chamomile and meadow grasses, painted the way a field feels in June.",pal:["#5f7d3a","#8aa35a","#c8d49a","#d23b2a","#3f5bb0","#f4f1e6","#e9b93c"],style:"meadow",styleName:"Contemporary impressionism"},
+  floral:{name:"Floral Art",blurb:"Garden flowers up close: peonies, roses, poppies and sweet peas, painted with love for every petal.",pal:["#e9a3b0","#d23b2a","#f3eee0","#e7c33a","#5a7a3a","#c7b8d8","#2f3a5a"],style:"impasto",styleName:"Floral art"},
+  waterlilies:{name:"Water Lilies",blurb:"Still ponds, floating lilies and reflections of the sky, in the gentle light of a summer afternoon.",pal:["#6f88a8","#8fa8c8","#a8c4a0","#e9b7c9","#f1e8d8","#3f6a5a","#c7b8d8"],style:"monet",styleName:"Impressionism, Monet-inspired"},
+  irises:{name:"Irises",blurb:"Tall blue and violet irises by the water and in the garden, with their elegant, curling petals.",pal:["#3f5bb0","#6a4fa0","#a26bd1","#e9b93c","#5f7d3a","#8aa35a","#f4f1e6"],style:"meadow",styleName:"Floral art"},
+  farmyard:{name:"Farmyard Art",blurb:"Farm animals with real character: hens, cows, sheep and more, in warm countryside colours.",pal:["#b08d68","#e8d9b5","#c86b3c","#5f7d3a","#f4f1e6","#3b3430","#8aa35a"],style:"meadow",styleName:"Farmyard art"},
+  impressions:{name:"Impressions",blurb:"Soft, Monet-inspired light: ponds, river mist and gardens seen through half-closed eyes.",pal:["#8fa8c8","#b9c7dd","#c7b8d8","#a8c4a0","#e8d9b5","#6f88a8","#f1e8d8"],style:"monet",styleName:"Impressionism, Monet-inspired"},
+  splash:{name:"Splash & Pour",blurb:"Acrylic thrown, poured and dabbed with gloves, sticks, knives and sponges, then gently guided into an image.",pal:["#1f2a44","#3a6fb0","#e05a7a","#f2c14e","#7fc8a9","#f6f4ee","#a26bd1"],style:"splash",styleName:"Acrylic splash & pour"},
+  // removed for now at Valentyna's request; kept only so an older painting with this theme still opens
+  impasto:{name:"Impasto",hidden:true,blurb:"Thick, sculpted paint laid on with knife and brush.",pal:["#e7c33a","#d9822b","#b23a3a","#f3eee0","#5a7a3a","#2f3a5a","#e9a3b0"],style:"impasto",styleName:"Impasto, palette knife"}
 };
 // sizes in cm (w × h)
 // SAMPLE works: shown only where the admin API is not available (e.g. the old GitHub Pages preview).
@@ -353,10 +423,10 @@ let WORKS = [
   {id:"river-fog",theme:"impressions",title:"Fog over the River",w:50,h:70,medium:"Oil",support:"Linen canvas",year:2024,price:780,seed:41,status:"sold",
    story:"The river at 6 a.m. in October. You can only guess where the far bank is.",
    reel:null,prints:{paper:{price:60,sold:10},canvas:{price:160,sold:5}}},
-  {id:"rain-peonies",theme:"impasto",title:"Peonies, Heavy with Rain",w:50,h:60,medium:"Oil",support:"Linen canvas",year:2025,price:890,seed:53,status:"available",
+  {id:"rain-peonies",theme:"floral",title:"Peonies, Heavy with Rain",w:50,h:60,medium:"Oil",support:"Linen canvas",year:2025,price:890,seed:53,status:"available",
    story:"Peonies always collapse after the first rain. I built them up with the knife so the petals stand off the canvas.",
    reel:"https://www.instagram.com/valentynaart_uk/",prints:{paper:{price:60,sold:2},canvas:{price:170,sold:0}}},
-  {id:"sunflowers-storm",theme:"impasto",title:"Sunflowers After the Storm",w:80,h:100,medium:"Oil",support:"Linen canvas",year:2025,price:1650,seed:67,status:"available",
+  {id:"sunflowers-storm",theme:"floral",title:"Sunflowers After the Storm",w:80,h:100,medium:"Oil",support:"Linen canvas",year:2025,price:1650,seed:67,status:"available",
    story:"A whole field bent over by wind, then turning back to the sun the next morning. The paint is almost a centimetre thick in places.",
    reel:null,prints:{paper:{price:75,sold:5},canvas:{price:210,sold:3}}},
   {id:"meadow-thrown",theme:"splash",title:"Meadow, Thrown",w:60,h:60,medium:"Acrylic",support:"Linen canvas",year:2025,price:720,seed:79,status:"available",
@@ -386,7 +456,7 @@ async function loadWorks(){
       const ph=photos[0], noSize=!(p.w>0&&p.h>0), ar=ph&&ph.w&&ph.h?ph.w/ph.h:.75;
       const w=noSize?Math.round(ar>=1?60:60*ar):p.w, h=noSize?Math.round(ar>=1?60/ar:60):p.h;
       return {
-      id:"p-"+p.id, theme:THEMES[p.theme]?p.theme:Object.keys(THEMES)[0], title:p.title||"Untitled", w, h, noSize, medium:p.medium||"Oil", support:p.support||"Linen canvas",
+      id:"p-"+p.id, theme:THEMES[p.theme]?p.theme:Object.keys(THEMES)[0], title:p.title||"Untitled", w, h, noSize, medium:p.medium||"Oil", support:p.support||"Linen canvas", style:p.style||"",
       year:p.year||"", price:p.price||0, status:p.status, story:p.story||"", reel:p.reel||null, seed:hashSeed(p.id),
       prints:{paper:p.prints&&p.prints.paper, canvas:p.prints&&p.prints.canvas}, cards:(p.cards||[]).filter(c=>c.price>0), sku:p.sku||"",
       photos, back, depth:p.depth>0?p.depth:(Math.max(w,h)>=70?3.8:1.8), depthGuess:!(p.depth>0)
@@ -408,15 +478,15 @@ const FRAMES = [
   {id:"none",name:"No frame",desc:"Painted edges, ready to hang as it is",price:"Included",sw:"repeating-linear-gradient(45deg,#4b6b5f 0 4px,#3a5a4e 4px 8px)"},
   {id:"oak",name:"Natural oak floating frame",desc:"Light wood with a small shadow gap around the canvas",price:"+ price TBC",cm:2.5,gap:.8,bg:"linear-gradient(135deg,#d7b68a,#b38d5f)",sw:"linear-gradient(135deg,#d7b68a,#b38d5f)"},
   {id:"black",name:"Black floating frame",desc:"Slim and modern, makes bright colours glow",price:"+ price TBC",cm:2.5,gap:.8,bg:"linear-gradient(135deg,#3a3a3a,#141414)",sw:"linear-gradient(135deg,#3a3a3a,#141414)"},
-  {id:"gold",name:"Classic gold frame",desc:"Traditional moulding, beautiful with impressionist work",price:"+ price TBC",cm:6,gap:0,bg:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)",sw:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)"},
-  {id:"help",name:"Help me choose a frame",desc:"Valentyna suggests 2 or 3 frames for this painting and your room, with photos, before you decide",price:"Free advice",sw:"radial-gradient(circle,#d9bc6e 0 30%,#4b6b5f 31%)"}
+  {id:"gold",name:"Classic gold frame",desc:"Traditional moulding, beautiful with impressionist work",price:"+ price TBC",cm:6,gap:0,bg:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)",sw:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)"}
 ];
 let currentFrame = "none";
 const CAN3D = typeof CSS!=="undefined" && CSS.supports && CSS.supports("transform-style","preserve-3d");
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const FINE = matchMedia("(pointer: fine)").matches;
-const ROLL_OVER_CM = 70; // guess: longest side above this ships rolled
-const STYLE_NAMES = {meadow:"Contemporary impressionism",monet:"Impressionism, Monet-inspired",impasto:"Impasto, palette knife",splash:"Acrylic splash & pour"};
+const styleOf = w => w.style || THEMES[w.theme].styleName;
+// themes shown in lists: on the live site only those with paintings; hidden ones only if a painting still uses them
+const shownThemes = () => Object.entries(THEMES).filter(([k,t])=>LIVE?WORKS.some(w=>w.theme===k):!t.hidden);
 
 const COUNTRIES = [
   {v:"uk",n:"United Kingdom",zone:"Domestic",ok:true,wood:true},
@@ -451,8 +521,11 @@ let CUR = (()=>{try{const c=localStorage.getItem("cur");if(CURRENCIES[c])return 
 const money = n => { if(!(n>0)) return "Price on request";const c=CURRENCIES[CUR]; let v=n*c.rate;
   const step = CUR==="JPY" ? (n>=300?1000:100) : (n>=300?10:1); v=Math.round(v/step)*step;
   return c.sym + v.toLocaleString(c.locale==="de-DE"?"en-GB":c.locale)};
+// small currency picker next to a price, kept in step with the one in the header
+const curPick = () => `<label class="cur-mini"><span class="sr">Currency</span><select data-cur aria-label="Currency">${Object.entries(CURRENCIES).map(([k,c])=>`<option value="${k}" ${k===CUR?"selected":""}>${k} ${c.sym.replace(/^[A-Z]+/,"")}</option>`).join("")}</select></label>`;
+function setCur(c){CUR=c;try{localStorage.setItem("cur",CUR)}catch(e){}const m=$("#cur");if(m)m.value=CUR;const y=scrollY;route();scrollTo(0,y)}
+document.addEventListener("change",e=>{if(e.target.matches&&e.target.matches("select[data-cur]"))setCur(e.target.value)});
 const curNote = () => CUR==="GBP" ? "" : `<p class="cur-note">Shown in ${CUR} at an approximate rate. The exact amount is confirmed at checkout. <span class="guess">rates TBC</span></p>`;
-const rolledByDefault = w => Math.max(w.w,w.h) > ROLL_OVER_CM;
 const left = p => EDITION - p.sold;
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 
@@ -529,7 +602,7 @@ function workCard(w){
     <span class="spec">${w.medium} on ${w.support.toLowerCase()} · ${w.noSize?"size on request":w.w+" × "+w.h+" cm"}</span></a>`;
 }
 function vHome(){
-  const themeList = Object.entries(THEMES).filter(([k])=>!LIVE||WORKS.some(w=>w.theme===k));
+  const themeList = shownThemes();
   return `<div class="ship-strip" style="padding-block:28px 0;margin-top:0"><span><b>Worldwide shipping</b> with insurance</span><span><b>Stretched canvas</b> originals</span><span><b>Editions of ${EDITION}</b>, signed &amp; numbered</span><span><b>Turn every painting in 3D</b> and try it on your wall</span></div>
   ${themeList.length?`<section>
     <div class="sec-head"><h2>${themeList.length===4?"Four ways I paint":"The ways I paint"}</h2><a href="#gallery" class="label">All paintings →</a></div>
@@ -544,7 +617,7 @@ function vGallery(theme){
   const list = theme?WORKS.filter(w=>w.theme===theme):WORKS;
   const t = theme&&THEMES[theme];
   return `<div class="page-head"><span class="label">${t?"Theme":"Paintings"}</span><h1 style="margin-top:8px">${t?t.name:"All paintings"}</h1>${t?`<p class="theme-intro">${t.blurb}</p>`:`<p>Original works, grouped by the way they are painted.</p>`}</div>
-  <div class="filter" style="margin-top:24px"><a href="#gallery" ${!theme?'aria-current="page"':""}>All</a>${Object.entries(THEMES).map(([k,x])=>`<a href="#${k}" ${theme===k?'aria-current="page"':""}>${x.name}</a>`).join("")}</div>
+  <div class="filter" style="margin-top:24px"><a href="#gallery" ${!theme?'aria-current="page"':""}>All</a>${shownThemes().map(([k,x])=>`<a href="#${k}" ${theme===k?'aria-current="page"':""}>${x.name}</a>`).join("")}</div>
   ${list.length?`<div class="grid">${list.map(workCard).join("")}</div>`:(WORKS.length?`<p style="margin-top:24px">No paintings in this theme yet. <a href="#gallery">See all paintings</a></p>`:emptyHTML())}`;
 }
 function packHTML(w,c){
@@ -553,8 +626,7 @@ function packHTML(w,c){
   const tube = `<svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="6" cy="14" rx="3" ry="6" fill="none"/><path d="M6 8h17M6 20h17" fill="none"/><ellipse cx="23" cy="14" rx="3" ry="6" fill="none"/></svg>`;
   if(!C.ok) return `<div class="pack no"><svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="14" cy="14" r="10" fill="none"/><path d="M7 21L21 7" fill="none"/></svg><div><b>Sorry, I don't ship to ${C.n} at the moment.</b>Delivery there is very expensive and unreliable. Please write to me if you'd like to discuss it.</div></div>`;
   if(!C.wood) return `<div class="pack">${tube}<div><b>Ships rolled in a tube, without the wooden stretcher</b>${C.n} does not accept untreated wood in parcels. The canvas arrives rolled and needs re-stretching locally (any framer can do this). <span class="guess">wording TBC</span></div></div>`;
-  if(rolledByDefault(w)) return `<div class="pack">${tube}<div><b>Ships rolled in a tube (recommended for this size)</b>At ${w.w} × ${w.h} cm a box is not safe enough in transit, so I take the canvas off the stretcher and roll it. Shipping stretched in a box is possible on request, at a higher cost. <span class="guess">size limit ${ROLL_OVER_CM} cm is a guess</span></div></div>`;
-  return `<div class="pack">${box}<div><b>Ships stretched, ready to hang</b>Wrapped, corner-protected and packed in a rigid box.</div></div>`;
+  return `<div class="pack">${box}<div><b>Ships on its stretcher, ready to hang</b>Wrapped, corner-protected and packed in a rigid box, large paintings too.</div></div>`;
 }
 function vPiece(w){
   const t = THEMES[w.theme];
@@ -564,10 +636,10 @@ function vPiece(w){
   <div class="piece">
     <div class="viewer">
       <div class="modes" role="tablist" aria-label="How to view">
-        ${CAN3D?`<button type="button" role="tab" data-mode="turn" aria-selected="true">Turn in 3D</button><button type="button" role="tab" data-mode="wall" aria-selected="false">On a wall</button>`:""}
-        <button type="button" role="tab" data-mode="photos" aria-selected="${!CAN3D}">Photos</button>
+        <button type="button" role="tab" data-mode="photos" aria-selected="true">Photos</button>
+        ${CAN3D?`<button type="button" role="tab" data-mode="turn" aria-selected="false">Turn in 3D</button><button type="button" role="tab" data-mode="wall" aria-selected="false">On a wall</button>`:""}
       </div>
-      <div id="pane-turn" ${CAN3D?"":"hidden"}>
+      <div id="pane-turn" hidden>
         <div class="stage3d" id="stage3d" aria-label="3D view of the painting. Drag to turn it."></div>
         <div class="v-controls">
           <div class="seg"><button class="chip" type="button" data-ang="0" aria-pressed="true">Front</button><button class="chip" type="button" data-ang="62">Edge</button><button class="chip" type="button" data-ang="180">Back</button></div>
@@ -581,7 +653,7 @@ function vPiece(w){
           <div class="seg" id="wallSeg">${[["#efebe3","Warm white"],["#b9c2ad","Sage"],["#c9b3a6","Clay"],["#3d4143","Charcoal"]].map(([c,n],i)=>`<button class="swatch" type="button" style="background:${c}" data-wall="${c}" aria-label="${n} wall" title="${n}" aria-pressed="${i===0}"></button>`).join("")}<button class="chip" type="button" id="evening" aria-pressed="false">Evening light</button></div>
         </div>
       </div>
-      <div id="pane-photos" ${CAN3D?"hidden":""}>
+      <div id="pane-photos">
         ${w.photos&&w.photos.length?`<div class="main-shot" id="mainShot"><div class="frame"><img src="${w.photos[0].src}" alt="${esc(w.title)}, painting by Valentyna Ksendz" fetchpriority="high" decoding="async"${w.photos[0].w?` width="${w.photos[0].w}" height="${w.photos[0].h}"`:""} style="display:block;width:100%;height:auto"></div></div>
         ${w.photos.length>1?`<div class="thumbs" role="group" aria-label="Photos">${w.photos.map((ph,i)=>`<button type="button" data-src="${ph.src}" aria-pressed="${i===0}" aria-label="${esc(w.title)}, photo ${i+1}"><img src="${ph.thumb}" alt="" decoding="async" loading="lazy" style="display:block;width:100%;aspect-ratio:1;object-fit:cover"></button>`).join("")}</div>`:""}`
         :`<div class="main-shot" id="mainShot">${frame(w.id,"front","Front · placeholder")}</div>
@@ -593,25 +665,27 @@ function vPiece(w){
       <h1>${esc(w.title)}</h1>
       <div class="card"><dl>
         <dt>Size</dt><dd>${sizeText(w)}</dd>
-        <dt>Medium</dt><dd>${w.medium}</dd>
-        <dt>Support</dt><dd>${w.support}, ${w.depth} cm deep stretcher${w.depthGuess===false?"":`, painted edges <span class="guess">guess</span>`}</dd>
-        <dt>Style</dt><dd>${STYLE_NAMES[t.style]}</dd>
-        <dt>Year</dt><dd>${w.year}</dd>
-        <dt>Signed</dt><dd>Signed on the front, certificate of authenticity included <span class="guess">guess</span></dd>
-      </dl></div>
+        <dt>Medium</dt><dd>${esc(w.medium)} on ${esc(w.support.toLowerCase())}</dd>
+        <dt>Style</dt><dd>${esc(styleOf(w))}</dd>
+        ${w.year?`<dt>Year</dt><dd>${w.year}</dd>`:""}
+      </dl>
+      <details class="more"><summary>More details</summary>
+        <p>Stretcher ${w.depth} cm deep${w.depthGuess===false?"":`, painted edges <span class="guess">guess</span>`}. Every canvas has its own wooden stretcher, so the back differs from painting to painting.</p>
+        <p>Signed on the front, certificate of authenticity included. <span class="guess">guess</span></p>
+      </details></div>
 
-      <div class="price-row"><span class="price-big">${w.status==="sold"?"Sold":money(w.price)}</span><span class="label">Original · one of a kind</span></div>${w.status==="sold"?"":curNote()}
+      <div class="price-row"><span class="price-big">${w.status==="sold"?"Sold":money(w.price)}</span>${w.status==="sold"?"":curPick()}<span class="label">Original · one of a kind</span></div>${w.status==="sold"?"":curNote()}
       ${w.status==="sold"
         ? `<p class="buy-note">This original has found its home. Limited prints are still available below.</p>`
         : `<button class="btn wide" type="button" id="buyOrig" style="margin-top:14px">Buy the original</button><p class="buy-note" id="buyNote"></p>
-        <fieldset class="frames" style="margin-inline:0"><legend class="label" style="padding:0 6px">Framing</legend>
-          <h3>Would you like it framed? <span class="guess">prices &amp; frames TBC</span></h3>
+        <details class="frames"><summary>Framing options</summary>
+          <p class="frame-note">Choose a frame, or keep it as it is. <span class="guess">frames &amp; prices TBC</span></p>
           ${FRAMES.map((f,i)=>`<label class="frame-opt"><input type="radio" name="frame" id="frame-${f.id}" value="${f.id}" ${i===0?"checked":""}><span class="sw" style="background:${f.sw}" aria-hidden="true"></span><span><b>${f.name}</b><small>${f.desc}</small></span><span class="fp">${f.price}</span></label>`).join("")}
           <p class="frame-note" id="frameNote"></p>
           ${CAN3D?`<button type="button" class="linkbtn" id="seeFrame">See it framed on a wall</button>`:""}
-        </fieldset>`}
+        </details>`}
 
-      <div class="terms" aria-label="Delivery and returns">
+      <details class="terms"><summary>Delivery &amp; returns</summary>
         <h3>Delivery: worldwide, with insurance</h3>
         <div class="row"><label for="ctry" class="label">Shipping to</label>
           <select id="ctry">${COUNTRIES.map(c=>`<option value="${c.v}">${c.n}</option>`).join("")}</select></div>
@@ -625,7 +699,7 @@ function vPiece(w){
         <h3>Returns</h3>
         <p>You can return an original within 14 days of delivery if it isn't right for you. It must come back in its original condition and packaging, fully insured; return shipping is paid by you. Refund within 5 days of the painting arriving back. Prints are final sale unless damaged. <span class="guess">all terms TBC</span></p>
         <a class="more" href="#shipping">Full shipping &amp; returns details →</a>
-      </div>
+      </details>
 
       ${hasPrints(w)?`<div class="prints" id="printBox">
         <span class="label">Limited edition prints</span>
@@ -670,7 +744,7 @@ function bindPiece(w){
     });
   };
   document.querySelectorAll(".modes [data-mode]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.mode)));
-  show(CAN3D?"turn":"photos");
+  show("photos");
   const main=$("#mainShot");
   document.querySelectorAll(".thumbs button").forEach(b=>b.addEventListener("click",()=>{
     document.querySelectorAll(".thumbs button").forEach(x=>x.setAttribute("aria-pressed",x===b));
@@ -721,18 +795,18 @@ function vShipping(){
   <div class="prose" style="margin-top:24px">
     <h2>Delivery plus insurance</h2>
     <p>Every original travels fully insured for its value, with tracking from my studio to your door. Shipping and insurance are paid by the buyer. I quote the exact cost for your country before you pay. <span class="guess">guess</span></p>
-    <h2>Stretched in a box, or rolled in a tube</h2>
-    <p>Paintings up to ${ROLL_OVER_CM} cm on the longest side ship stretched on their wooden frame, ready to hang. Larger paintings are safer rolled: I take the canvas off the stretcher, roll it paint-side out with protective paper, and send it in a strong tube. <span class="guess">size limit TBC</span></p>
-    <p>A rolled canvas needs to be re-stretched when it arrives. Any local framer can do this. If you would rather receive it stretched, tell me before you order and I'll quote for a crate.</p>
+    <h2>Sent on the stretcher, ready to hang</h2>
+    <p>Paintings travel on their wooden stretcher, ready to hang the day they arrive, including large paintings over a metre wide. Each one is wrapped, corner-protected and packed in a rigid box.</p>
+    <p>Every canvas is built on its own wooden stretcher, so the back can look a little different from painting to painting: larger canvases have extra cross bars to keep them flat and strong.</p>
     <h2>Countries that don't accept wood</h2>
     <p>Some countries, including Australia and New Zealand, have strict rules on wood in parcels. Paintings to these countries always ship rolled, without the wooden stretcher bars.</p>
     <div class="table-wrap"><table class="zones">
       <thead><tr><th>Destination</th><th>Ships</th><th>Packing</th></tr></thead>
       <tbody>
-        <tr><td>United Kingdom</td><td>Yes</td><td>Stretched or rolled, by size</td></tr>
-        <tr><td>Europe</td><td>Yes</td><td>Stretched or rolled, by size</td></tr>
-        <tr><td>USA &amp; Canada</td><td>Yes</td><td>Stretched or rolled, by size</td></tr>
-        <tr><td>Japan &amp; Asia</td><td>Yes</td><td>Stretched or rolled, by size</td></tr>
+        <tr><td>United Kingdom</td><td>Yes</td><td>On the stretcher, ready to hang</td></tr>
+        <tr><td>Europe</td><td>Yes</td><td>On the stretcher, ready to hang</td></tr>
+        <tr><td>USA &amp; Canada</td><td>Yes</td><td>On the stretcher, ready to hang</td></tr>
+        <tr><td>Japan &amp; Asia</td><td>Yes</td><td>On the stretcher, ready to hang</td></tr>
         <tr><td>Australia &amp; New Zealand</td><td>Yes</td><td>Rolled only, no wood</td></tr>
         <tr><td>South Africa</td><td>Not at the moment</td><td>Write to me to discuss</td></tr>
       </tbody></table></div>
@@ -773,58 +847,114 @@ function paintedCanvas(w,W,H){const c=document.createElement("canvas");c.width=M
 function loop(step){let id=0,alive=true;const tick=t=>{id=0;if(alive&&step(t))id=requestAnimationFrame(tick)};const kick=()=>{if(alive&&!id)id=requestAnimationFrame(tick)};onCleanup(()=>{alive=false;cancelAnimationFrame(id)});return kick}
 
 /* ---------- 1. cinematic walk-through hall (home) ---------- */
+function buildCarousel(){
+  const el=$("#cine"); el.hidden=false; el.className="cw";
+  const hdr=document.querySelector("header.site").offsetHeight;
+  el.style.setProperty("--hdr",hdr+"px");
+  const vw=innerWidth, H=Math.max(480,innerHeight-hdr), INTRO=112, still=REDUCED;
+  const slide=(w,i)=>{
+    const availW=Math.min(vw*.76,420), availH=H-(i===0?INTRO:0)-150;
+    const fac=clamp(.6+.4*Math.sqrt(w.w*w.h/8000),.65,1);
+    const sc=Math.min(availW/w.w,availH/w.h)*fac, W=Math.round(w.w*sc), Hh=Math.round(w.h*sc);
+    return `<section class="cw-slide" style="height:${H}px"><div class="cw-wall"></div><i class="cw-glow"></i>
+      ${i===0?`<div class="cine-intro wrap"><h1>Wildflower Artist</h1><div class="tagline">Nature in every brushstroke</div><div class="ctas"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="#prints">Prints</a></div></div>`:""}
+      <a class="cw-art" href="#${w.id}" style="width:${W}px;height:${Hh}px" aria-label="${esc(w.title)}"><canvas data-cw="${w.id}"></canvas></a>
+      <a class="cw-plate" href="#${w.id}"><b>${esc(w.title)}</b><span>${w.status==="sold"?"Sold":money(w.price)}</span></a>
+      ${i===0&&!still&&H>=760?`<div class="scroll-cue" id="cue">Scroll<i></i></div>`:""}</section>`};
+  el.innerHTML=WORKS.map(slide).join("")+`<div class="cw-end"><a class="btn" href="#gallery">All paintings</a></div>`;
+  const slides=[...el.querySelectorAll(".cw-slide")], cue=$("#cue");
+  const parts=slides.map(sl=>({sl,wall:sl.querySelector(".cw-wall"),glow:sl.querySelector(".cw-glow"),art:sl.querySelector(".cw-art")}));
+  // paint a slide when it is near the screen, and tint its wall with the painting's average colour
+  const draw=sl=>{
+    if(sl.dataset.d) return; sl.dataset.d=1;
+    const cv=sl.querySelector("canvas"), w=WORKS.find(x=>x.id===cv.dataset.cw), k=DPR();
+    cv.width=Math.round(cv.parentNode.clientWidth*k); cv.height=Math.round(cv.parentNode.clientHeight*k);
+    paintWork(cv.getContext("2d"),cv.width,cv.height,w);
+    try{
+      const a=document.createElement("canvas"); a.width=a.height=8; a.getContext("2d").drawImage(cv,0,0,8,8);
+      const b=document.createElement("canvas"); b.width=b.height=1; const bx=b.getContext("2d"); bx.drawImage(a,0,0,1,1);
+      const d=bx.getImageData(0,0,1,1).data, mx=(c,base,p)=>Math.round(base+(c-base)*p);
+      sl.querySelector(".cw-wall").style.background=`linear-gradient(180deg,rgb(${mx(d[0],31,.22)},${mx(d[1],74,.22)},${mx(d[2],61,.22)}),rgb(${mx(d[0],24,.14)},${mx(d[1],61,.14)},${mx(d[2],50,.14)}))`;
+    }catch(e){}
+  };
+  const io="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)draw(e.target)}),{rootMargin:"120% 0px"}):null;
+  slides.forEach(sl=>io?io.observe(sl):draw(sl));
+  if(still) return onCleanup(()=>io&&io.disconnect());
+  // parallax: the wall moves slower than the page, the painting leans and grows as it comes to the middle of the screen
+  let raf=0;
+  const upd=()=>{
+    raf=0; const vh=innerHeight, mid=(hdr+vh)/2, rs=parts.map(p=>p.sl.getBoundingClientRect());
+    parts.forEach((p,i)=>{const r=rs[i]; if(r.bottom<-80||r.top>vh+80) return;
+      const rel=clamp((r.top+r.height/2-mid)/r.height,-1,1), a=Math.abs(rel);
+      p.wall.style.transform=`translate3d(0,${(-rel*.2*r.height).toFixed(1)}px,0)`;
+      p.art.style.transform=`rotateX(${(rel*6).toFixed(2)}deg) scale(${(1-a*.07).toFixed(3)})`;
+      p.glow.style.opacity=(1-a*.8).toFixed(2);});
+    if(cue) cue.style.opacity=clamp(1-scrollY/120,0,1);
+  };
+  const on=()=>{if(!raf)raf=requestAnimationFrame(upd)};
+  addEventListener("scroll",on,{passive:true}); addEventListener("resize",on);
+  onCleanup(()=>{removeEventListener("scroll",on);removeEventListener("resize",on);cancelAnimationFrame(raf);io&&io.disconnect()});
+  on();
+}
+
 function buildHall(){
+  if(innerWidth<700 && WORKS.length) return buildCarousel(); // phones: one painting per screen
   const el=$("#cine"); el.hidden=false; el.className="";
   el.style.setProperty("--hdr",document.querySelector("header.site").offsetHeight+"px");
   const mobile=innerWidth<700;
-  const HW=mobile?520:1100, HH=mobile?600:640, L=mobile?2500:3000, PX=mobile?2.4:2.9, STEP=mobile?300:340;
+  // phones: tall walls with paintings hung in two rows (salon hang), so the screen is filled top to bottom
+  const HW=mobile?440:1100, HH=mobile?900:640, PX=mobile?2.4:2.9, STEP=mobile?300:340, ZSTEP=mobile?190:STEP;
+  const L=Math.max(mobile?2500:3000, 380+Math.max(0,WORKS.length-2)*ZSTEP+700); // last side painting stays well before the end wall
   const still = REDUCED || !CAN3D;
   if(still) el.classList.add("static");
   if(!WORKS.length){el.hidden=true;return}
   const feature = WORKS.find(w=>w.id==="sunflowers-storm") || [...WORKS].filter(w=>w.status!=="sold").sort((a,b)=>b.w*b.h-a.w*a.h)[0] || WORKS[0];
   const side = WORKS.filter(w=>w!==feature);
-  const art = (w,x,y,z,ry,k=1)=>{const W=w.w*PX*k,H=w.h*PX*k;
+  // keep every painting inside its wall: side walls hold up to ~half the hall height, the end wall up to 80 % of its width
+  const art = (w,x,y,z,ry,k=1)=>{const end=ry===0, maxW=end?HW*.8:STEP*1.6, maxH=HH*(end?(mobile?.42:.6):(mobile?.36:.5));
+    const f=Math.min(k, maxW/(w.w*PX), maxH/(w.h*PX)), W=w.w*PX*f, H=w.h*PX*f;
     return `<a class="hall-art" href="#${w.id}" data-z="${z}" aria-label="${esc(w.title)}" style="width:${W}px;height:${H}px;transform:translate3d(${x-W/2}px,${y-H/2}px,${z}px) rotateY(${ry}deg)"><canvas data-hall="${w.id}" width="${Math.round(W)}" height="${Math.round(H)}"></canvas><span class="hall-plate">${esc(w.title)}<br>${w.status==="sold"?"Sold":money(w.price)}</span></a>`};
   const FRONT=700, LEN=L+FRONT;
-  const items = side.map((w,i)=>{const left=i%2===0, z=-380-i*STEP;
-    return art(w,left?-HW/2+4:HW/2-4,-30,z,left?90:-90)}).join("");
-  el.innerHTML=`<div class="stage" style="--persp:${mobile?640:800}px"><div class="world" id="world">
+  const items = side.map((w,i)=>{const left=i%2===0, z=-380-i*ZSTEP, y=mobile?(Math.floor(i/2)%2?HH*.2:-HH*.2):-30;
+    return art(w,left?-HW/2+4:HW/2-4,y,z,left?90:-90)}).join("");
+  el.innerHTML=`<div class="cine-intro wrap">
+      <h1>Wildflower Artist</h1>
+      <div class="tagline">Nature in every brushstroke</div>
+      <div class="ctas"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="#prints">Prints</a></div>
+    </div>
+    <div class="track" style="${still?"":`height:${Math.round(Math.max(300,L/10))}vh`}"><div class="stage"><div class="zoomer" style="--persp:${mobile?640:800}px"><div class="world" id="world">
       <div class="hall-floor" style="width:${HW}px;height:${LEN}px;transform:translate3d(${-HW/2}px,${HH/2}px,${FRONT}px) rotateX(-90deg)"></div>
       <div class="hall-wall" style="width:${LEN}px;height:${HH}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${FRONT}px) rotateY(90deg)"></div>
       <div class="hall-wall" style="width:${LEN}px;height:${HH}px;transform:translate3d(${HW/2}px,${-HH/2}px,${FRONT}px) rotateY(90deg)"></div>
+      <div class="hall-ceil" style="width:${HW}px;height:${LEN}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${-L}px) rotateX(90deg)"></div>
       <div class="hall-end" style="width:${HW}px;height:${HH}px;transform:translate3d(${-HW/2}px,${-HH/2}px,${-L}px)"></div>
       ${items}${art(feature,0,-40,-L+3,0,1.5)}
-    </div>
-    <div class="cine-copy" id="cineCopy"><div class="wrap">
-      <span class="label" style="color:var(--gold)">Botanical art &amp; original paintings</span>
-      <h1 style="margin-top:12px">Wildflower Artist</h1>
-      <div class="tagline">Nature in every brushstroke</div>
-      <div class="goldrule"></div>
-      <p>Original oil and acrylic paintings on stretched canvas by Valentyna Ksendz. ${still?"":"Scroll down to walk through the gallery."}</p>
-      <div class="ctas"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="#prints">Limited prints</a></div>
     </div></div>
     <div class="end-copy" id="endCopy"><div class="ctas"><a class="btn" href="#${feature.id}">Turn “${esc(feature.title)}” in 3D</a><a class="btn ghost" href="#gallery" style="background:rgba(15,42,34,.6)">All paintings</a></div></div>
-    ${still?"":`<div class="scroll-cue" id="cue">Scroll<i></i></div>`}
-  </div>`;
+    ${still?"":`<div class="scroll-cue" id="cue">Scroll to walk through<i></i></div>`}
+  </div></div>`;
   el.querySelectorAll("canvas[data-hall]").forEach(c=>{const w=WORKS.find(x=>x.id===c.dataset.hall);paintWork(c.getContext("2d"),c.width,c.height,w)});
-  const world=$("#world"), copy=$("#cineCopy"), end=$("#endCopy"), cue=$("#cue"), arts=[...el.querySelectorAll(".hall-art")];
-  const MAXZ=L-640;
+  const world=$("#world"), end=$("#endCopy"), cue=$("#cue"), arts=[...el.querySelectorAll(".hall-art")];
+  const START=mobile?320:0, MAXZ=L-640-START; // phones start a few steps into the hall, so the first paintings are big
   if(still){world.style.transform=`translateZ(${MAXZ*.18}px)`;return}
   let cam=0,target=0,ox=50,oxT=50;
-  const stage=el.querySelector(".stage");
-  const read=()=>{const r=el.getBoundingClientRect();const p=clamp(-r.top/Math.max(1,r.height-stage.offsetHeight),0,1);target=p*MAXZ};
+  const stage=el.querySelector(".stage"), zoomer=el.querySelector(".zoomer");
+  // on tall phones the hall would sit small in the middle: enlarge it to fill the screen
+  const fit=()=>{zoomer.style.setProperty("--zoom",mobile?clamp(stage.clientHeight/stage.clientWidth*.8,1.05,1.8).toFixed(2):1)};
+  fit();
+  const track=el.querySelector(".track");
+  const read=()=>{const r=track.getBoundingClientRect();const p=clamp(-r.top/Math.max(1,r.height-stage.offsetHeight),0,1);target=p*MAXZ};
   const kick=loop(()=>{
     cam+= (target-cam)*0.09; ox+=(oxT-ox)*0.08;
-    world.style.transform=`translateZ(${cam.toFixed(1)}px)`;
-    stage.style.perspectiveOrigin=`${ox.toFixed(2)}% 42%`;
+    world.style.transform=`translateZ(${(cam+START).toFixed(1)}px)`;
+    zoomer.style.perspectiveOrigin=`${ox.toFixed(2)}% ${mobile?38:42}%`;
     const p=cam/MAXZ;
-    copy.style.opacity=clamp(1-p*4,0,1); copy.style.visibility=p>.3?"hidden":"visible";
     const e=clamp((p-.82)*6,0,1); end.style.opacity=e; end.classList.toggle("on",e>.5);
     if(cue) cue.style.opacity=clamp(1-p*8,0,1);
-    for(const a of arts){const z=+a.dataset.z+cam; a.style.visibility=z>220?"hidden":"visible"}
+    for(const a of arts){const z=+a.dataset.z+cam+START; a.style.visibility=z>220?"hidden":"visible"}
     return Math.abs(target-cam)>.3||Math.abs(oxT-ox)>.05;
   });
-  const onScroll=()=>{read();kick()};
+  const onScroll=e=>{if(e&&e.type==="resize")fit();read();kick()};
   const onMove=e=>{oxT=50+(e.clientX/innerWidth-.5)*8;kick()};
   addEventListener("scroll",onScroll,{passive:true}); addEventListener("resize",onScroll);
   if(FINE) addEventListener("pointermove",onMove,{passive:true});
@@ -934,6 +1064,13 @@ if(FINE && !REDUCED){
 }
 
 /* ---------- router (plain #name hashes) ---------- */
+// phone header: name + Menu; the links and the currency open below it
+(()=>{const hdr=$("header.site"), btn=$("#menuBtn"), nav=$("#mainNav"), cur=$(".cur"), home=cur.parentNode, mq=matchMedia("(max-width:760px)");
+  const place=()=>{if(mq.matches){if(cur.parentNode!==nav)nav.appendChild(cur)}else if(cur.parentNode!==home)home.appendChild(cur)};
+  place(); mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place);
+  btn.addEventListener("click",()=>{const o=!hdr.classList.contains("open");hdr.classList.toggle("open",o);btn.setAttribute("aria-expanded",o);btn.textContent=o?"Close":"Menu"});
+  addEventListener("hashchange",()=>{hdr.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.textContent="Menu"});
+})();
 function route(){
   const pm = location.pathname.match(/^\/art\/([\w-]+)\/?$/);
   const h = (location.hash||(pm?"#p-"+pm[1]:"#home")).slice(1);
@@ -967,7 +1104,7 @@ function setMeta(w,h){
   document.title=t; document.querySelector('meta[name="description"]').content=d;
 }
 (()=>{const sel=$("#cur");sel.innerHTML=Object.entries(CURRENCIES).map(([k,c])=>`<option value="${k}" ${k===CUR?"selected":""}>${c.label}</option>`).join("");
-  sel.addEventListener("change",()=>{CUR=sel.value;try{localStorage.setItem("cur",CUR)}catch(e){}const y=scrollY;route();scrollTo(0,y)})})();
+  sel.addEventListener("change",()=>setCur(sel.value))})();
 window.addEventListener("hashchange",route);
 loadWorks().then(route);
 </script>
