@@ -84,6 +84,7 @@ textarea{min-height:130px;resize:vertical}
 <header class="top">
   <a href="#/" class="brand" style="text-decoration:none;color:inherit">Кабинет Валентины</a>
   <nav>
+    <a class="btn" href="#/sales">Продажи</a>
     <a class="btn" href="/" target="_blank" rel="noopener">Открыть сайт</a>
     <a class="btn" href="/cdn-cgi/access/logout">Выйти</a>
   </nav>
@@ -478,11 +479,61 @@ async function addFiles(files) {
   if (errors.length) note("Не загрузилось: " + errors.join("; "));
 }
 
+/* ---------------- Sales (Stripe) ---------------- */
+const KIND_RU = {original:"Оригинал", print_paper:"Принт на бумаге", print_canvas:"Принт на холсте", card:"Открытка"};
+const ORDER_RU = {paid:"Оплачено", partly_refunded:"Частичный возврат", refunded:"Возврат"};
+const pence = p => "£" + (Number(p || 0) / 100).toLocaleString("ru-RU", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const addr = a => a ? [a.line1, a.line2, a.city, a.state, a.postal_code, a.country].filter(Boolean).map(esc).join(", ") : "";
+async function sales() {
+  document.title = "Продажи · Кабинет Валентины";
+  const msg = decodeURIComponent((location.hash.split("?msg=")[1] || ""));
+  const [st, od] = await Promise.all([api("stripe"), api("orders")]);
+  const ready = st.keys && st.clientId;
+  const conn = st.account
+    ? `<p>Подключён аккаунт Stripe: <b>${esc(st.accountName || st.account)}</b>${st.mode === "test" ? ` <span class="badge b-draft">тестовый режим</span>` : ""}</p>
+       <p class="hint">Деньги за продажи приходят на ваш счёт в Stripe, а оттуда на ваш банк. Комиссию Stripe за карту платите вы, 3% от цены картины или принта (без доставки) автоматически уходят Валентину по договору.</p>
+       <button class="btn" id="disc">Отключить Stripe</button>`
+    : ready
+      ? `<p>Чтобы на сайте заработала кнопка «Buy», подключите свой аккаунт Stripe. Если его ещё нет, Stripe предложит его создать.</p>
+         <a class="btn big primary" href="/api/admin/stripe/connect">Подключить Stripe</a>`
+      : `<p class="hint">Оплата ещё настраивается (ключи Stripe не добавлены). Этим занимается Валентин.</p>`;
+  const shop = st.open ? `<span class="badge b-available">Оплата на сайте включена</span>`
+    : `<span class="badge b-draft">Оплата на сайте выключена</span>${st.account && !st.webhook ? ` <span class="hint">нет ключа webhook</span>` : ""}`;
+  const t = od.totals;
+  $app.innerHTML = `
+    <div class="row"><h1>Продажи</h1><a class="btn" href="#/">← Мои картины</a></div>
+    ${msg ? `<div class="msg">${esc(msg)}</div>` : ""}
+    <section class="panel"><h3>Stripe ${shop}</h3>${conn}</section>
+    <section class="stats" aria-label="Итоги продаж">
+      <div class="stat"><div class="k">Заказов</div><div class="v">${t.count}</div><div class="s">без полных возвратов</div></div>
+      <div class="stat"><div class="k">Товары</div><div class="v">${pence(t.product)}</div><div class="s">картины, принты, рамы, открытки</div></div>
+      <div class="stat"><div class="k">Доставка</div><div class="v">${pence(t.shipping)}</div><div class="s">оплачена покупателями</div></div>
+      <div class="stat"><div class="k">3% Валентину</div><div class="v">${pence(t.fee)}</div><div class="s">только с товаров</div></div>
+    </section>
+    <section style="display:flex;flex-direction:column;gap:16px">
+      <h2>Заказы</h2>
+      ${od.orders.length ? od.orders.map(o => `
+        <div class="panel">
+          <div class="row"><b>${esc(o.title || o.sku)}</b><span class="badge b-${o.status === "paid" ? "available" : "sold"}">${ORDER_RU[o.status] || esc(o.status)}</span></div>
+          ${o.problem ? `<div class="msg" style="background:#fde8e8;color:var(--bad)">${esc(o.problem)}</div>` : ""}
+          <p>${KIND_RU[o.kind] || esc(o.kind)} · ${esc(o.sku)}${o.frame && o.frame !== "none" ? " · рама: " + esc(o.frame === "help" ? "помочь выбрать (написать покупателю)" : o.frame) : ""}</p>
+          <p>Товар ${pence(o.product_p)} + доставка ${pence(o.shipping_p)}. Оплачено: ${(o.total / 100).toFixed(2)} ${esc(o.currency.toUpperCase())}</p>
+          <p><b>Кому отправить:</b> ${esc(o.buyer_name || "")}<br>${addr(o.address)}<br>${o.buyer_email ? `<a href="mailto:${esc(o.buyer_email)}">${esc(o.buyer_email)}</a>` : ""} ${o.buyer_phone ? " · " + esc(o.buyer_phone) : ""}</p>
+          <p class="hint">${new Date(o.created_at.replace(" ", "T") + "Z").toLocaleString("ru-RU")}</p>
+        </div>`).join("") : `<p class="hint">Пока заказов нет. Когда кто-то купит на сайте, заказ появится здесь, а Stripe пришлёт вам письмо.</p>`}
+    </section>`;
+  const d = document.getElementById("disc");
+  if (d) d.onclick = async () => {
+    if (!confirm("Отключить Stripe? Кнопка «Buy» на сайте перестанет работать.")) return;
+    await api("stripe", {method: "DELETE"}); location.hash = "#/sales"; sales();
+  };
+}
+
 /* ---------------- Router ---------------- */
 async function route() {
   try {
     const m = location.hash.match(/^#\/p\/(\d+)/);
-    if (m) await edit(m[1]); else await home();
+    if (m) await edit(m[1]); else if (location.hash.startsWith("#/sales")) await sales(); else await home();
     window.scrollTo(0, 0);
   } catch (e) {
     $app.innerHTML = `<div class="msg">Не получилось загрузить: ${esc(e.message)}. Обновите страницу.</div>`;

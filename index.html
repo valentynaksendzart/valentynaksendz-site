@@ -673,8 +673,7 @@ function bindPiece(w){
   const renderEd=()=>{const p=w.prints[pt];$("#edition").innerHTML=editionHTML(p,pt);const b=$("#buyPrint");b.disabled=left(p)===0;b.textContent=left(p)===0?"Edition sold out":`Buy ${pt==="paper"?"paper":"canvas"} print · ${money(p.price)}`};
   document.querySelectorAll(".opt").forEach(o=>o.addEventListener("click",()=>{pt=o.dataset.pt;document.querySelectorAll(".opt").forEach(x=>x.setAttribute("aria-pressed",x===o));renderEd()}));
   if(hasPrints(w)) renderEd();
-  const soon="Online checkout is coming soon. For now this button does nothing.";
-  $("#buyOrig")&&$("#buyOrig").addEventListener("click",()=>{$("#buyNote").textContent=soon});
+  $("#buyOrig")&&$("#buyOrig").addEventListener("click",()=>buy(w.sku,currentFrame,$("#buyNote")));
   currentFrame="none"; roomRerender=null;
   const frameNote=()=>{const n=$("#frameNote");if(!n)return;const f=FRAMES.find(x=>x.id===currentFrame);
     n.textContent = currentFrame==="none" ? "The edges are painted, so the canvas looks finished without a frame."
@@ -683,11 +682,44 @@ function bindPiece(w){
   document.querySelectorAll('input[name="frame"]').forEach(r=>r.addEventListener("change",()=>{currentFrame=r.value;frameNote();if(roomRerender)roomRerender()}));
   frameNote();
   $("#seeFrame")&&$("#seeFrame").addEventListener("click",()=>{show("wall");$("#pane-wall").scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"})});
-  $("#buyPrint")&&$("#buyPrint").addEventListener("click",()=>{$("#printNote").textContent=soon});
+  $("#buyPrint")&&$("#buyPrint").addEventListener("click",()=>buy(w.sku?`${w.sku}-${pt==="paper"?"PP":"PC"}`:"",null,$("#printNote")));
   bindCardBuy(document);
 }
+/* ---------- checkout (Stripe). Off until the shop is switched on in Cloudflare. ---------- */
+let SHOP={open:false};
+fetch("/api/shop").then(r=>r.ok?r.json():null).then(d=>{if(d)SHOP=d}).catch(()=>{});
+const guessZone=()=>{const c=$("#ctry");if(c&&COUNTRIES.find(x=>x.v===c.value&&x.ok))return c.value;try{const z=localStorage.getItem("zone");if(z)return z}catch(e){}
+  return {GBP:"uk",EUR:"eu",USD:"us",CAD:"ca",AUD:"au",JPY:"jp"}[CUR]||"uk"};
+// Asks where to deliver (shipping is priced per country), then opens Stripe's secure payment page.
+function buy(sku,frame,note){
+  if(!note) return;
+  if(!SHOP.open||!sku){note.textContent="Online checkout is coming soon. For now this button does nothing.";return}
+  const z=guessZone();
+  note.innerHTML=`<span class="buy-step"><label>Deliver to <select class="ship-to">${COUNTRIES.filter(c=>c.ok).map(c=>`<option value="${c.v}" ${c.v===z?"selected":""}>${esc(c.n)}</option>`).join("")}</select></label>
+    <button class="btn" type="button">Continue to secure payment</button></span>
+    <small style="display:block;margin-top:6px">Delivery is tracked and insured. You will see the full price, including delivery, before you pay.</small>`;
+  const sel=note.querySelector("select"), go=note.querySelector("button");
+  sel.focus();
+  go.addEventListener("click",async()=>{
+    try{localStorage.setItem("zone",sel.value)}catch(e){}
+    go.disabled=true; go.textContent="Opening the payment page…";
+    try{
+      const r=await fetch("/api/checkout",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({sku,frame,country:sel.value})});
+      const d=await r.json().catch(()=>({}));
+      if(r.ok&&d.url){location.href=d.url;return}
+      note.textContent=d.error||"Sorry, something went wrong. Please try again in a minute.";
+    }catch(e){note.textContent="No internet connection. Please try again."}
+  });
+}
+function vThanks(){
+  return `<div class="page-head"><span class="label">Order received</span><h1 style="margin-top:8px">Thank you!</h1>
+    <p class="lead">Your payment went through. A receipt is on its way to your email.</p>
+    <p>Valentyna will pack your order with care and email you when it is on its way, with the tracking number.</p>
+    <p>Questions? Just reply to the receipt email or write on <a href="${INSTAGRAM}" target="_blank" rel="noopener">Instagram</a>.</p>
+    <p style="margin-top:24px"><a class="btn" href="#gallery">Back to the gallery</a></p></div>`;
+}
 function bindCardBuy(root){
-  root.querySelectorAll("[data-buycard]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();const n=b.parentElement.querySelector("[data-cardnote]");if(n)n.textContent="Online checkout is coming soon. For now this button does nothing."}));
+  root.querySelectorAll("[data-buycard]").forEach(b=>b.addEventListener("click",e=>{e.preventDefault();const n=b.parentElement.querySelector("[data-cardnote]");if(n)buy(b.dataset.buycard,null,n)}));
 }
 function vCards(){
   const list=WORKS.filter(hasCard);
@@ -938,10 +970,11 @@ function route(){
   else if(h==="cards"){html=vCards();nav="cards"}
   else if(h==="shipping"){html=vShipping();nav="shipping"}
   else if(h==="about"){html=vAbout();nav="about"}
+  else if(h==="thanks"){html=vThanks()}
   else html=vHome();
   window.scrollTo(0,0);
   v.innerHTML=html; hydrate(v); if(w) bindPiece(w); if(h==="cards") bindCardBuy(v);
-  if(!w && !THEMES[h] && !["gallery","prints","cards","shipping","about"].includes(h)) buildHall();
+  if(!w && !THEMES[h] && !["gallery","prints","cards","shipping","about","thanks"].includes(h)) buildHall();
   document.querySelectorAll("nav.main a").forEach(a=>{if(a.dataset.nav===nav)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   window.scrollTo(0,0);
 }
