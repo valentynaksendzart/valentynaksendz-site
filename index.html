@@ -318,7 +318,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .tip{display:flex;align-items:center;gap:12px;justify-content:space-between;background:var(--paper);border:1px solid var(--gold-deep);border-radius:6px;padding:12px 14px;margin-bottom:12px;font-size:1.02rem}
 .tip button{font:700 1rem var(--font-body);min-height:44px;padding:0 16px;border-radius:4px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;flex:none}
 /* ---------- AR: see it on your own wall (phones only) ---------- */
-.ar-box{margin-top:14px;padding:14px 16px;border:1px solid var(--gold-deep);border-radius:6px;background:var(--paper)}
+.ar-box{margin:0 0 12px;padding:12px 14px;border:1px solid var(--gold-deep);border-radius:6px;background:var(--paper)}
 .ar-box .btn{min-height:56px;font-size:1.1rem}
 .ar-box p{font-size:1rem;color:var(--muted);margin-top:8px;line-height:1.45}
 .ar-steps{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:ar}
@@ -664,7 +664,9 @@ function packHTML(w,c){
    Android: Scene Viewer downloads /ar/<painting>.glb, made by the server from the admin sizes and a JPEG copy of the photo.
    Nothing is loaded until the button is tapped. Add ?ar=ios or ?ar=android to the address to see the button on a computer. */
 const AR_FORCE=(location.search.match(/[?&]ar=(ios|android)/)||[])[1];
-const AR_IOS=AR_FORCE==="ios"||(()=>{try{return document.createElement("a").relList.supports("ar")}catch(e){return false}})();
+// iPhone/iPad: Safari says it can open Quick Look; iPads report themselves as a Mac with a touch screen
+const AR_IOS=AR_FORCE==="ios"||(()=>{try{return document.createElement("a").relList.supports("ar")}catch(e){return false}})()
+  ||/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
 const AR_ANDROID=AR_FORCE==="android"||(!AR_IOS&&/Android/i.test(navigator.userAgent));
 const arWay=w=>!w||w.noSize||!(w.w>0&&w.h>0)?null:AR_IOS?"ios":AR_ANDROID&&w.ar?"android":null;
 const arSpec=(w,tw,th)=>({pw:isMulti(w)?w.pw:w.w,h:w.h,panels:w.panels||1,gap:w.gap||0,depth:w.depth,tw,th});
@@ -725,6 +727,10 @@ function vPiece(w){
         <button type="button" role="tab" data-mode="photos" aria-selected="true">Photos</button>
         ${CAN3D?`<button type="button" role="tab" data-mode="turn" aria-selected="false">Turn in 3D</button><button type="button" role="tab" data-mode="wall" aria-selected="false">On a wall</button>`:""}
       </div>
+      ${arWay(w)?`<div class="ar-box" id="arBox">
+        <button class="btn wide" type="button" id="arGo">See it on your own wall</button>
+        <p>Uses your phone's camera. The painting appears on your wall at its real size, ${sizeShort(w)}.</p>
+      </div>`:""}
       <div id="pane-turn" hidden>
         <div class="stage3d" id="stage3d" aria-label="3D view of the painting. Drag to turn it."></div>
         <div class="v-controls">
@@ -745,10 +751,6 @@ function vPiece(w){
         :`<div class="main-shot" id="mainShot">${frame(w.id,"front","Front · placeholder")}</div>
         <div class="thumbs" role="group" aria-label="Photos">${shots.map(([k,l],i)=>`<button type="button" data-shot="${k}" data-label="${l}" aria-pressed="${i===0}"><canvas data-work="${w.id}" data-kind="${k}"></canvas>${l}</button>`).join("")}</div>`}
       </div>
-      ${arWay(w)?`<div class="ar-box" id="arBox">
-        <button class="btn wide" type="button" id="arGo">See it on your own wall</button>
-        <p>Uses your phone's camera. The painting appears on your wall at its real size, ${sizeShort(w)}.</p>
-      </div>`:""}
     </div>
     <div class="info">
       <a class="label theme-link" href="#${w.theme}">${t.name}</a>
