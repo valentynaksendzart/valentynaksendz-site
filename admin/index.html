@@ -92,9 +92,16 @@ textarea{min-height:130px;resize:vertical}
 
 <script>
 "use strict";
-const THEMES = [["wildflowers","Полевые цветы"],["impressions","Импрессионизм"],["impasto","Импасто"],["splash","Всплеск и заливка"]];
+// "impasto" removed for now at Valentyna's request (older paintings keep it until changed)
+const THEMES = [["wildflowers","Полевые цветы"],["floral","Цветы (Floral art)"],["waterlilies","Кувшинки"],["irises","Ирисы"],["farmyard","Фермерские животные"],["impressions","Импрессионизм"],["splash","Всплеск и заливка"]];
+// style shown on the site; empty = the theme's usual style (keep in sync with THEME_STYLE in /index.html)
+const STYLES = ["Floral art","Botanical art","Contemporary impressionism","Impressionism, Monet-inspired","Farmyard art","Acrylic splash & pour","Impasto, palette knife"];
+const THEME_STYLE = {wildflowers:"Contemporary impressionism",floral:"Floral art",waterlilies:"Impressionism, Monet-inspired",irises:"Floral art",farmyard:"Farmyard art",impressions:"Impressionism, Monet-inspired",splash:"Acrylic splash & pour",impasto:"Impasto, palette knife"};
 const MEDIUMS = [["Oil","Масло"],["Acrylic","Акрил"],["Mixed media","Смешанная техника"]];
 const SUPPORTS = [["Linen canvas","Льняной холст"],["Cotton canvas","Хлопковый холст"],["Canvas board","Холст на картоне"],["Paper","Бумага"]];
+// one artwork on several canvases, sold as one set
+const PANEL_RU = {1:"Одна картина",2:"Диптих",3:"Триптих",4:"Полиптих"};
+const DEF_GAP = 5; // cm between panels if Valentyna leaves the gap empty (keep in sync with /index.html)
 const STATUS_RU = {available:"На сайте",sold:"Продано",draft:"Черновик"};
 const $app = document.getElementById("app");
 
@@ -150,7 +157,8 @@ async function home() {
 }
 function card(p) {
   const ph = p.photos[0];
-  const size = p.width_cm && p.height_cm ? `${p.width_cm} × ${p.height_cm} см` : "размер не указан";
+  const n = Number(p.panels) > 1 ? Number(p.panels) : 1;
+  const size = p.width_cm && p.height_cm ? (n > 1 ? `${PANEL_RU[n]}, ${n} × ${p.width_cm} × ${p.height_cm} см` : `${p.width_cm} × ${p.height_cm} см`) : "размер не указан";
   return `<a class="card" href="#/p/${p.id}" style="text-decoration:none;color:inherit">
     <div class="pic" style="${ph ? `background-image:url('${img(ph.thumb)}')` : ""}"><span class="badge b-${p.status}">${STATUS_RU[p.status]}</span></div>
     <div class="body"><div class="t">${esc(p.title) || "Без названия"}</div>
@@ -180,14 +188,27 @@ async function edit(id) {
           <input type="file" id="file" accept="image/*" multiple class="sr">
           <button class="drop" id="drop">Добавить фото</button>
           <div class="hint">Можно загружать в полном качестве, прямо с телефона. Сайт сам сделает лёгкие копии. Первое фото будет главным. Если сфотографируете картину сзади, нажмите на этом фото «Это оборот»: сайт покажет его, когда картину поворачивают.</div>
+          <div class="hint" id="multiPhotoHint"></div>
         </section>
         <section class="panel">
           <h3>2. О картине</h3>
           <label>Название на английском
             <input type="text" data-k="title" value="${esc(cur.title)}" placeholder="Poppies at Dawn"></label>
+          <div style="display:flex;flex-direction:column;gap:8px"><span>Из скольких холстов картина</span>
+            <div class="chips" role="group" aria-label="Сколько холстов" id="panels">
+              ${[1,2,3,4].map(n => `<button class="chip green" data-panels="${n}" aria-pressed="${(Number(cur.panels)||1)===n}">${n === 1 ? "Один холст" : `${PANEL_RU[n]} (${n})`}</button>`).join("")}
+            </div>
+            <div class="hint">Диптих — одна картина на двух холстах, триптих — на трёх. На сайте это одна картина с одной ценой, продаётся комплектом.</div></div>
           <div class="two">
-            <label>Ширина, см<input type="number" inputmode="decimal" min="1" data-k="width_cm" value="${cur.width_cm ?? ""}"></label>
-            <label>Высота, см<input type="number" inputmode="decimal" min="1" data-k="height_cm" value="${cur.height_cm ?? ""}"></label>
+            <label><span id="wLbl">Ширина, см</span><input type="number" inputmode="decimal" min="1" data-k="width_cm" value="${cur.width_cm ?? ""}"></label>
+            <label><span id="hLbl">Высота, см</span><input type="number" inputmode="decimal" min="1" data-k="height_cm" value="${cur.height_cm ?? ""}"></label>
+          </div>
+          <div id="multiBox" style="display:flex;flex-direction:column;gap:8px">
+            <label>Расстояние между холстами на стене, см
+              <input type="number" inputmode="decimal" min="0" max="30" step="0.5" data-k="gap_cm" value="${cur.gap_cm ?? ""}" placeholder="${DEF_GAP}"></label>
+            <div class="hint">Как вы советуете вешать. Если оставить пустым, будет ${DEF_GAP} см.</div>
+            <div class="hint" id="total" style="color:var(--ink);font-weight:600"></div>
+            <div id="split"></div>
           </div>
           <label>Толщина подрамника, см
             <input type="number" inputmode="decimal" min="0.5" max="15" step="0.1" data-k="depth_cm" value="${cur.depth_cm ?? ""}" placeholder="например, 1.8 или 3.5"></label>
@@ -196,6 +217,10 @@ async function edit(id) {
             <div class="chips" role="group" aria-label="Тема" id="themes">
               ${THEMES.map(([k,t]) => `<button class="chip green" data-theme="${k}" aria-pressed="${cur.theme===k}">${t}</button>`).join("")}
             </div></div>
+          <label>Стиль (на английском, так его увидят покупатели)
+            <input type="text" data-k="style" list="styles" value="${esc(cur.style)}" placeholder="${esc(THEME_STYLE[cur.theme] || "")}" id="style"></label>
+          <datalist id="styles">${STYLES.map(x => `<option value="${esc(x)}">`).join("")}</datalist>
+          <div class="hint" style="margin-top:-8px">Нажмите на поле и выберите из списка или напишите свой. Если оставить пустым, на сайте будет: «<span id="styleDef">${esc(THEME_STYLE[cur.theme] || "")}</span>».</div>
           <div class="two">
             <label>Техника<select data-k="medium">${opt(MEDIUMS, cur.medium)}</select></label>
             <label>Основа<select data-k="support">${opt(SUPPORTS, cur.support)}</select></label>
@@ -232,9 +257,17 @@ async function edit(id) {
     if (el.dataset.k === "title") $app.querySelector("#h").textContent = el.value || "Новая картина";
     queueSave();
   }));
+  $app.querySelectorAll("[data-panels]").forEach(b => b.onclick = () => {
+    cur.panels = Number(b.dataset.panels);
+    $app.querySelectorAll("[data-panels]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    drawPanels(); queueSave();
+  });
+  $app.querySelectorAll('[data-k="width_cm"],[data-k="height_cm"],[data-k="gap_cm"]').forEach(el => el.addEventListener("input", drawPanels));
   $app.querySelectorAll("[data-theme]").forEach(b => b.onclick = () => {
     cur.theme = b.dataset.theme;
     $app.querySelectorAll("[data-theme]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    const def = THEME_STYLE[cur.theme] || "";
+    $app.querySelector("#style").placeholder = def; $app.querySelector("#styleDef").textContent = def;
     queueSave();
   });
   $app.querySelectorAll("[data-pk]").forEach(b => b.onclick = () => {
@@ -242,7 +275,7 @@ async function edit(id) {
     cur[k] = Math.max(0, Math.min(cur.prints_edition, Number(cur[k] || 0) + Number(b.dataset.d)));
     drawPrints(); queueSave();
   });
-  drawPrints(); drawPhotos(); drawActions();
+  drawPrints(); drawPhotos(); drawActions(); drawPanels();
   loadCard();
 
   const file = $app.querySelector("#file"), drop = $app.querySelector("#drop");
@@ -360,6 +393,7 @@ function drawPhotos(pending = []) {
         <button data-del="${i}">Убрать</button>
       </div>
     </div>`).join("") + pending.map(t => `<div class="ph busy">${esc(t)}</div>`).join("");
+  if (!pending.length) drawPanels();
   box.querySelectorAll("[data-main]").forEach(b => b.onclick = () => {
     const i = Number(b.dataset.main); cur.photos.unshift(cur.photos.splice(i, 1)[0]); drawPhotos(); saveNow();
   });
@@ -372,6 +406,33 @@ function drawPhotos(pending = []) {
     if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Точно?"; return; }
     cur.photos.splice(Number(b.dataset.del), 1); drawPhotos(); saveNow();
   });
+}
+
+// Diptych / triptych: labels, overall size, and a preview of how the site cuts the main photo into panels.
+function drawPanels() {
+  const box = $app.querySelector("#multiBox"); if (!box) return;
+  const n = Number(cur.panels) > 1 ? Number(cur.panels) : 1, multi = n > 1;
+  box.style.display = multi ? "flex" : "none";
+  $app.querySelector("#wLbl").textContent = multi ? "Ширина одного холста, см" : "Ширина, см";
+  $app.querySelector("#hLbl").textContent = multi ? "Высота одного холста, см" : "Высота, см";
+  $app.querySelector("#multiPhotoHint").textContent = multi
+    ? `Для ${n === 2 ? "диптиха" : n === 3 ? "триптиха" : "полиптиха"}: первым поставьте фото всей картины целиком — холсты вплотную друг к другу, ровно, спереди. Сайт сам разрежет его на ${n} части с промежутком. Остальные фото (на стене, детали, сбоку) — как обычно.` : "";
+  if (!multi) return;
+  const pw = Number(String(cur.width_cm ?? "").replace(",", ".")), ph = Number(String(cur.height_cm ?? "").replace(",", "."));
+  const g = cur.gap_cm === "" || cur.gap_cm == null ? DEF_GAP : Number(String(cur.gap_cm).replace(",", "."));
+  const tot = $app.querySelector("#total"), split = $app.querySelector("#split");
+  if (!(pw > 0 && ph > 0)) { tot.textContent = "Укажите ширину и высоту одного холста."; split.innerHTML = ""; return; }
+  const r = x => Math.round(x * 10) / 10, W = r(n * pw + (n - 1) * g);
+  tot.textContent = `На сайте: ${n} × ${r(pw)} × ${r(ph)} см, общий размер на стене ${W} × ${r(ph)} см`;
+  const main = cur.photos.find(p => p.kind !== "back");
+  split.innerHTML = main ? `<div class="hint" style="margin-bottom:6px">Так сайт разрежет главное фото:</div>` + panelsPreview(img(main.large), main.w / main.h, n, pw, ph, g) : "";
+}
+// same maths as panelStrip() in /index.html: the photo covers the panels laid edge to edge, then each panel shows its slice
+function panelsPreview(src, A, n, pw, ph, g) {
+  const W = n * pw + (n - 1) * g, Wi = Math.max(n * pw, ph * (A || n * pw / ph)), Hi = Wi / (A || n * pw / ph);
+  const x0 = (Wi - n * pw) / 2, y0 = (Hi - ph) / 2;
+  return `<div style="display:flex;gap:${g / W * 100}%;aspect-ratio:${W}/${ph};max-width:420px;background:#e9e2d5;padding:10px;border-radius:12px">` +
+    Array.from({length: n}, (_, i) => `<div style="position:relative;overflow:hidden;flex:0 0 ${pw / W * 100}%;box-shadow:0 2px 6px rgba(0,0,0,.25)"><img src="${src}" alt="" style="position:absolute;max-width:none;width:${Wi / pw * 100}%;left:${-(x0 + i * pw) / pw * 100}%;top:${-y0 / ph * 100}%"></div>`).join("") + `</div>`;
 }
 
 function drawActions() {

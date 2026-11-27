@@ -25,12 +25,18 @@ window.SITE_CONFIG = {
     "--accent-ink": "#183D32"
   },
 
-  // Painting themes / collections (pal + style drive the placeholder art)
-themes: {
-  wildflowers:{name:"Wildflowers",blurb:"Poppies, cornflowers, chamomile and meadow grasses, painted the way a field feels in June.",pal:["#5f7d3a","#8aa35a","#c8d49a","#d23b2a","#3f5bb0","#f4f1e6","#e9b93c"],style:"meadow"},
-  impressions:{name:"Impressions",blurb:"Soft, Monet-inspired light: ponds, river mist and gardens seen through half-closed eyes.",pal:["#8fa8c8","#b9c7dd","#c7b8d8","#a8c4a0","#e8d9b5","#6f88a8","#f1e8d8"],style:"monet"},
-  impasto:{name:"Impasto",blurb:"Thick, sculpted paint laid on with knife and brush. Up close it is pure texture; step back and the flowers appear.",pal:["#e7c33a","#d9822b","#b23a3a","#f3eee0","#5a7a3a","#2f3a5a","#e9a3b0"],style:"impasto"},
-  splash:{name:"Splash & Pour",blurb:"Acrylic thrown, poured and dabbed with gloves, sticks, knives and sponges, then gently guided into an image.",pal:["#1f2a44","#3a6fb0","#e05a7a","#f2c14e","#7fc8a9","#f6f4ee","#a26bd1"],style:"splash"}
+  // Painting themes / collections (pal/draw = placeholder art, styleName = default Style line, hidden = not listed)
+  themes: {
+  // "draw" = how the placeholder picture is painted while there is no photo; "styleName" = default Style line (a painting can set its own in the admin)
+  wildflowers:{name:"Wildflowers",blurb:"Poppies, cornflowers, chamomile and meadow grasses, painted the way a field feels in June.",pal:["#5f7d3a","#8aa35a","#c8d49a","#d23b2a","#3f5bb0","#f4f1e6","#e9b93c"],style:"meadow",styleName:"Contemporary impressionism"},
+  floral:{name:"Floral Art",blurb:"Garden flowers up close: peonies, roses, poppies and sweet peas, painted with love for every petal.",pal:["#e9a3b0","#d23b2a","#f3eee0","#e7c33a","#5a7a3a","#c7b8d8","#2f3a5a"],style:"impasto",styleName:"Floral art"},
+  waterlilies:{name:"Water Lilies",blurb:"Still ponds, floating lilies and reflections of the sky, in the gentle light of a summer afternoon.",pal:["#6f88a8","#8fa8c8","#a8c4a0","#e9b7c9","#f1e8d8","#3f6a5a","#c7b8d8"],style:"monet",styleName:"Impressionism, Monet-inspired"},
+  irises:{name:"Irises",blurb:"Tall blue and violet irises by the water and in the garden, with their elegant, curling petals.",pal:["#3f5bb0","#6a4fa0","#a26bd1","#e9b93c","#5f7d3a","#8aa35a","#f4f1e6"],style:"meadow",styleName:"Floral art"},
+  farmyard:{name:"Farmyard Art",blurb:"Farm animals with real character: hens, cows, sheep and more, in warm countryside colours.",pal:["#b08d68","#e8d9b5","#c86b3c","#5f7d3a","#f4f1e6","#3b3430","#8aa35a"],style:"meadow",styleName:"Farmyard art"},
+  impressions:{name:"Impressions",blurb:"Soft, Monet-inspired light: ponds, river mist and gardens seen through half-closed eyes.",pal:["#8fa8c8","#b9c7dd","#c7b8d8","#a8c4a0","#e8d9b5","#6f88a8","#f1e8d8"],style:"monet",styleName:"Impressionism, Monet-inspired"},
+  splash:{name:"Splash & Pour",blurb:"Acrylic thrown, poured and dabbed with gloves, sticks, knives and sponges, then gently guided into an image.",pal:["#1f2a44","#3a6fb0","#e05a7a","#f2c14e","#7fc8a9","#f6f4ee","#a26bd1"],style:"splash",styleName:"Acrylic splash & pour"},
+  // removed for now at Valentyna's request; kept only so an older painting with this theme still opens
+  impasto:{name:"Impasto",hidden:true,blurb:"Thick, sculpted paint laid on with knife and brush.",pal:["#e7c33a","#d9822b","#b23a3a","#f3eee0","#5a7a3a","#2f3a5a","#e9a3b0"],style:"impasto",styleName:"Impasto, palette knife"}
 },
 
   // Number of prints in each limited edition
@@ -42,13 +48,8 @@ themes: {
   {id:"none",name:"No frame",desc:"Painted edges, ready to hang as it is",price:"Included",sw:"repeating-linear-gradient(45deg,#4b6b5f 0 4px,#3a5a4e 4px 8px)"},
   {id:"oak",name:"Natural oak floating frame",desc:"Light wood with a small shadow gap around the canvas",price:"+ price TBC",cm:2.5,gap:.8,bg:"linear-gradient(135deg,#d7b68a,#b38d5f)",sw:"linear-gradient(135deg,#d7b68a,#b38d5f)"},
   {id:"black",name:"Black floating frame",desc:"Slim and modern, makes bright colours glow",price:"+ price TBC",cm:2.5,gap:.8,bg:"linear-gradient(135deg,#3a3a3a,#141414)",sw:"linear-gradient(135deg,#3a3a3a,#141414)"},
-  {id:"gold",name:"Classic gold frame",desc:"Traditional moulding, beautiful with impressionist work",price:"+ price TBC",cm:6,gap:0,bg:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)",sw:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)"},
-  {id:"help",name:"Help me choose a frame",desc:"Valentyna suggests 2 or 3 frames for this painting and your room, with photos, before you decide",price:"Free advice",sw:"radial-gradient(circle,#d9bc6e 0 30%,#4b6b5f 31%)"}
+  {id:"gold",name:"Classic gold frame",desc:"Traditional moulding, beautiful with impressionist work",price:"+ price TBC",cm:6,gap:0,bg:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)",sw:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)"}
 ],
-
-  // Longest side (cm) above which a painting ships rolled
-  rollOverCm: 70,
-  styleNames: {meadow:"Contemporary impressionism",monet:"Impressionism, Monet-inspired",impasto:"Impasto, palette knife",splash:"Acrylic splash & pour"},
 
   // Shipping destinations: ok=false means not served, wood=false means no wooden stretcher/crate
   countries: [
