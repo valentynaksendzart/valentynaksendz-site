@@ -500,12 +500,12 @@ async function decode(file) {
     } finally { URL.revokeObjectURL(url); }
   }
 }
-async function variant(src, maxSide, q) {
+async function variant(src, maxSide, q, jpegOnly) {
   const w0 = src.width, h0 = src.height, k = Math.min(1, maxSide / Math.max(w0, h0));
   const c = document.createElement("canvas");
   c.width = Math.round(w0 * k); c.height = Math.round(h0 * k);
   const g = c.getContext("2d"); g.imageSmoothingQuality = "high"; g.drawImage(src, 0, 0, c.width, c.height);
-  let b = await new Promise(r => c.toBlob(r, "image/webp", q));
+  let b = jpegOnly ? null : await new Promise(r => c.toBlob(r, "image/webp", q));
   if (!b || b.type !== "image/webp") b = await new Promise(r => c.toBlob(r, "image/jpeg", q));
   return {blob: b, w: c.width, h: c.height};
 }
@@ -531,7 +531,9 @@ async function addFiles(files) {
       const o = await put(cur.id, id, "orig", f, otype);
       const l = await put(cur.id, id, "large", large.blob, large.blob.type);
       const t = await put(cur.id, id, "thumb", thumb.blob, thumb.blob.type);
-      cur.photos.push({id, orig: o.key, large: l.key, thumb: t.key, w: large.w, h: large.h, bytes: o.bytes + l.bytes + t.bytes, kind: "art"});
+      // JPEG copy for the "See it on your own wall" model on Android phones (they can't read WebP there)
+      const ar = await variant(src, 2048, 0.85, true), a = await put(cur.id, id, "ar", ar.blob, "image/jpeg");
+      cur.photos.push({id, orig: o.key, large: l.key, thumb: t.key, ar: a.key, aw: ar.w, ah: ar.h, w: large.w, h: large.h, bytes: o.bytes + l.bytes + t.bytes + a.bytes, kind: "art"});
       await saveNow();
     } catch (e) { errors.push(f.name + ": " + e.message); }
     pending.shift(); drawPhotos(pending);
@@ -539,11 +541,24 @@ async function addFiles(files) {
   if (errors.length) note("Не загрузилось: " + errors.join("; "));
 }
 
+// Paintings uploaded before the AR feature: make the JPEG copy of the main photo once, quietly, from its web copy.
+async function ensureAr() {
+  const p = cur && cur.photos.find(x => x.kind !== "back");
+  if (!p || p.ar || !p.large) return;
+  try {
+    const r = await fetch(img(p.large), {credentials: "same-origin"}); if (!r.ok) return;
+    const src = await createImageBitmap(await r.blob());
+    const ar = await variant(src, 2048, 0.85, true), a = await put(cur.id, p.id, "ar", ar.blob, "image/jpeg");
+    p.ar = a.key; p.aw = ar.w; p.ah = ar.h; p.bytes = (p.bytes || 0) + a.bytes;
+    await saveNow();
+  } catch (e) { /* try again next time the painting is opened */ }
+}
+
 /* ---------------- Router ---------------- */
 async function route() {
   try {
     const m = location.hash.match(/^#\/p\/(\d+)/);
-    if (m) await edit(m[1]); else await home();
+    if (m) { await edit(m[1]); ensureAr(); } else await home();
     window.scrollTo(0, 0);
   } catch (e) {
     $app.innerHTML = `<div class="msg">Не получилось загрузить: ${esc(e.message)}. Обновите страницу.</div>`;

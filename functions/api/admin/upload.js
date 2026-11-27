@@ -9,13 +9,14 @@ export const onRequestPut = async ({ env, request }) => {
   const painting = q.get('painting');
   const photo = q.get('photo');
   const variant = q.get('variant');
-  if (!/^\d+$/.test(painting || '') || !/^[\w-]{8,64}$/.test(photo || '') || !['orig', 'large', 'thumb'].includes(variant)) {
+  if (!/^\d+$/.test(painting || '') || !/^[\w-]{8,64}$/.test(photo || '') || !['orig', 'large', 'thumb', 'ar'].includes(variant)) {
     return err(400, 'Неверные параметры');
   }
   const type = (request.headers.get('content-type') || '').split(';')[0].trim();
   let ext = TYPES[type];
   if (!ext) return err(415, 'Этот формат фото не подходит');
   if (variant !== 'orig' && !['webp', 'jpg'].includes(ext)) return err(415, 'Неверный формат копии');
+  if (variant === 'ar' && ext !== 'jpg') return err(415, 'AR-копия должна быть JPG');
   const len = Number(request.headers.get('content-length') || 0);
   if (len > MAX) return err(413, 'Файл слишком большой (больше 60 МБ)');
 
