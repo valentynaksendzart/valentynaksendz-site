@@ -60,17 +60,16 @@ header.site .wrap{display:flex;align-items:center;justify-content:space-between;
 nav.main{display:flex;gap:18px;flex-wrap:wrap}
 nav.main a{text-decoration:none;font-size:1.05rem;color:var(--muted);padding-block:4px;border-bottom:1px solid transparent}
 nav.main a:hover,nav.main a[aria-current="page"]{color:var(--gold);border-bottom-color:var(--gold)}
-.menu-btn{display:none;font:500 1rem var(--font-body);color:var(--gold);background:none;border:1px solid var(--gold-deep);border-radius:3px;padding:6px 12px;cursor:pointer}
+.menu-btn{display:none;font:700 1.05rem var(--font-body);color:var(--gold);background:none;border:1px solid var(--gold);border-radius:4px;padding:0 16px;min-height:48px;cursor:pointer}
 @media (max-width:760px){
-  header.site .wrap{flex-wrap:nowrap;gap:10px;padding-block:6px}
+  header.site .wrap{flex-wrap:nowrap;gap:10px;padding-block:5px}
   .brand{font-size:1.15rem;margin-right:auto;white-space:nowrap}
-  .menu-btn{padding:3px 10px;font-size:.9rem}
   .brand small{display:none}
   .menu-btn{display:block}
   nav.main .cur{padding:12px 0 4px}
   nav.main{display:none;position:absolute;left:0;right:0;top:100%;background:var(--wall);border-bottom:1px solid var(--rule);flex-direction:column;gap:0;padding:4px 16px 12px}
   header.site.open nav.main{display:flex}
-  nav.main a{font-size:1.15rem;padding:12px 0;border-bottom:1px solid var(--rule)}
+  nav.main a{font-size:1.2rem;padding:0;min-height:56px;display:flex;align-items:center;border-bottom:1px solid var(--rule);color:var(--ink)}
   nav.main a:last-child{border-bottom:0}
 }
 
@@ -87,7 +86,7 @@ section{padding-block:48px}
 .ship-strip{display:flex;gap:28px;flex-wrap:wrap;margin-top:28px;font-size:1rem;color:var(--muted)}
 .ship-strip b{color:var(--gold);font-weight:700}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 1.05rem var(--font-body);padding:14px 26px;border-radius:3px;border:1px solid var(--gold);background:var(--gold);color:var(--accent-ink);text-decoration:none;cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 1.05rem var(--font-body);padding:0 26px;min-height:56px;border-radius:4px;border:1px solid var(--gold);background:var(--gold);color:var(--accent-ink);text-decoration:none;cursor:pointer}
 .btn:hover{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn.ghost{background:transparent;color:var(--gold)}
@@ -148,7 +147,7 @@ section{padding-block:48px}
 .card-box{margin-top:26px;padding-top:20px;border-top:1px solid rgba(217,188,110,.3);display:flex;flex-direction:column;gap:10px;align-items:flex-start}.card-box h3{margin:0}.card-item .btn{margin-top:10px}.card-item a{color:inherit;text-decoration:none}
 .price-row{display:flex;align-items:center;gap:12px;margin-top:26px;flex-wrap:wrap}
 .price-row .label{margin-left:auto}
-.cur-mini select{font:500 1rem var(--font-body);color:var(--gold);background:var(--wall);border:1px solid var(--gold-deep);border-radius:3px;padding:6px 8px;cursor:pointer}
+.cur-mini{display:block;width:100%}
 .price-big{font-family:var(--font-display);font-weight:600;color:var(--gold);font-size:2.4rem}
 .buy-note{margin-top:10px;font-size:.95rem;color:var(--muted);min-height:1.4em}
 
@@ -296,7 +295,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .cine-copy .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;pointer-events:auto}
 .cine-copy .btn{background:var(--gold);color:var(--accent-ink);border-color:var(--gold)}
 .cine-copy .btn.ghost{background:rgba(15,42,34,.5);color:var(--gold)}
-.scroll-cue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font:500 12px var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--hall-muted);display:flex;flex-direction:column;align-items:center;gap:6px}
+.scroll-cue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font:700 15px var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:var(--hall-muted);display:flex;flex-direction:column;align-items:center;gap:6px}
 .scroll-cue i{width:1px;height:28px;background:linear-gradient(var(--hall-muted),transparent)}
 @media (prefers-reduced-motion:no-preference){.scroll-cue i{animation:cue 1.8s ease-in-out infinite}@keyframes cue{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}}
 .end-copy{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7vh;opacity:0;pointer-events:none;text-align:center}
@@ -307,7 +306,16 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .tilt{transition:transform .25s ease;transform:perspective(900px) rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg))}
 
 /* ---------- currency picker ---------- */
-.cur select{font:500 1rem var(--font-body);color:var(--gold);background:var(--wall);border:1px solid var(--gold-deep);border-radius:3px;padding:6px 10px;cursor:pointer}
+.curbtns{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}
+.curbtns button,.curbtns select{font:700 1.05rem var(--font-body);color:var(--gold);background:var(--wall);border:1px solid var(--gold-deep);border-radius:4px;min-width:48px;min-height:48px;padding:0 12px;cursor:pointer}
+.curbtns button[aria-pressed="true"]{background:var(--gold);color:var(--accent-ink);border-color:var(--gold)}
+.curbtns select{font-weight:500;font-size:1rem}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:30;max-width:calc(100% - 32px);background:var(--gold);color:var(--accent-ink);font:700 1.05rem var(--font-body);padding:14px 20px;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.45);text-align:center}
+.back{display:inline-flex;align-items:center;min-height:52px;font:700 1.1rem var(--font-body);color:var(--gold);text-decoration:none;border:1px solid var(--gold-deep);border-radius:4px;padding:0 20px;margin:14px 0 4px}
+.back:hover{background:var(--gold);color:var(--accent-ink)}
+.back.bottom{margin:28px 0 0}
+.tip{display:flex;align-items:center;gap:12px;justify-content:space-between;background:var(--paper);border:1px solid var(--gold-deep);border-radius:6px;padding:12px 14px;margin-bottom:12px;font-size:1.02rem}
+.tip button{font:700 1rem var(--font-body);min-height:44px;padding:0 16px;border-radius:4px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;flex:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .cur-note{font-size:.9rem;color:var(--muted);margin-top:6px}
 
@@ -327,7 +335,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 
 /* ---------- painting viewer: 3D / on a wall / photos ---------- */
 .modes{display:flex;gap:4px;margin-bottom:12px;border-bottom:1px solid var(--rule)}
-.modes button{font:500 1.02rem var(--font-body);background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px;color:var(--muted);cursor:pointer;margin-bottom:-1px}
+.modes button{font:500 1.1rem var(--font-body);background:none;border:0;border-bottom:3px solid transparent;padding:0 14px;min-height:52px;color:var(--muted);cursor:pointer;margin-bottom:-1px}
 .modes button[aria-selected="true"]{color:var(--gold);border-bottom-color:var(--gold)}
 .stage3d{position:relative;height:clamp(360px,56vw,560px);perspective:1400px;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;background:radial-gradient(ellipse at 50% 40%,var(--paper),var(--wall) 75%);overflow:hidden}
 .stage3d:active{cursor:grabbing}
@@ -342,7 +350,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .floor-shadow{position:absolute;left:50%;bottom:8%;width:60%;height:26px;transform:translateX(-50%);background:radial-gradient(ellipse at center,rgba(0,0,0,.28),transparent 70%);pointer-events:none}
 .v-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:10px}
 .v-controls .seg{display:flex;gap:6px;flex-wrap:wrap}
-.chip{font:500 .95rem var(--font-body);padding:8px 14px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:99px;cursor:pointer}
+.chip{font:500 1rem var(--font-body);min-height:48px;padding:0 18px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:99px;cursor:pointer}
 .chip[aria-pressed="true"]{border-color:var(--gold);background:var(--gold);color:var(--accent-ink)}
 .hint{font-size:.95rem;color:var(--muted)}
 .swatch{width:26px;height:26px;border-radius:50%;border:1px solid var(--rule);cursor:pointer;padding:0}
@@ -370,7 +378,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 <header class="site">
   <div class="wrap">
     <a class="brand" href="#home">Valentyna Ksendz<small>Wildflower artist · Original paintings</small></a>
-    <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mainNav"><span aria-hidden="true">☰</span> Menu</button>
     <nav class="main" aria-label="Main" id="mainNav">
       <a href="#gallery" data-nav="gallery">Paintings</a>
       <a href="#prints" data-nav="prints">Prints</a>
@@ -378,7 +386,7 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
       <a href="#shipping" data-nav="shipping">Shipping &amp; returns</a>
       <a href="#about" data-nav="about">About</a>
     </nav>
-    <label class="cur"><span class="sr">Currency</span><select id="cur" aria-label="Currency"></select></label>
+    <div class="cur" id="curBar" role="group" aria-label="Currency"></div>
   </div>
 </header>
 
@@ -544,9 +552,15 @@ const money = n => { if(!(n>0)) return "Price on request";const c=CURRENCIES[CUR
   const step = CUR==="JPY" ? (n>=300?1000:100) : (n>=300?10:1); v=Math.round(v/step)*step;
   return c.sym + v.toLocaleString(c.locale==="de-DE"?"en-GB":c.locale)};
 // small currency picker next to a price, kept in step with the one in the header
-const curPick = () => `<label class="cur-mini"><span class="sr">Currency</span><select data-cur aria-label="Currency">${Object.entries(CURRENCIES).map(([k,c])=>`<option value="${k}" ${k===CUR?"selected":""}>${k} ${c.sym.replace(/^[A-Z]+/,"")}</option>`).join("")}</select></label>`;
-function setCur(c){CUR=c;try{localStorage.setItem("cur",CUR)}catch(e){}const m=$("#cur");if(m)m.value=CUR;const y=scrollY;route();scrollTo(0,y)}
-document.addEventListener("change",e=>{if(e.target.matches&&e.target.matches("select[data-cur]"))setCur(e.target.value)});
+const CUR_MAIN=["GBP","EUR","USD"], CUR_NAME={GBP:"pounds (£)",EUR:"euros (€)",USD:"US dollars ($)",CAD:"Canadian dollars (CA$)",AUD:"Australian dollars (A$)",JPY:"yen (¥)"};
+const curUI = () => `<div class="curbtns" role="group" aria-label="Show prices in">${CUR_MAIN.map(k=>`<button type="button" data-curb="${k}" aria-pressed="${k===CUR}" aria-label="${CUR_NAME[k]}">${CURRENCIES[k].sym.replace("US","")}</button>`).join("")}<select data-cur aria-label="Other currencies">${CUR_MAIN.includes(CUR)?'<option value="">Other…</option>':""}${Object.keys(CURRENCIES).filter(k=>!CUR_MAIN.includes(k)).map(k=>`<option value="${k}" ${k===CUR?"selected":""}>${CURRENCIES[k].label}</option>`).join("")}</select></div>`;
+const curPick = () => `<div class="cur-mini"><span class="label">Show price in</span> ${curUI()}</div>`;
+function renderCurBar(){const b=$("#curBar");if(b)b.innerHTML=curUI()}
+let toastT;
+function toast(msg){let t=$("#toast");if(!t){t=document.createElement("div");t.id="toast";t.className="toast";t.setAttribute("role","status");document.body.appendChild(t)}t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},3200)}
+function setCur(c){if(!CURRENCIES[c]||c===CUR)return;CUR=c;try{localStorage.setItem("cur",CUR)}catch(e){}renderCurBar();const y=scrollY;route();scrollTo(0,y);toast("Prices now shown in "+CUR_NAME[CUR])}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-curb]");if(b)setCur(b.dataset.curb)});
+document.addEventListener("change",e=>{if(e.target.matches&&e.target.matches("select[data-cur]")&&e.target.value)setCur(e.target.value)});
 const curNote = () => CUR==="GBP" ? "" : `<p class="cur-note">Shown in ${CUR} at an approximate rate. The exact amount is confirmed at checkout. <span class="guess">rates TBC</span></p>`;
 const left = p => EDITION - p.sold;
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -667,13 +681,16 @@ function packHTML(w,c){
   if(!C.wood) return `<div class="pack">${tube}<div><b>Ships rolled in a tube, without the wooden stretcher</b>${C.n} does not accept untreated wood in parcels. The canvas arrives rolled and needs re-stretching locally (any framer can do this). <span class="guess">wording TBC</span></div></div>`;
   return `<div class="pack">${box}<div><b>Ships on its stretcher, ready to hang</b>Wrapped, corner-protected and packed in a rigid box, large paintings too.</div></div>`;
 }
+const seenTip=()=>{try{return localStorage.getItem("tip1")==="1"}catch(e){return false}};
 function vPiece(w){
   const t = THEMES[w.theme];
   const shots=[["front","Front"],["angle","Side view"],["detail","Detail"],["interior","In an interior"]];
   const prints=w.prints;
-  return `<div class="crumbs"><a href="#gallery">Paintings</a> / <a href="#${w.theme}">${t.name}</a> / ${esc(w.title)}</div>
+  return `<a class="back" data-back href="#${BACKH||"gallery"}">← Back to gallery</a>
+  <div class="crumbs"><a href="#gallery">Paintings</a> / <a href="#${w.theme}">${t.name}</a> / ${esc(w.title)}</div>
   <div class="piece">
     <div class="viewer">
+      ${CAN3D&&!seenTip()?`<div class="tip" id="tip"><span>Tap <b>Turn in 3D</b> to spin the painting round, or <b>On a wall</b> to see its size.</span><button type="button" id="tipOk">Got it</button></div>`:""}
       <div class="modes" role="tablist" aria-label="How to view">
         <button type="button" role="tab" data-mode="photos" aria-selected="true">Photos</button>
         ${CAN3D?`<button type="button" role="tab" data-mode="turn" aria-selected="false">Turn in 3D</button><button type="button" role="tab" data-mode="wall" aria-selected="false">On a wall</button>`:""}
@@ -774,6 +791,8 @@ function editionHTML(p,type){
 }
 function bindPiece(w){
   const inited={};
+  $("#view").insertAdjacentHTML("beforeend",`<a class="back bottom" data-back href="#${BACKH||"gallery"}">← Back to gallery</a>`);
+  const tipOk=$("#tipOk");if(tipOk)tipOk.addEventListener("click",()=>{try{localStorage.setItem("tip1","1")}catch(e){}$("#tip").remove()});
   const show=m=>{
     document.querySelectorAll(".modes [data-mode]").forEach(b=>b.setAttribute("aria-selected",b.dataset.mode===m));
     ["turn","wall","photos"].forEach(k=>{const p=$("#pane-"+k);if(p)p.hidden=k!==m});
@@ -1117,9 +1136,16 @@ if(FINE && !REDUCED){
 (()=>{const hdr=$("header.site"), btn=$("#menuBtn"), nav=$("#mainNav"), cur=$(".cur"), home=cur.parentNode, mq=matchMedia("(max-width:760px)");
   const place=()=>{if(mq.matches){if(cur.parentNode!==nav)nav.appendChild(cur)}else if(cur.parentNode!==home)home.appendChild(cur)};
   place(); mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place);
-  btn.addEventListener("click",()=>{const o=!hdr.classList.contains("open");hdr.classList.toggle("open",o);btn.setAttribute("aria-expanded",o);btn.textContent=o?"Close":"Menu"});
-  addEventListener("hashchange",()=>{hdr.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.textContent="Menu"});
+  const set=o=>{hdr.classList.toggle("open",o);btn.setAttribute("aria-expanded",o);btn.innerHTML=o?'<span aria-hidden="true">✕</span> Close':'<span aria-hidden="true">☰</span> Menu'};
+  btn.addEventListener("click",()=>set(!hdr.classList.contains("open")));
+  nav.addEventListener("click",e=>{if(e.target.closest("a"))set(false)});
+  document.addEventListener("click",e=>{if(!hdr.contains(e.target))set(false)});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false)});
+  addEventListener("hashchange",()=>set(false));
 })();
+let prevH=null, backNext=false, BACKH=null; const POS={};
+addEventListener("popstate",()=>{backNext=true});
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-back]"))backNext=true});
 function route(){
   const pm = location.pathname.match(/^\/art\/([\w-]+)\/?$/);
   const h = (location.hash||(pm?"#p-"+pm[1]:"#home")).slice(1);
@@ -1127,6 +1153,10 @@ function route(){
   const cine=$("#cine"); cine.hidden=true; cine.innerHTML="";
   const v = $("#view"); let html, nav="";
   const w = WORKS.find(x=>x.id===h);
+  if(prevH!==null)POS[prevH]=scrollY;
+  const backH = (prevH&&prevH!==h&&(prevH==="home"||prevH==="gallery"||THEMES[prevH]))?prevH:(BACKH||"gallery");
+  if(!w)BACKH=null; else if(prevH!==h)BACKH=backH;
+  const restore=backNext&&POS[h]!=null?POS[h]:0; backNext=false; const hPrev=prevH; prevH=h;
   if(w){html=vPiece(w);nav="gallery"}
   else if(THEMES[h]){html=vGallery(h);nav="gallery"}
   else if(h==="gallery"){html=vGallery(null);nav="gallery"}
@@ -1140,7 +1170,7 @@ function route(){
   if(!w && !THEMES[h] && !["gallery","prints","cards","shipping","about"].includes(h)) buildHall();
   document.querySelectorAll("nav.main a").forEach(a=>{if(a.dataset.nav===nav)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   setMeta(w,h);
-  window.scrollTo(0,0);
+  window.scrollTo(0,restore);
 }
 /* Page title + description per view (search engines and browser tabs). */
 const META_DESC = document.querySelector('meta[name="description"]').content;
@@ -1152,8 +1182,7 @@ function setMeta(w,h){
   else if(names[h]){t=names[h]+" | Valentyna Ksendz Art"}
   document.title=t; document.querySelector('meta[name="description"]').content=d;
 }
-(()=>{const sel=$("#cur");sel.innerHTML=Object.entries(CURRENCIES).map(([k,c])=>`<option value="${k}" ${k===CUR?"selected":""}>${c.label}</option>`).join("");
-  sel.addEventListener("change",()=>setCur(sel.value))})();
+renderCurBar();
 window.addEventListener("hashchange",route);
 loadWorks().then(route);
 </script>
