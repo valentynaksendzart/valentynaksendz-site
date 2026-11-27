@@ -1,5 +1,6 @@
 import { ensureSchema } from '../../lib/schema.js';
 import { toPublic } from '../../lib/util.js';
+import { ARTIST_NAME, SITE_TITLE } from '../../lib/site.js';
 
 // Real, shareable URL for each painting: /art/<slug>.
 // Serves the normal site (it opens the painting itself) with the painting's own title,
@@ -17,10 +18,10 @@ export const onRequestGet = async ({ env, params, request }) => {
 
   const w = toPublic(row);
   const pageUrl = `${url.origin}/art/${encodeURIComponent(w.id)}`;
-  const title = `${w.title} by Valentyna Ksendz`;
+  const title = `${w.title} by ${ARTIST_NAME}`;
   const multi = w.panels > 1, names = { 2: 'Diptych', 3: 'Triptych', 4: 'Polyptych' };
   const size = w.w && w.h ? (multi ? ` ${names[w.panels] || 'Polyptych'}, ${w.panels} canvases of ${w.w} × ${w.h} cm.` : ` ${w.w} × ${w.h} cm.`) : '';
-  const desc = ((w.story || `${w.title}, original ${String(w.medium || 'oil').toLowerCase()} painting by Valentyna Ksendz.`).replace(/\s+/g, ' ').slice(0, 140) + size).trim();
+  const desc = ((w.story || `${w.title}, original ${String(w.medium || 'oil').toLowerCase()} painting by ${ARTIST_NAME}.`).replace(/\s+/g, ' ').slice(0, 140) + size).trim();
   const img = w.photos[0] ? url.origin + w.photos[0].src : null;
 
   const ld = {
@@ -33,8 +34,8 @@ export const onRequestGet = async ({ env, params, request }) => {
     artform: 'Painting',
     artMedium: w.medium,
     artworkSurface: w.support,
-    creator: { '@type': 'Person', name: 'Valentyna Ksendz', url: url.origin + '/' },
-    brand: { '@type': 'Brand', name: 'Valentyna Ksendz Art' },
+    creator: { '@type': 'Person', name: ARTIST_NAME, url: url.origin + '/' },
+    brand: { '@type': 'Brand', name: SITE_TITLE },
   };
   if (img) ld.image = img;
   if (w.w) ld.width = { '@type': 'QuantitativeValue', value: multi ? Math.round((w.panels * w.w + (w.panels - 1) * (w.gap ?? 5)) * 10) / 10 : w.w, unitCode: 'CMT' };

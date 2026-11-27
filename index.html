@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#183D32">
+<script src="/site.config.js"></script>
 <style>[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Valentyna Ksendz Art</title>
 <meta name="description" content="Original oil and acrylic paintings by Valentyna Ksendz: wildflowers, floral art, water lilies, irises, farmyard animals and splash technique. Limited-edition prints. Worldwide shipping.">
@@ -410,19 +411,9 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 </footer>
 
 <script>
+const SITE = window.SITE_CONFIG; // all client-specific settings live in site.config.js
 /* ---------- DATA (all placeholder content; replace with Valentyna's real works) ---------- */
-const THEMES = {
-  // "draw" = how the placeholder picture is painted while there is no photo; "styleName" = default Style line (a painting can set its own in the admin)
-  wildflowers:{name:"Wildflowers",blurb:"Poppies, cornflowers, chamomile and meadow grasses, painted the way a field feels in June.",pal:["#5f7d3a","#8aa35a","#c8d49a","#d23b2a","#3f5bb0","#f4f1e6","#e9b93c"],style:"meadow",styleName:"Contemporary impressionism"},
-  floral:{name:"Floral Art",blurb:"Garden flowers up close: peonies, roses, poppies and sweet peas, painted with love for every petal.",pal:["#e9a3b0","#d23b2a","#f3eee0","#e7c33a","#5a7a3a","#c7b8d8","#2f3a5a"],style:"impasto",styleName:"Floral art"},
-  waterlilies:{name:"Water Lilies",blurb:"Still ponds, floating lilies and reflections of the sky, in the gentle light of a summer afternoon.",pal:["#6f88a8","#8fa8c8","#a8c4a0","#e9b7c9","#f1e8d8","#3f6a5a","#c7b8d8"],style:"monet",styleName:"Impressionism, Monet-inspired"},
-  irises:{name:"Irises",blurb:"Tall blue and violet irises by the water and in the garden, with their elegant, curling petals.",pal:["#3f5bb0","#6a4fa0","#a26bd1","#e9b93c","#5f7d3a","#8aa35a","#f4f1e6"],style:"meadow",styleName:"Floral art"},
-  farmyard:{name:"Farmyard Art",blurb:"Farm animals with real character: hens, cows, sheep and more, in warm countryside colours.",pal:["#b08d68","#e8d9b5","#c86b3c","#5f7d3a","#f4f1e6","#3b3430","#8aa35a"],style:"meadow",styleName:"Farmyard art"},
-  impressions:{name:"Impressions",blurb:"Soft, Monet-inspired light: ponds, river mist and gardens seen through half-closed eyes.",pal:["#8fa8c8","#b9c7dd","#c7b8d8","#a8c4a0","#e8d9b5","#6f88a8","#f1e8d8"],style:"monet",styleName:"Impressionism, Monet-inspired"},
-  splash:{name:"Splash & Pour",blurb:"Acrylic thrown, poured and dabbed with gloves, sticks, knives and sponges, then gently guided into an image.",pal:["#1f2a44","#3a6fb0","#e05a7a","#f2c14e","#7fc8a9","#f6f4ee","#a26bd1"],style:"splash",styleName:"Acrylic splash & pour"},
-  // removed for now at Valentyna's request; kept only so an older painting with this theme still opens
-  impasto:{name:"Impasto",hidden:true,blurb:"Thick, sculpted paint laid on with knife and brush.",pal:["#e7c33a","#d9822b","#b23a3a","#f3eee0","#5a7a3a","#2f3a5a","#e9a3b0"],style:"impasto",styleName:"Impasto, palette knife"}
-};
+const THEMES = SITE.themes;
 // sizes in cm (w × h)
 // SAMPLE works: shown only where the admin API is not available (e.g. the old GitHub Pages preview).
 let WORKS = [
@@ -462,7 +453,7 @@ const isMulti = w => w && w.panels>1;
 const DEMO_DIPTYCH = {id:"demo-diptych",theme:"wildflowers",title:"Wildflower Meadow (diptych demo)",panels:2,pw:60,h:60,gap:5,w:125,medium:"Acrylic",support:"Cotton canvas",year:2026,price:1400,seed:29,status:"available",
   story:"Demo only: one meadow painted across two square canvases, meant to hang side by side.",reel:null,prints:{paper:null,canvas:null},depth:1.8};
 let LIVE = false; // true once paintings come from the admin panel (/api/paintings)
-const INSTAGRAM = "https://www.instagram.com/valentynaart_uk/";
+const INSTAGRAM = SITE.instagram;
 const hashSeed = s => {let h=7;for(const c of String(s))h=(h*31+c.charCodeAt(0))|0;return Math.abs(h)%997+1};
 const loadImg = src => new Promise(res=>{if(!src)return res(null);const im=new Image();im.decoding="async";im.onload=()=>res(im);im.onerror=()=>res(null);im.src=src});
 async function loadWorks(){
@@ -500,14 +491,9 @@ const moneySmall = n => {const c=CURRENCIES[CUR]; const v=n*c.rate; return CUR==
 const cardBuy = c => c.left>0?`<button class="btn ghost" type="button" data-buycard="${esc(c.sku)}">Buy card · ${moneySmall(c.price)}</button>`:`<button class="btn ghost" type="button" disabled>Sold out</button>`;
 const hasPrints = w => !!(w.prints&&(w.prints.paper||w.prints.canvas));
 const emptyHTML = () => `<div class="empty-state"><h2>New paintings are on their way</h2><p>Valentyna is photographing her latest work. Follow her on Instagram to see new paintings first.</p><a class="btn" href="${INSTAGRAM}" target="_blank" rel="noopener">@valentynaart_uk on Instagram</a></div>`;
-const EDITION = 10;
+const EDITION = SITE.edition;
 // framing options (Valentyna's request); prices and suppliers TBC. cm = moulding width, gap = float gap shown around the canvas
-const FRAMES = [
-  {id:"none",name:"No frame",desc:"Painted edges, ready to hang as it is",price:"Included",sw:"repeating-linear-gradient(45deg,#4b6b5f 0 4px,#3a5a4e 4px 8px)"},
-  {id:"oak",name:"Natural oak floating frame",desc:"Light wood with a small shadow gap around the canvas",price:"+ price TBC",cm:2.5,gap:.8,bg:"linear-gradient(135deg,#d7b68a,#b38d5f)",sw:"linear-gradient(135deg,#d7b68a,#b38d5f)"},
-  {id:"black",name:"Black floating frame",desc:"Slim and modern, makes bright colours glow",price:"+ price TBC",cm:2.5,gap:.8,bg:"linear-gradient(135deg,#3a3a3a,#141414)",sw:"linear-gradient(135deg,#3a3a3a,#141414)"},
-  {id:"gold",name:"Classic gold frame",desc:"Traditional moulding, beautiful with impressionist work",price:"+ price TBC",cm:6,gap:0,bg:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)",sw:"linear-gradient(135deg,#f0d78c,#b8913f 45%,#e6c672 60%,#9c7a30)"}
-];
+const FRAMES = SITE.frames;
 let currentFrame = "none";
 const CAN3D = typeof CSS!=="undefined" && CSS.supports && CSS.supports("transform-style","preserve-3d");
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -516,17 +502,7 @@ const styleOf = w => w.style || THEMES[w.theme].styleName;
 // themes shown in lists: on the live site only those with paintings; hidden ones only if a painting still uses them
 const shownThemes = () => Object.entries(THEMES).filter(([k,t])=>LIVE?WORKS.some(w=>w.theme===k):!t.hidden);
 
-const COUNTRIES = [
-  {v:"uk",n:"United Kingdom",zone:"Domestic",ok:true,wood:true},
-  {v:"eu",n:"Europe (EU)",zone:"Europe",ok:true,wood:true},
-  {v:"us",n:"United States",zone:"North America",ok:true,wood:true},
-  {v:"ca",n:"Canada",zone:"North America",ok:true,wood:true},
-  {v:"jp",n:"Japan",zone:"Asia",ok:true,wood:true},
-  {v:"asia",n:"Other Asia",zone:"Asia",ok:true,wood:true},
-  {v:"au",n:"Australia",zone:"Oceania",ok:true,wood:false},
-  {v:"nz",n:"New Zealand",zone:"Oceania",ok:true,wood:false},
-  {v:"za",n:"South Africa",zone:"Not available",ok:false,wood:true}
-];
+const COUNTRIES = SITE.countries;
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -536,14 +512,7 @@ const sizeText = w => w.noSize?"Size on request":isMulti(w)?`${PANEL_NAME[w.pane
 // short size for cards and labels: "Diptych · 2 × 60 × 60 cm"
 const sizeShort = w => w.noSize?"size on request":isMulti(w)?`${PANEL_NAME[w.panels]} · ${w.panels} × ${w.pw} × ${w.h} cm`:`${w.w} × ${w.h} cm`;
 // Prices are set in GBP. Other currencies use fixed approximate rates until the payment service is connected (rates TBC; the checkout will charge the exact amount).
-const CURRENCIES = {
-  GBP:{label:"GBP (£)",sym:"£",rate:1,locale:"en-GB"},
-  USD:{label:"USD (US$)",sym:"US$",rate:1.27,locale:"en-US"},
-  EUR:{label:"EUR (€)",sym:"€",rate:1.17,locale:"de-DE"},
-  CAD:{label:"CAD (CA$)",sym:"CA$",rate:1.76,locale:"en-CA"},
-  AUD:{label:"AUD (A$)",sym:"A$",rate:1.93,locale:"en-AU"},
-  JPY:{label:"JPY (¥)",sym:"¥",rate:190,locale:"ja-JP"}
-};
+const CURRENCIES = SITE.currencies;
 let CUR = (()=>{try{const c=localStorage.getItem("cur");if(CURRENCIES[c])return c}catch(e){}
   const l=(navigator.language||"").toLowerCase();
   if(l.endsWith("-us"))return "USD"; if(l.endsWith("-ca"))return "CAD"; if(l.endsWith("-au")||l.endsWith("-nz"))return "AUD"; if(l.startsWith("ja"))return "JPY";
