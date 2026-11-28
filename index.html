@@ -312,13 +312,13 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .curbtns button[aria-pressed="true"]{background:var(--gold);color:var(--accent-ink);border-color:var(--gold)}
 .curbtns select{font-weight:500;font-size:1rem}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:30;max-width:calc(100% - 32px);background:var(--gold);color:var(--accent-ink);font:700 1.05rem var(--font-body);padding:14px 20px;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.45);text-align:center}
-.back{display:inline-flex;align-items:center;min-height:52px;font:700 1.1rem var(--font-body);color:var(--gold);text-decoration:none;border:1px solid var(--gold-deep);border-radius:4px;padding:0 20px;margin:14px 0 4px}
+.back{display:inline-flex;align-items:center;min-height:48px;font:700 1.1rem var(--font-body);color:var(--gold);text-decoration:none;border:1px solid var(--gold-deep);border-radius:4px;padding:0 20px;margin:10px 0 8px}
 .back:hover{background:var(--gold);color:var(--accent-ink)}
 .back.bottom{margin:28px 0 0}
 .tip{display:flex;align-items:center;gap:12px;justify-content:space-between;background:var(--paper);border:1px solid var(--gold-deep);border-radius:6px;padding:12px 14px;margin-bottom:12px;font-size:1.02rem}
 .tip button{font:700 1rem var(--font-body);min-height:44px;padding:0 16px;border-radius:4px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;flex:none}
 /* ---------- AR: see it on your own wall (phones only) ---------- */
-.ar-box{margin:0 0 12px;padding:12px 14px;border:1px solid var(--gold-deep);border-radius:6px;background:var(--paper)}
+.ar-box{margin:14px 0 0;padding:12px 14px;border:1px solid var(--gold-deep);border-radius:6px;background:var(--paper)}
 .ar-box .btn{min-height:56px;font-size:1.1rem}
 .ar-box p{font-size:1rem;color:var(--muted);margin-top:8px;line-height:1.45}
 .ar-steps{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:ar}
@@ -724,7 +724,6 @@ function vPiece(w){
   const shots=[["front","Front"],["angle","Side view"],["detail","Detail"],["interior","In an interior"]];
   const prints=w.prints;
   return `<a class="back" data-back href="#${BACKH||"gallery"}">← Back to gallery</a>
-  <div class="crumbs"><a href="#gallery">Paintings</a> / <a href="#${w.theme}">${t.name}</a> / ${esc(w.title)}</div>
   <div class="piece">
     <div class="viewer">
       ${CAN3D&&!seenTip()?`<div class="tip" id="tip"><span>Tap <b>Turn in 3D</b> to spin the painting round, or <b>On a wall</b> to see its size.</span><button type="button" id="tipOk">Got it</button></div>`:""}
@@ -732,10 +731,6 @@ function vPiece(w){
         <button type="button" role="tab" data-mode="photos" aria-selected="true">Photos</button>
         ${CAN3D?`<button type="button" role="tab" data-mode="turn" aria-selected="false">Turn in 3D</button><button type="button" role="tab" data-mode="wall" aria-selected="false">On a wall</button>`:""}
       </div>
-      ${arWay(w)?`<div class="ar-box" id="arBox">
-        <button class="btn wide" type="button" id="arGo">See it on your own wall</button>
-        <p>Uses your phone's camera. The painting appears on your wall at its real size, ${sizeShort(w)}.</p>
-      </div>`:""}
       <div id="pane-turn" hidden>
         <div class="stage3d" id="stage3d" aria-label="3D view of the painting. Drag to turn it."></div>
         <div class="v-controls">
@@ -749,6 +744,10 @@ function vPiece(w){
           <div class="seg" id="roomSeg"><button class="chip" type="button" data-room="sofa" aria-pressed="true">Living room</button><button class="chip" type="button" data-room="bed">Bedroom</button><button class="chip" type="button" data-room="console">Hallway</button></div>
           <div class="seg" id="wallSeg">${[["#efebe3","Warm white"],["#b9c2ad","Sage"],["#c9b3a6","Clay"],["#3d4143","Charcoal"]].map(([c,n],i)=>`<button class="swatch" type="button" style="background:${c}" data-wall="${c}" aria-label="${n} wall" title="${n}" aria-pressed="${i===0}"></button>`).join("")}<button class="chip" type="button" id="evening" aria-pressed="false">Evening light</button></div>
         </div>
+        ${arWay(w)?`<div class="ar-box" id="arBox">
+        <button class="btn wide" type="button" id="arGo">See it on your own wall</button>
+        <p>Uses your phone's camera. The painting appears on your wall at its real size, ${sizeShort(w)}.</p>
+      </div>`:""}
       </div>
       <div id="pane-photos">
         ${w.photos&&w.photos.length?`<div class="main-shot" id="mainShot">${shotHTML(w,0)}</div>
