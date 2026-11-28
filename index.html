@@ -232,21 +232,52 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 }
 
 
-/* ---------- phone home: wall carousel (one painting per screen, parallax wall) ---------- */
-.cw{background:#12302a;color:var(--hall-ink)}
+/* ---------- phone home: wall carousel (one painting per screen) ---------- */
+#cine.cw{background:#14362c;color:var(--hall-ink)}
 .cw-slide{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;perspective:900px}
-.cw-wall{position:absolute;left:0;right:0;top:-25%;bottom:-25%;background:linear-gradient(180deg,#1f4a3d,#183D32);will-change:transform}
-.cw-wall::before{content:"";position:absolute;left:0;right:0;top:21.3%;height:0;border-top:2px solid rgba(217,188,110,.3);box-shadow:0 7px 12px rgba(0,0,0,.22)}
-.cw-wall::after{content:"";position:absolute;left:0;right:0;top:71.3%;bottom:0;background:rgba(0,0,0,.2);border-top:2px solid rgba(217,188,110,.22);box-shadow:inset 0 10px 14px rgba(0,0,0,.18)}
-.cw-glow{position:absolute;left:50%;top:-12%;width:150%;height:75%;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 0,rgba(255,226,170,.26),transparent 68%);pointer-events:none}
+/* the wall is one even colour for every slide; the painting's colour is only a soft halo that fades out before the slide edges, so slides join without seams */
+.cw-wall{position:absolute;inset:0;background:radial-gradient(closest-side,var(--tint,rgba(40,90,74,.5)),rgba(20,54,44,0));pointer-events:none}
+.cw-slide + .cw-slide::before{content:"";position:absolute;left:50%;top:0;width:64px;height:1px;margin-left:-32px;background:rgba(217,188,110,.45);z-index:1}
+.cw-glow{position:absolute;left:50%;top:6%;width:140%;height:72%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,226,170,.12),rgba(255,226,170,0));pointer-events:none}
 .cw-slide > .cine-intro,.cw-art,.cw-plate{position:relative;z-index:1}
-.cw-art{display:block;box-shadow:0 0 0 4px #c9a95a,0 18px 36px rgba(0,0,0,.55);will-change:transform}
+.cw-art{display:block;box-shadow:0 0 0 4px #c9a95a,0 18px 36px rgba(0,0,0,.55);transition:opacity .35s ease}
+.cw-slide.gone .cw-art{opacity:0}
+.cw-plate{transition:opacity .2s ease}
+.cw-slide.gone .cw-plate{opacity:0}
+.cw-slide + .cw-slide::before{transition:opacity .2s ease}
+.cw-slide.gone + .cw-slide::before{opacity:0}
+html.cw-home #view,html.cw-home footer.site{display:none}
+/* the home carousel is the whole page: no rubber-band bounce past the end, and if a phone bounces anyway it shows the same dark wall, not a pale strip */
+html.cw-home,html.cw-home body{overscroll-behavior-y:none;background:#102d25}
+/* gallery wall behind the carousel: each painting that scrolls more than half off the top flies back onto it */
+.cw-back{position:fixed;left:0;right:0;bottom:0;top:var(--hdr,62px);z-index:0;pointer-events:none;opacity:0;transition:opacity .8s ease;
+  background:radial-gradient(ellipse at 50% 0,rgba(255,226,170,.07),transparent 70%),linear-gradient(180deg,#173d32,#102d25)}
+.cw-back.show{opacity:1}
+.cw-back i{position:absolute;display:block;box-shadow:0 0 0 2px rgba(201,169,90,.55),0 6px 10px rgba(0,0,0,.45);opacity:0;transform:scale(1.25);transition:opacity .8s ease,transform .8s ease}
+.cw-back i.in{opacity:.28;transform:none}
+.cw-back.full i.in{opacity:1;pointer-events:auto;cursor:pointer}
+.cw-back i.multi,.cw-fly.multi{box-shadow:none!important}
+.cw-slide.gone{pointer-events:none}
+.cw-end{pointer-events:none}.cw-end a{pointer-events:auto}
+.cw-plate{background:rgba(14,40,33,.78);border-radius:12px;padding:5px 16px 7px}
+.cw-pop-bg{position:fixed;inset:0;z-index:3;background:rgba(8,24,19,.78);opacity:0;transition:opacity .45s ease}
+.cw-pop-bg.show{opacity:1}
+.cw-pop{position:fixed;z-index:4;display:block;transform-origin:0 0;transition:transform .6s cubic-bezier(.3,0,.2,1);box-shadow:0 0 0 4px #d9bc6e,0 26px 50px rgba(0,0,0,.6)}
+.cw-pop.multi{box-shadow:none}
+.cw-pop canvas{display:block;width:100%;height:100%}
+.cw-pop-plate{position:fixed;z-index:4;text-align:center;text-decoration:none;opacity:0;transition:opacity .4s ease .25s}
+.cw-pop-plate b{display:block;font:600 1.45rem/1.2 var(--font-display);color:var(--gold)}
+.cw-pop-plate span{display:block;margin-top:2px;font:500 1.05rem var(--font-body);color:var(--hall-ink)}
+.cw-back canvas{display:block;width:100%;height:100%}
+.cw-fly{position:fixed;z-index:0;pointer-events:none;box-shadow:0 0 0 4px #c9a95a,0 18px 36px rgba(0,0,0,.55);transform-origin:0 0;transition:transform .95s cubic-bezier(.45,0,.2,1),opacity .5s ease,box-shadow .95s ease}
+.cw-fly canvas{display:block;width:100%;height:100%}
+.cw-slide{z-index:1}
 .cw-art canvas{display:block;width:100%;height:100%}
 .cw-plate{display:block;text-align:center;text-decoration:none;max-width:88%}
 .cw-plate b{display:block;font:600 1.45rem/1.2 var(--font-display);color:var(--gold)}
 .cw-plate span{display:block;margin-top:2px;font:500 1.05rem var(--font-body);color:var(--hall-ink)}
 .cw .scroll-cue{z-index:1}
-.cw-end{padding:30px 16px 40px;display:flex;justify-content:center;background:#12302a}
+.cw-end{position:relative;z-index:1;box-sizing:border-box;min-height:calc(100vh - var(--hdr,62px));min-height:calc(100svh - var(--hdr,62px));padding:30px 16px 36px;display:flex;justify-content:center;align-items:flex-end}
 
 /* ---------- cinematic gallery hall (home) ---------- */
 :root{--hall-bg:#0f2a22;--hall-ink:#f4eedd;--hall-muted:#cfd6c9;--hall-wall:#183D32;--hall-floor:#2a211b;--spot:rgba(255,226,170,.16)}
@@ -312,13 +343,13 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .curbtns button[aria-pressed="true"]{background:var(--gold);color:var(--accent-ink);border-color:var(--gold)}
 .curbtns select{font-weight:500;font-size:1rem}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:30;max-width:calc(100% - 32px);background:var(--gold);color:var(--accent-ink);font:700 1.05rem var(--font-body);padding:14px 20px;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.45);text-align:center}
-.back{display:inline-flex;align-items:center;min-height:52px;font:700 1.1rem var(--font-body);color:var(--gold);text-decoration:none;border:1px solid var(--gold-deep);border-radius:4px;padding:0 20px;margin:14px 0 4px}
+.back{display:inline-flex;align-items:center;min-height:48px;font:700 1.1rem var(--font-body);color:var(--gold);text-decoration:none;border:1px solid var(--gold-deep);border-radius:4px;padding:0 20px;margin:10px 0 8px}
 .back:hover{background:var(--gold);color:var(--accent-ink)}
 .back.bottom{margin:28px 0 0}
 .tip{display:flex;align-items:center;gap:12px;justify-content:space-between;background:var(--paper);border:1px solid var(--gold-deep);border-radius:6px;padding:12px 14px;margin-bottom:12px;font-size:1.02rem}
 .tip button{font:700 1rem var(--font-body);min-height:44px;padding:0 16px;border-radius:4px;border:1px solid var(--gold);background:none;color:var(--gold);cursor:pointer;flex:none}
 /* ---------- AR: see it on your own wall (phones only) ---------- */
-.ar-box{margin:0 0 12px;padding:12px 14px;border:1px solid var(--gold-deep);border-radius:6px;background:var(--paper)}
+.ar-box{margin:14px 0 0;padding:12px 14px;border:1px solid var(--gold-deep);border-radius:6px;background:var(--paper)}
 .ar-box .btn{min-height:56px;font-size:1.1rem}
 .ar-box p{font-size:1rem;color:var(--muted);margin-top:8px;line-height:1.45}
 .ar-steps{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:ar}
@@ -724,7 +755,6 @@ function vPiece(w){
   const shots=[["front","Front"],["angle","Side view"],["detail","Detail"],["interior","In an interior"]];
   const prints=w.prints;
   return `<a class="back" data-back href="#${BACKH||"gallery"}">← Back to gallery</a>
-  <div class="crumbs"><a href="#gallery">Paintings</a> / <a href="#${w.theme}">${t.name}</a> / ${esc(w.title)}</div>
   <div class="piece">
     <div class="viewer">
       ${CAN3D&&!seenTip()?`<div class="tip" id="tip"><span>Tap <b>Turn in 3D</b> to spin the painting round, or <b>On a wall</b> to see its size.</span><button type="button" id="tipOk">Got it</button></div>`:""}
@@ -732,10 +762,6 @@ function vPiece(w){
         <button type="button" role="tab" data-mode="photos" aria-selected="true">Photos</button>
         ${CAN3D?`<button type="button" role="tab" data-mode="turn" aria-selected="false">Turn in 3D</button><button type="button" role="tab" data-mode="wall" aria-selected="false">On a wall</button>`:""}
       </div>
-      ${arWay(w)?`<div class="ar-box" id="arBox">
-        <button class="btn wide" type="button" id="arGo">See it on your own wall</button>
-        <p>Uses your phone's camera. The painting appears on your wall at its real size, ${sizeShort(w)}.</p>
-      </div>`:""}
       <div id="pane-turn" hidden>
         <div class="stage3d" id="stage3d" aria-label="3D view of the painting. Drag to turn it."></div>
         <div class="v-controls">
@@ -749,6 +775,10 @@ function vPiece(w){
           <div class="seg" id="roomSeg"><button class="chip" type="button" data-room="sofa" aria-pressed="true">Living room</button><button class="chip" type="button" data-room="bed">Bedroom</button><button class="chip" type="button" data-room="console">Hallway</button></div>
           <div class="seg" id="wallSeg">${[["#efebe3","Warm white"],["#b9c2ad","Sage"],["#c9b3a6","Clay"],["#3d4143","Charcoal"]].map(([c,n],i)=>`<button class="swatch" type="button" style="background:${c}" data-wall="${c}" aria-label="${n} wall" title="${n}" aria-pressed="${i===0}"></button>`).join("")}<button class="chip" type="button" id="evening" aria-pressed="false">Evening light</button></div>
         </div>
+        ${arWay(w)?`<div class="ar-box" id="arBox">
+        <button class="btn wide" type="button" id="arGo">See it on your own wall</button>
+        <p>Uses your phone's camera. The painting appears on your wall at its real size, ${sizeShort(w)}.</p>
+      </div>`:""}
       </div>
       <div id="pane-photos">
         ${w.photos&&w.photos.length?`<div class="main-shot" id="mainShot">${shotHTML(w,0)}</div>
@@ -949,23 +979,29 @@ function paintedCanvas(w,W,H,only){const c=document.createElement("canvas");c.wi
 function loop(step){let id=0,alive=true;const tick=t=>{id=0;if(alive&&step(t))id=requestAnimationFrame(tick)};const kick=()=>{if(alive&&!id)id=requestAnimationFrame(tick)};onCleanup(()=>{alive=false;cancelAnimationFrame(id)});return kick}
 
 /* ---------- 1. cinematic walk-through hall (home) ---------- */
+// the phone's height with its browser bars shown (100svh): unlike innerHeight it does not change as Safari hides its toolbar,
+// so slides and the wall are laid out the same way every time the home page is built
+function stableVH(){const d=document.createElement("div");d.style.cssText="position:fixed;top:0;left:0;width:1px;height:100vh;height:100svh;visibility:hidden;pointer-events:none";
+  document.body.appendChild(d);const h=d.offsetHeight;d.remove();return h>200?Math.min(h,innerHeight+200):innerHeight}
+let CW_END=false; // the visitor left the home carousel from the finished wall: "Back to gallery" returns to it
 function buildCarousel(){
   const el=$("#cine"); el.hidden=false; el.className="cw";
   const hdr=document.querySelector("header.site").offsetHeight;
   el.style.setProperty("--hdr",hdr+"px");
-  const vw=innerWidth, H=Math.max(480,innerHeight-hdr), INTRO=112, still=REDUCED;
+  const VH=stableVH(), vw=innerWidth, H=Math.max(480,VH-hdr), INTRO=112, still=REDUCED;
   const slide=(w,i)=>{
     const availW=Math.min(vw*.76,420), availH=H-(i===0?INTRO:0)-150;
     const fac=clamp(.6+.4*Math.sqrt(w.w*w.h/8000),.65,1);
     const sc=Math.min(availW/w.w,availH/w.h)*fac, W=Math.round(w.w*sc), Hh=Math.round(w.h*sc);
-    return `<section class="cw-slide" style="height:${H}px"><div class="cw-wall"></div><i class="cw-glow"></i>
+    const sh=Math.min(H,Hh+(i===0?INTRO:0)+(i===0?190:140)); // slide only as tall as its painting + title, so paintings sit closer together
+    return `<section class="cw-slide" style="height:${sh}px"><div class="cw-wall"></div><i class="cw-glow"></i>
       ${i===0?`<div class="cine-intro wrap"><h1>Wildflower Artist</h1><div class="tagline">Nature in every brushstroke</div><div class="ctas"><a class="btn" href="#gallery">See the paintings</a><a class="btn ghost" href="#prints">Prints</a></div></div>`:""}
       <a class="cw-art${isMulti(w)?" multi":""}" href="#${w.id}" style="width:${W}px;height:${Hh}px" aria-label="${esc(w.title)}"><canvas data-cw="${w.id}"></canvas></a>
       <a class="cw-plate" href="#${w.id}"><b>${esc(w.title)}</b><span>${w.status==="sold"?"Sold":money(w.price)}</span></a>
       ${i===0&&!still&&H>=760?`<div class="scroll-cue" id="cue">Scroll<i></i></div>`:""}</section>`};
   el.innerHTML=WORKS.map(slide).join("")+`<div class="cw-end"><a class="btn" href="#gallery">All paintings</a></div>`;
   const slides=[...el.querySelectorAll(".cw-slide")], cue=$("#cue");
-  const parts=slides.map(sl=>({sl,wall:sl.querySelector(".cw-wall"),glow:sl.querySelector(".cw-glow"),art:sl.querySelector(".cw-art")}));
+  const parts=slides.map(sl=>({sl,glow:sl.querySelector(".cw-glow"),art:sl.querySelector(".cw-art")}));
   // paint a slide when it is near the screen, and tint its wall with the painting's average colour
   const draw=sl=>{
     if(sl.dataset.d) return; sl.dataset.d=1;
@@ -975,28 +1011,80 @@ function buildCarousel(){
     try{
       const a=document.createElement("canvas"); a.width=a.height=8; a.getContext("2d").drawImage(cv,0,0,8,8);
       const b=document.createElement("canvas"); b.width=b.height=1; const bx=b.getContext("2d"); bx.drawImage(a,0,0,1,1);
-      const d=bx.getImageData(0,0,1,1).data, mx=(c,base,p)=>Math.round(base+(c-base)*p);
-      sl.querySelector(".cw-wall").style.background=`linear-gradient(180deg,rgb(${mx(d[0],31,.22)},${mx(d[1],74,.22)},${mx(d[2],61,.22)}),rgb(${mx(d[0],24,.14)},${mx(d[1],61,.14)},${mx(d[2],50,.14)}))`;
+      const d=bx.getImageData(0,0,1,1).data;
+      sl.querySelector(".cw-wall").style.setProperty("--tint",`rgba(${d[0]},${d[1]},${d[2]},.22)`);
     }catch(e){}
   };
   const io="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)draw(e.target)}),{rootMargin:"120% 0px"}):null;
   slides.forEach(sl=>io?io.observe(sl):draw(sl));
   if(still) return onCleanup(()=>io&&io.disconnect());
-  // parallax: the wall moves slower than the page, the painting leans and grows as it comes to the middle of the screen
-  let raf=0;
-  const upd=()=>{
-    raf=0; const vh=innerHeight, mid=(hdr+vh)/2, rs=parts.map(p=>p.sl.getBoundingClientRect());
-    parts.forEach((p,i)=>{const r=rs[i]; if(r.bottom<-80||r.top>vh+80) return;
-      const rel=clamp((r.top+r.height/2-mid)/r.height,-1,1), a=Math.abs(rel);
-      p.wall.style.transform=`translate3d(0,${(-rel*.2*r.height).toFixed(1)}px,0)`;
-      p.art.style.transform=`rotateX(${(rel*6).toFixed(2)}deg) scale(${(1-a*.07).toFixed(3)})`;
-      p.glow.style.opacity=(1-a*.8).toFixed(2);});
+  // gallery wall: a fixed wall behind the slides, laid out in advance as a mosaic (rows that fill the width, no empty grid cells).
+  // When 15% of a painting is hidden under the header it flies back onto its own place on the wall; scrolling down brings it back.
+  document.documentElement.classList.add("cw-home");
+  const back=document.createElement("div"); back.className="cw-back"; el.prepend(back);
+  const n=parts.length, GAP=18, PADX=14, BW=vw-2*PADX, BH=VH-hdr, HMAX=Math.max(160,BH-110-24);
+  const works=parts.map(p=>WORKS.find(x=>x.id===p.art.querySelector("canvas").dataset.cw));
+  const asp=works.map(w=>w.w/w.h);
+  const rowsFor=T=>{const rows=[]; let cur=[],sum=0;
+    asp.forEach((a,i)=>{if(cur.length&&(sum+a)*T+GAP*cur.length>BW){rows.push(cur);cur=[];sum=0} cur.push(i);sum+=a});
+    if(cur.length)rows.push(cur);
+    return rows.map((r,ri)=>{const sm=r.reduce((q,i)=>q+asp[i],0), nat=sm*T+GAP*(r.length-1), last=ri===rows.length-1;
+      let h=(last&&nat<BW*.7)?T:(BW-GAP*(r.length-1))/sm; h=Math.min(h,HMAX*.45); return {r,h,sm}})};
+  const total=rows=>rows.reduce((q,x)=>q+x.h,0)+GAP*(rows.length-1);
+  let lo=24,hi=HMAX,best=rowsFor(lo); for(let k=0;k<22;k++){const mid=(lo+hi)/2, rr=rowsFor(mid); if(total(rr)<=HMAX){best=rr;lo=mid}else hi=mid}
+  // hung by hand, not on a grid: each painting is a little smaller than its cell and sits off-centre in it,
+  // so the gaps above, below and between paintings differ. The jitter comes from the painting's id, so the wall looks the same on every visit.
+  const rnd=(id,k)=>{let h=2166136261^k; for(let c=0;c<id.length;c++){h^=id.charCodeAt(c);h=Math.imul(h,16777619)} h^=h>>>13; h=Math.imul(h,1274126177); return ((h^h>>>16)>>>0)/4294967296};
+  let y=(HMAX-total(best))/2+12;
+  best.forEach((row,ri)=>{const rw=row.sm*row.h+GAP*(row.r.length-1); let x=PADX+(BW-rw)/2;
+    row.r.forEach(i=>{const w=works[i], cw=asp[i]*row.h, ch=row.h, s=.8+.14*rnd(w.id,1), sw=Math.round(cw*s), sh=Math.round(ch*s),
+        dx=(cw-sw)*rnd(w.id,2), dy=(ch-sh)*(.15+.7*rnd(w.id,3)), sp=document.createElement("i");
+      sp.className=isMulti(w)?"multi":""; sp.style.cssText=`left:${Math.round(x+dx)}px;top:${Math.round(y+dy)}px;width:${sw}px;height:${sh}px`;
+      sp.innerHTML="<canvas></canvas>"; sp.dataset.id=w.id; back.appendChild(sp); parts[i].spot=sp; parts[i].w=w; parts[i].away=false; x+=cw+GAP});
+    y+=row.h+GAP});
+  // the wall paintings are painted straight from the artwork (small canvases), a few at a time
+  parts.forEach((p,i)=>setTimeout(()=>{const cv=p.spot.firstChild, k=Math.min(window.devicePixelRatio||1,1.5), W=Math.round(p.spot.offsetWidth*k)||1, H=Math.round(p.spot.offsetHeight*k)||1; cv.width=W; cv.height=H; try{paintWork(cv.getContext("2d"),W,H,p.w)}catch(e){}},80+40*i));
+  const flies=new Set();
+  const copy=(from,to)=>{try{to.width=Math.max(1,Math.round(to.parentNode.clientWidth*1.5));to.height=Math.max(1,Math.round(to.parentNode.clientHeight*1.5));to.getContext("2d").drawImage(from,0,0,to.width,to.height)}catch(e){}};
+  const fly=p=>{
+    draw(p.sl);
+    const src=p.art.querySelector("canvas"), a=p.art.getBoundingClientRect(), t=p.spot.getBoundingClientRect();
+    p.sl.classList.add("gone"); back.classList.add("show");
+    const f=document.createElement("div"); f.className="cw-fly"+(isMulti(p.w)?" multi":""); f.style.cssText=`left:${a.left}px;top:${a.top}px;width:${a.width}px;height:${a.height}px`;
+    f.innerHTML="<canvas></canvas>"; document.body.appendChild(f); copy(src,f.firstChild); flies.add(f);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{f.style.transform=`translate(${t.left-a.left}px,${t.top-a.top}px) scale(${t.width/a.width},${t.height/a.height})`; f.style.boxShadow="0 0 0 2px rgba(201,169,90,.55),0 6px 10px rgba(0,0,0,.45)"}));
+    setTimeout(()=>{if(p.away)p.spot.classList.add("in"); f.style.opacity=0},820); // scrolled back meanwhile: it stays in the stack
+    setTimeout(()=>{f.remove(); flies.delete(f)},1400);
+  };
+  const unfly=p=>{p.spot.classList.remove("in"); p.sl.classList.remove("gone")};
+  // tap a painting on the finished wall: it comes forward (title + price); tap it again to open it; any scroll sends it back
+  let pop=null;
+  const closePop=()=>{if(!pop)return; const q=pop; pop=null; const t=q.p.spot.getBoundingClientRect(), a=q.art.getBoundingClientRect();
+    q.bg.classList.remove("show"); q.plate.style.opacity=0;
+    q.art.style.transform=`translate(${t.left-a.left}px,${t.top-a.top}px) scale(${t.width/a.width},${t.height/a.height})`;
+    setTimeout(()=>{q.p.spot.style.visibility="";q.art.remove();q.bg.remove();q.plate.remove()},650)};
+  const openPop=p=>{if(pop)return; const w=p.w, t=p.spot.getBoundingClientRect(), mw=vw*.84, mh=BH*.58, k=Math.min(mw/w.w,mh/w.h), W=Math.round(w.w*k), H=Math.round(w.h*k), L=Math.round((vw-W)/2), T=Math.round(hdr+(BH-H-96)/2);
+    const bg=document.createElement("div"); bg.className="cw-pop-bg"; bg.onclick=closePop;
+    const art=document.createElement("a"); art.className="cw-pop"+(isMulti(w)?" multi":""); art.href="#"+w.id; art.style.cssText=`left:${L}px;top:${T}px;width:${W}px;height:${H}px;transform:translate(${t.left-L}px,${t.top-T}px) scale(${t.width/W},${t.height/H})`;
+    const cv=document.createElement("canvas"), d=Math.min(window.devicePixelRatio||1,1.5); cv.width=Math.round(W*d); cv.height=Math.round(H*d); art.appendChild(cv); try{paintWork(cv.getContext("2d"),cv.width,cv.height,w)}catch(e){}
+    const plate=document.createElement("a"); plate.className="cw-pop-plate"; plate.href="#"+w.id; plate.style.cssText=`left:0;right:0;top:${T+H+14}px`; plate.innerHTML=`<b>${esc(w.title)}</b><span>${w.status==="sold"?"Sold":money(w.price)}</span>`;
+    document.body.append(bg,art,plate); p.spot.style.visibility="hidden"; pop={p,art,bg,plate,y:scrollY};
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{bg.classList.add("show");art.style.transform="none";plate.style.opacity=1}))};
+  back.addEventListener("click",e=>{const sp=e.target.closest&&e.target.closest("i.in"); if(!sp||!back.classList.contains("full"))return; const p=parts.find(q=>q.spot===sp); if(p)openPop(p)});
+  let raf=0, lastY=scrollY;
+  const upd=()=>{raf=0; const jump=Math.abs(scrollY-lastY)>innerHeight*.9; lastY=scrollY;
+    if(pop&&Math.abs(scrollY-pop.y)>3)closePop();
+    parts.forEach(p=>{const r=p.art.getBoundingClientRect(), away=r.top+r.height*.15<hdr;
+      if(away!==p.away){p.away=away; if(!away)unfly(p); else if(jump){p.sl.classList.add("gone");p.spot.classList.add("in")} else fly(p)}});
+    back.classList.toggle("show",parts[0].away); back.classList.toggle("full",parts[n-1].away);
+    const eb=el.getBoundingClientRect().bottom; back.style.clipPath=eb<innerHeight?`inset(0 0 ${Math.round(innerHeight-eb)}px 0)`:"";
     if(cue) cue.style.opacity=clamp(1-scrollY/120,0,1);
   };
   const on=()=>{if(!raf)raf=requestAnimationFrame(upd)};
-  addEventListener("scroll",on,{passive:true}); addEventListener("resize",on);
-  onCleanup(()=>{removeEventListener("scroll",on);removeEventListener("resize",on);cancelAnimationFrame(raf);io&&io.disconnect()});
-  on();
+  addEventListener("scroll",on,{passive:true});
+  onCleanup(()=>{CW_END=back.classList.contains("full");removeEventListener("scroll",on);cancelAnimationFrame(raf);flies.forEach(f=>f.remove());if(pop){pop.art.remove();pop.bg.remove();pop.plate.remove();pop=null}document.documentElement.classList.remove("cw-home");io&&io.disconnect()});
+  // coming back from a painting page the scroll position is restored just after this runs: that first jump puts paintings on the wall without flying
+  setTimeout(on,0); on();
 }
 
 function buildHall(){
@@ -1186,6 +1274,7 @@ if(FINE && !REDUCED){
   addEventListener("hashchange",()=>set(false));
 })();
 let prevH=null, backNext=false, BACKH=null; const POS={};
+try{history.scrollRestoration="manual"}catch(e){} // the router restores positions itself; Safari's own restore fought it
 addEventListener("popstate",()=>{backNext=true});
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-back]"))backNext=true});
 function route(){
@@ -1212,7 +1301,8 @@ function route(){
   if(!w && !THEMES[h] && !["gallery","prints","cards","shipping","about"].includes(h)) buildHall();
   document.querySelectorAll("nav.main a").forEach(a=>{if(a.dataset.nav===nav)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   setMeta(w,h);
-  window.scrollTo(0,restore);
+  // back to the home carousel after opening a painting from the finished wall: go to the wall again, even if the page height changed meanwhile
+  window.scrollTo(0,restore&&h==="home"&&CW_END&&$("#cine").classList.contains("cw")?document.documentElement.scrollHeight:restore);
 }
 /* Page title + description per view (search engines and browser tabs). */
 const META_DESC = document.querySelector('meta[name="description"]').content;
