@@ -247,6 +247,8 @@ footer.site a{text-decoration:none}footer.site a:hover{color:var(--gold)}
 .cw-slide + .cw-slide::before{transition:opacity .2s ease}
 .cw-slide.gone + .cw-slide::before{opacity:0}
 html.cw-home #view,html.cw-home footer.site{display:none}
+/* the home carousel is the whole page: no rubber-band bounce past the end, and if a phone bounces anyway it shows the same dark wall, not a pale strip */
+html.cw-home,html.cw-home body{overscroll-behavior-y:none;background:#102d25}
 /* gallery wall behind the carousel: each painting that scrolls more than half off the top flies back onto it */
 .cw-back{position:fixed;left:0;right:0;bottom:0;top:var(--hdr,62px);z-index:0;pointer-events:none;opacity:0;transition:opacity .8s ease;
   background:radial-gradient(ellipse at 50% 0,rgba(255,226,170,.07),transparent 70%),linear-gradient(180deg,#173d32,#102d25)}
